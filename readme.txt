@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Olimometer ===
 Contributors: oshingler
 Donate link: http://www.olivershingler.co.uk/oliblog/olimometer
 Tags: fundraising, thermometer, fundraising thermometer, olimometer

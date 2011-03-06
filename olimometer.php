@@ -222,7 +222,7 @@ function show_olimometer() {
 	if(strlen(get_option("olimometer_thermometer_class"))>1) {$thermometer_class = get_option("olimometer_thermometer_class");} else {$thermometer_class = "";}
 	echo "<div class='".$thermometer_class."'>\n";
 	$image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
-	echo "<img src='".$image_location."?total_value=".$total_value."&progress_value=".$progress_value."&currency=".$currency."&thermometer_bg_colour=".$thermometer_bg_colour."&text_colour=".$text_colour."&thermometer_height=".$thermometer_height."'>";
+	echo "<img src='".$image_location."?total_value=".$total_value."&progress_value=".$progress_value."&currency=".$currency."&thermometer_bg_colour=".$thermometer_bg_colour."&text_colour=".$text_colour."&thermometer_height=".$thermometer_height."' alt='Olimometer'>";
 	echo "</div>\n";
 }
 

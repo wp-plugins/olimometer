@@ -28,9 +28,9 @@ This plugin requires that the GD libraries are available within PHP.
 
 == Frequently Asked Questions ==
 
-= No Questions yet =
+= How do I report a bug? =
 
-So no answers yet either
+Visit my plugin page http://www.olivershingler.co.uk/oliblog/olimometer and leave a comment. I can't make any promises but I will do my best. Please let me know of any and all problems you find.
 
 
 == Screenshots ==

@@ -129,7 +129,7 @@ function olimometer_manage_page() {
 		<tr class="form-field form-required">
 			<th scope="row" valign="top"><label for="name">Currency</label></th>
 			<td><input name="olimometer_currency" id="olimometer_currency" type="text" value="<?php 
-				if(get_option("olimometer_currency")) {echo get_option("olimometer_currency");} else {echo "156";}
+				if(get_option("olimometer_currency")) {echo get_option("olimometer_currency");} else {echo "163";}
 			?>" size="40" aria-required="true" />
             <p>Decimal ASCII Value of the currency (for LiberationSans-Regular.ttf)</p>
 

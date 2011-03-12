@@ -1,7 +1,7 @@
 === Olimometer ===
 Contributors: oshingler
 Donate link: http://www.olivershingler.co.uk/oliblog/olimometer
-Tags: fundraising, thermometer, fundraising thermometer, olimometer, sponsor, sponsorship, charity, donation
+Tags: fundraising, thermometer, fundraising thermometer, olimometer, sponsor, sponsorship, charity, donation, donate
 Requires at least: 3.1
 Tested up to: 3.1
 Stable tag: 1.1

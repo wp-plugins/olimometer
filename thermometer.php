@@ -7,6 +7,7 @@ $total_value = $HTTP_GET_VARS['total_value'];
 $progress_value = $HTTP_GET_VARS['progress_value'];
 $currency = $HTTP_GET_VARS['currency'];
 $text_colour = $HTTP_GET_VARS['text_colour'];
+$transparent = $HTTP_GET_VARS['transparent'];
 
 //hard coded variables
 $thermometer_width = 100;
@@ -50,7 +51,6 @@ $total_bar_length = $thermometer_height - $therm_bulb_height - 7;
 
 //work out how many pixels of that bar need to be coloured in
 $filled_bar_length = ceil(($total_bar_length / $total_value) * $progress_value);
-//$filled_bar_length = 60;
 
 //work out the ypos of the top of the mercury bar
 $top_of_bar = $thermometer_height - ($filled_bar_length + $therm_bulb_height);
@@ -72,10 +72,14 @@ imagettftext($new_image, 8, 0, 60, $bulb_ypos+10, $text_colour_rgb, $font_name, 
 imagettftext($new_image, 8, 0, 60, $top_of_bar, $text_colour_rgb, $font_name, $currency_symbol.$progress_value);
 
 
+//Set transparancy if required using supplied background colour as mask
+if ($transparent == 1) {
+	imagecolortransparent($new_image, $background_colour);
+}
 
 
 //output the image to the browser
-imagejpeg($new_image, NULL, 100);
+imagepng($new_image, NULL);
 
 //function to convert hex colour string to rgb array
 function rgb2array($rgb) {

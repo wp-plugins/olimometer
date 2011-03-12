@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: Allows WordPress to display a thermometer to measure progress such as fundraising.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 1.0
+Version: 1.1
 */
 
 /*
@@ -69,6 +69,8 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 	fwrite($fh, $stringData);
 	$stringData = $_REQUEST['olimometer_widget_title']."\n";
 	fwrite($fh, $stringData);
+	$stringData = $_REQUEST['olimometer_transparent']."\n";
+	fwrite($fh, $stringData);
 	fclose($fh);
 
 	update_option("olimometer_progress_value", $olimometer_progress_value);
@@ -79,6 +81,7 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 	update_option("olimometer_thermometer_height", $_REQUEST['olimometer_thermometer_height']);
 	update_option("olimometer_thermometer_class", $_REQUEST['olimometer_thermometer_class']);
 	update_option("olimometer_widget_title", $_REQUEST['olimometer_widget_title']);
+	update_option("olimometer_transparent", $_REQUEST['olimometer_transparent']);
 
 
 
@@ -129,7 +132,7 @@ function olimometer_manage_page() {
 		<tr class="form-field form-required">
 			<th scope="row" valign="top"><label for="name">Currency</label></th>
 			<td><input name="olimometer_currency" id="olimometer_currency" type="text" value="<?php 
-				if(get_option("olimometer_currency")) {echo get_option("olimometer_currency");} else {echo "163";}
+				if(get_option("olimometer_currency")) {echo get_option("olimometer_currency");} else {echo "156";}
 			?>" size="40" aria-required="true" />
             <p>Decimal ASCII Value of the currency (for LiberationSans-Regular.ttf)</p>
 
@@ -154,6 +157,20 @@ function olimometer_manage_page() {
 				if(get_option("olimometer_thermometer_bg_colour")) {echo get_option("olimometer_thermometer_bg_colour");} else {echo "FFFFFF";}
 			?>" size="40" aria-required="true" />
             <p>Hex value for background colour of thermometer image (FFFFFF = white, 000000 = black)</p></td>
+		</tr>
+
+		<tr class="form-field form-required">
+			<th scope="row" valign="top"><label for="name">Transparent Background</label></th>
+			<td><select name="olimometer_transparent" id="olimometer_transparent" aria-required="true" >
+				<option value=0>No</option>
+				<option value=1<?php
+if(get_option("olimometer_transparent") == 1) {
+	echo " selected";
+}
+
+?>>Yes</option>
+			</select>
+            <p>Make the thermometer background transparent? If you select this option to yes then make sure you choose a background colour above that is close to your site's actual background colour. This will help it blend in nicely.</p></td>
 		</tr>
 
 		<tr class="form-field form-required">
@@ -220,9 +237,11 @@ function show_olimometer() {
 	if(strlen(get_option("olimometer_text_colour"))>1) {$text_colour = get_option("olimometer_text_colour");} else {$text_colour= "000000";}
 	if(strlen(get_option("olimometer_thermometer_height"))>1) {$thermometer_height = get_option("olimometer_thermometer_height");} else {$thermometer_height = "200";}
 	if(strlen(get_option("olimometer_thermometer_class"))>1) {$thermometer_class = get_option("olimometer_thermometer_class");} else {$thermometer_class = "";}
+	if(get_option("olimometer_transparent")>0) {$thermometer_transparent = get_option("olimometer_transparent");} else {$thermometer_transparent = "plop";}
+
 	echo "<div class='".$thermometer_class."'>\n";
 	$image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
-	echo "<img src='".$image_location."?total_value=".$total_value."&progress_value=".$progress_value."&currency=".$currency."&thermometer_bg_colour=".$thermometer_bg_colour."&text_colour=".$text_colour."&thermometer_height=".$thermometer_height."' alt='Olimometer'>";
+	echo "<img src='".$image_location."?total_value=".$total_value."&progress_value=".$progress_value."&currency=".$currency."&thermometer_bg_colour=".$thermometer_bg_colour."&text_colour=".$text_colour."&thermometer_height=".$thermometer_height."&transparent=".$thermometer_transparent."' alt='Olimometer'>";
 	echo "</div>\n";
 }
 

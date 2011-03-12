@@ -12,11 +12,6 @@ A dynamic fundraising thermometer with customisable height, currency and backgro
 
 A dynamic fundraising thermometer with customisable height, currency and background colour or transparency.
 
-Common currency values include:
-£ = 163
-$ = 36
-€ = 128
-
 The background of the thermometer image (the part with the text labels on) can be customised to fit in with your site's design. The height (or length?!?) of the thermometer can be customised, and the scale of the mercury bar will automatically asjust accordingly.
 
 Also includes a widget for use on sidebars.

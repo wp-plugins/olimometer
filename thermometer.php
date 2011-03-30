@@ -12,6 +12,7 @@ $show_progress = $HTTP_GET_VARS['show_progress'];
 $progress_label = $HTTP_GET_VARS['progress_label'];
 $font_height = $HTTP_GET_VARS['font_height'];
 $thermometer_width = $HTTP_GET_VARS['width'];
+$suffix = $HTTP_GET_VARS['suffix'];
 
 //hard coded variables
 $therm_bulb_file = 'therm_bulb.jpg';
@@ -75,11 +76,19 @@ $text_color_array = rgb2array($text_colour);
 $text_colour_rgb = imagecolorallocate($new_image, $text_color_array[0], $text_color_array[1], $text_color_array[2]);
 if ($currency == 128)
 	$currency_symbol = "&#8364;";
+else if ($currency == 'x')
+        $currency_symbol = "";
 else
 	$currency_symbol = chr($currency);
 
-imagettftext($new_image, $font_height, 0, 60, $font_height*1.2, $text_colour_rgb, $font_name, $currency_symbol.$total_value);
-imagettftext($new_image, $font_height, 0, 60, $bulb_ypos+10, $text_colour_rgb, $font_name, $currency_symbol.'0');
+if ($suffix != 'x') {
+        $suffix_symbol = chr($suffix);
+}
+
+
+
+imagettftext($new_image, $font_height, 0, 60, $font_height*1.2, $text_colour_rgb, $font_name, $currency_symbol.$total_value.$suffix_symbol);
+imagettftext($new_image, $font_height, 0, 60, $bulb_ypos+10, $text_colour_rgb, $font_name, $currency_symbol.'0'.$suffix_symbol);
 
 //No longer showing progress value next to mercury bar as of v1.2
 //imagettftext($new_image, $font_height, 0, 60, $top_of_bar, $text_colour_rgb, $font_name, $currency_symbol.$progress_value);
@@ -87,7 +96,7 @@ imagettftext($new_image, $font_height, 0, 60, $bulb_ypos+10, $text_colour_rgb, $
 
 //If the Progress label is needed, show it!
 if($show_progress == 1) {
-   imagettftext($new_image, $font_height, 0, 0, $image_height-(ceil($font_height/2)), $text_colour_rgb, $font_name, $progress_label.' '.$currency_symbol.$progress_value);
+   imagettftext($new_image, $font_height, 0, 0, $image_height-(ceil($font_height/2)), $text_colour_rgb, $font_name, $progress_label.' '.$currency_symbol.$progress_value.$suffix_symbol);
 }
 
 //Set transparancy if required using supplied background colour as mask

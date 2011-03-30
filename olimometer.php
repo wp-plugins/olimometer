@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: Allows WordPress to display a thermometer to measure progress such as fundraising.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 1.21
+Version: 1.22
 */
 
 /*
@@ -79,6 +79,8 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 	fwrite($fh, $stringData);
 	$stringData = $_REQUEST['olimometer_width']."\n";
 	fwrite($fh, $stringData);
+	$stringData = $_REQUEST['olimometer_suffix']."\n";
+	fwrite($fh, $stringData);
 
 	fclose($fh);
 
@@ -95,6 +97,7 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 	update_option("olimometer_progress_label", $_REQUEST['olimometer_progress_label']);
 	update_option("olimometer_font_height", $_REQUEST['olimometer_font_height']);
 	update_option("olimometer_width", $_REQUEST['olimometer_width']);
+	update_option("olimometer_suffix", $_REQUEST['olimometer_suffix']);
 
 }
 
@@ -137,17 +140,33 @@ function olimometer_manage_page() {
             <p>Input the total amount of money you would like to raise.</p></td>
 		</tr>
 
-		<tr class="form-field form-required">
+
+
+		<tr class="form-field">
 			<th scope="row" valign="top"><label for="name">Currency</label></th>
 			<td><input name="olimometer_currency" id="olimometer_currency" type="text" value="<?php 
-				if(get_option("olimometer_currency")) {echo get_option("olimometer_currency");} else {echo "163";}
+				if(get_option("olimometer_currency")) {echo get_option("olimometer_currency");}
 			?>" size="40" aria-required="true" />
-            <p>Decimal ASCII Value of the currency (for LiberationSans-Regular.ttf)</p>
+            <p>(Optional) Decimal ASCII Value of the currency (for LiberationSans-Regular.ttf)</p>
 
 		<p>Common currency values include:<br/>
 		&pound = 163<br/>
 		$ = 36<br/>
 		&#8364; = 128</p>
+		</td>
+		</tr>		
+
+
+		<tr class="form-field">
+			<th scope="row" valign="top"><label for="name">Suffix</label></th>
+			<td><input name="olimometer_suffix" id="olimometer_suffix" type="text" value="<?php 
+				if(get_option("olimometer_suffix")) {echo get_option("olimometer_suffix");}
+			?>" size="40" aria-required="true" />
+            <p>(Optional) Decimal ASCII Value of the suffix (character to go after the value)</p>
+
+		<p>Common values include:<br/>
+                % = 37<br/>
+                </p>
 		</td>
 		</tr>
 
@@ -285,7 +304,8 @@ if( (get_option("olimometer_show_progress") == 0) && (strlen(get_option("olimome
 function show_olimometer() {
 	if(strlen(get_option("olimometer_total_value"))>1) {$total_value = get_option("olimometer_total_value");} else {$total_value= "100";}
 	if(strlen(get_option("olimometer_progress_value"))>1) {$progress_value = get_option("olimometer_progress_value");} else {$progress_value = 0;}
-	if(strlen(get_option("olimometer_currency"))>1) {$currency = get_option("olimometer_currency");} else {$currency = 163;}
+	if(strlen(get_option("olimometer_currency"))>1) {$currency = get_option("olimometer_currency");} else {$currency = x;}
+	if(strlen(get_option("olimometer_suffix"))>1) {$olimometer_suffix = get_option("olimometer_suffix");} else {$olimometer_suffix = x;}
 	if(strlen(get_option("olimometer_thermometer_bg_colour"))>1) {$thermometer_bg_colour = get_option("olimometer_thermometer_bg_colour");} else {$thermometer_bg_colour= "FFFFFF";}
 	if(strlen(get_option("olimometer_text_colour"))>1) {$text_colour = get_option("olimometer_text_colour");} else {$text_colour= "000000";}
 	if(strlen(get_option("olimometer_thermometer_height"))>1) {$thermometer_height = get_option("olimometer_thermometer_height");} else {$thermometer_height = "200";}
@@ -298,7 +318,7 @@ function show_olimometer() {
 
 	//echo "<div class='".$thermometer_class."'>\n";
 	$image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
-	echo "<img src='".$image_location."?total=".$total_value."&progress=".$progress_value."&currency=".$currency."&bg=".$thermometer_bg_colour."&text_colour=".$text_colour."&height=".$thermometer_height."&transparent=".$thermometer_transparent."&show_progress=".$olimometer_show_progress."&progress_label=".$olimometer_progress_label."&font_height=".$olimometer_font_height."&width=".$olimometer_width."'  class='".$thermometer_class."' alt='Olimometer'>";
+	echo "<img src='".$image_location."?total=".$total_value."&progress=".$progress_value."&currency=".$currency."&bg=".$thermometer_bg_colour."&text_colour=".$text_colour."&height=".$thermometer_height."&transparent=".$thermometer_transparent."&show_progress=".$olimometer_show_progress."&progress_label=".$olimometer_progress_label."&font_height=".$olimometer_font_height."&width=".$olimometer_width."&suffix=".$olimometer_suffix."'  class='".$thermometer_class."' alt='Olimometer'>";
 	//echo "</div>\n";
 }
 

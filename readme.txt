@@ -67,6 +67,10 @@ I can't make any promises but I will do my best.
 = 1.21 =
 * Fixed default currency, now defaults to GBP
 
+= 1.22 =
+* It is now possible to add a suffix (for example a % symbol) at the end of your values.
+* Currency symbol is now optional and defaults to nothing
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -80,3 +84,6 @@ Fixed the overlapping text bug where the progress value would overlap with the t
 
 = 1.21 = 
 Fixed default currency, now defaults to GBP - not a critical update at all if you already have it installed as this only affects new installations.
+
+= 1.22 =
+I noticed that some people were using the Olimometer to track a percentage, so this version allows you to add a suffix (for example a % symbol) at the end of your values. Currencies are now also optional as a consequence.

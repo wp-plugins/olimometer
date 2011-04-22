@@ -5,13 +5,13 @@ Tags: counter, fund, progress, fundraising, thermometer, fundraising thermometer
 Requires at least: 3.1
 Tested up to: 3.1.1
 
-A dynamic fundraising thermometer with customisable height, currency and background colour or transparency.
+A dynamic fundraising thermometer with customisable height, currency, background colour, transparency and skins.
 
 == Description ==
 
-A dynamic fundraising thermometer with customisable height, currency, background colour, transparency or skinnable images.
+A dynamic fundraising thermometer with customisable height, currency, background colour, transparency and skinnable images.
 
-The background of the thermometer image (the part with the text labels on) can be customised to fit in with your site's design. The height (or length?!?) of the thermometer can be customised, and the scale of the mercury bar will automatically asjust accordingly. The thermometer image can be customised using one of the preset skins, or by creating your own. See the FAQ for guidelines on creating your own skins. Don't forget to share your skins with me so I can include them in a future release. Also includes a widget for use on sidebars and a dashboard widget for quick updating of the progress and target values directly from the admin dashboard.
+The background of the thermometer image (the part with the text labels on) can be customised to fit in with your site's design. The height (or length?!?) of the thermometer can be customised, and the scale of the mercury bar will automatically adjust accordingly. The thermometer image can be customised using one of the preset skins, or by creating your own. See the FAQ for guidelines on creating your own skins. Don't forget to share your skins with me so I can include them in a future release. Also includes a widget for use on sidebars and a dashboard widget for quick updating of the progress and target values directly from the admin dashboard.
 
 This plugin requires that the GD libraries are available within PHP.
 

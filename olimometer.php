@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: Allows WordPress to display a thermometer to measure progress such as fundraising.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 1.30
+Version: 1.31
 */
 
 /*

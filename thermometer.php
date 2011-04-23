@@ -75,7 +75,7 @@ imagecopyresampled($new_image, $therm_bar, 0, $therm_bar_ypos, 0, 0, $therm_bar_
 
 
 //fill in the gap
-imagecopyresampled($new_image, $therm_bar, 0, $therm_bar_merc_top, 0, 0, $therm_bar_width, $therm_bar_height, $therm_bar_width, $therm_bar_height);
+//imagecopyresampled($new_image, $therm_bar, 0, $therm_bar_merc_top, 0, 0, $therm_bar_width, $therm_bar_height, $therm_bar_width, $therm_bar_height);
 
 
 //put the top on the thermometer

@@ -65,10 +65,18 @@ Once you've created your XML object, you'll then need to create a folder (as spe
 Then create yourself three new files, naming them according to that specified in the XML file. One image should contain the bottom of the thermometer (the bulb), the second should be the thermometer's bar which should be drawn empty of mercury and the third is the top of the thermometer.
 
 For best results follow these tips:
+
 * Each image file should be of equal width.
+
 * The background of each image should be an identical solid colour to enable seamless placement and transparency.
+
 * Use a droplet tool or other suitable colour identifier to identify a suitable bar_colour value using the mercury colour in your bulb_file image.
+
+* Make sure the top_file image includes a copy of the bar_file underneath it, but cleaned of any marks or bars - see the built in skins for an example. This is to avoid a gap being left between the top image and the bar image at certain image heights.
+
 * Share your skins with me - contact me using the Wordpress forums, tweet me @OliverShingler, or leave a comment on the Olimometer page: http://www.olivershingler.co.uk/oliblog/olimometer
+
+
 
 
 
@@ -112,6 +120,10 @@ For best results follow these tips:
 * Added a dashboard widget on the admin interface. You can now quickly update your progress or target values on the dashboard directly.
 * The thermometer image can now be customised using skins. See FAQ for current skinning guidelines.
 
+= 1.31 =
+* Fixed overlapping image bug in the skins. Thermometer top images are now larger to compensate.
+
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -135,3 +147,6 @@ Fixes a bug which caused progress values (total amount raised) of 9 or less to b
 = 1.30 =
 * Added a dashboard widget on the admin interface. You can now quickly update your progress or target values on the dashboard directly.
 * SKINS! The thermometer image can now be customised using skins. See FAQ for current skinning guidelines.
+
+= 1.31 =
+Fixed overlapping image bug in the skins.

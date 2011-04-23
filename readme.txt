@@ -86,6 +86,8 @@ For best results follow these tips:
 
 * Share your skins with me - contact me using the Wordpress forums, tweet me @OliverShingler, or leave a comment on the Olimometer page: http://www.olivershingler.co.uk/oliblog/olimometer
 
+* Keep a backup of skins.xml and your image files. When you update the Olimometer it will overwrite any skins you have created, this is why it is important to share them with me if possible to be included in a future release.
+
 
 
 

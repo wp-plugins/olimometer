@@ -1,7 +1,9 @@
 === Olimometer ===
 Contributors: oshingler
 Donate link: http://www.olivershingler.co.uk/oliblog/olimometer
-Tags: counter, fund, progress, fundraising, thermometer, fundraising thermometer, olimometer, sponsor, sponsorship, charity, donation, donate
+Tags: charities, charity, counter, donate, donate goals, donate meter, donation, donations, fund, fundraise, fundraising, fundraising goal, fundraising thermometer, goal, olimometer, paypal, progress, sidebar, sponsor, sponsorship, thermometer, widget
+
+
 Requires at least: 3.1
 Tested up to: 3.1.1
 

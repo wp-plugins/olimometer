@@ -51,15 +51,25 @@ See: How do I create my own skin?
 Within the plugin folder you'll find a file called skins.xml. This file contains the skin defintions for all available Olimometer skins. The easiest way to create your own skin is to copy and paste an existing one changing the values as appropriate. You need to create an entire 'skin' object within the XML structure. Each sub-object within the skin object is explained below:
 
 skin_name:	The name of the skin as displayed in the drop-down list on the settings page
+
 skin_folder:	The name of a subfolder within the plugin's skin folder in which you will store the thermometer images associated with this skin
+
 bulb_file:	The name of the PNG image file of the thermometer 'bulb' (bottom image)
+
 bar_file:	The name of the PNG image file of the thermometer 'bar'. This should be empty of mercury.
+
 top_file:	The name of the PNG image file of the top of the thermometer.
+
 bar_colour:	A six character RGB hex value (e.g. white = ffffff) colour of the mercury bar
+
 bar_xpos:	The number of pixels from the left of the image at which the mercury bar will be drawn.
+
 bar_width:	The width of the mercury bar in pixels.
+
 bar_top:	The number of pixels from the top of the image where the mercury bar will stop at 100%
+
 text_xpos:	The number of pixels from the left of the image at which the text values are placed.
+
 
 Once you've created your XML object, you'll then need to create a folder (as specified in skin_folder above) in wp-content/plugins/olimometer/skins/<yourfoldername>.
 Then create yourself three new files, naming them according to that specified in the XML file. One image should contain the bottom of the thermometer (the bulb), the second should be the thermometer's bar which should be drawn empty of mercury and the third is the top of the thermometer.

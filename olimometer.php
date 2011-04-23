@@ -399,7 +399,7 @@ function show_olimometer() {
 
 	//echo "<div class='".$thermometer_class."'>\n";
 	$image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
-	echo "<img src='".$image_location."?total=".$total_value."&progress=".$progress_value."&currency=".$currency."&bg=".$thermometer_bg_colour."&text_colour=".$text_colour."&height=".$thermometer_height."&transparent=".$thermometer_transparent."&show_progress=".$olimometer_show_progress."&progress_label=".$olimometer_progress_label."&font_height=".$olimometer_font_height."&width=".$olimometer_width."&suffix=".$olimometer_suffix."&skin=".$olimometer_skin."'  class='".$thermometer_class."' alt='Olimometer 1.30'>";
+	echo "<img src='".$image_location."?total=".$total_value."&progress=".$progress_value."&currency=".$currency."&bg=".$thermometer_bg_colour."&text_colour=".$text_colour."&height=".$thermometer_height."&transparent=".$thermometer_transparent."&show_progress=".$olimometer_show_progress."&progress_label=".$olimometer_progress_label."&font_height=".$olimometer_font_height."&width=".$olimometer_width."&suffix=".$olimometer_suffix."&skin=".$olimometer_skin."'  class='".$thermometer_class."' alt='Olimometer 1.31'>";
 	//echo "</div>\n";
 }
 

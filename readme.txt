@@ -4,6 +4,7 @@ Donate link: http://www.olivershingler.co.uk/oliblog/olimometer
 Tags: charities, charity, counter, donate, donate goals, donate meter, donation, donations, fund, fundraise, fundraising, fundraising goal, fundraising thermometer, goal, olimometer, paypal, progress, sidebar, sponsor, sponsorship, thermometer, widget
 Requires at least: 3.1
 Tested up to: 3.1.2
+Stable tag: trunk
 
 A dynamic fundraising thermometer with customisable height, currency, background colour, transparency and skins.
 

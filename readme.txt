@@ -136,7 +136,7 @@ For best results follow these tips:
 * Fixed overlapping image bug in the skins. Thermometer top images are now larger to compensate.
 
 = 1.32 =
-* The show_olimometer shortcode now operates correctly fixing a bug which prevented the thermometer image from being displayed inline with the contents of a post of page. IMPORTANT: If you have used the show_olimometer(); function within your templates, this must now be updated to `<?php echo show_olimometer();?>` (note the extra echo) or the image will not be displayed. This is because I didn't read the Wordpress documentation on how to create a plugin properly when I first wrote the plugin :)
+* The show_olimometer shortcode now operates correctly fixing a bug which prevented the thermometer image from being displayed inline with the contents of a post of page. IMPORTANT: If you have used the show_olimometer() function within your templates, this must now be updated to "echo show_olimometer()" (note the extra echo) or the image will not be displayed. This is because I didn't read the Wordpress documentation on how to create a plugin properly when I first wrote the plugin
 
 
 == Upgrade Notice ==

@@ -95,7 +95,12 @@ imagecopyresampled($new_image, $therm_top, 0, 0, 0, 0, $therm_top_width, $therm_
 $total_bar_length = $thermometer_height - $therm_bulb_height - $therm_bar_merc_top;
 
 //work out how many pixels of that bar need to be coloured in
-$filled_bar_length = ceil(($total_bar_length / $total_value) * $progress_value);
+if ($progress_value > $total_value) {
+	$filled_bar_length = ceil($total_bar_length);
+}
+else {
+	$filled_bar_length = ceil(($total_bar_length / $total_value) * $progress_value);
+}
 
 //work out the ypos of the top of the mercury bar
 $top_of_bar = $thermometer_height - ($filled_bar_length + $therm_bulb_height);

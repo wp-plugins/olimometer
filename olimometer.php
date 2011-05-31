@@ -2,39 +2,29 @@
 /*
 Plugin Name: Olimometer
 Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
-Description: Allows WordPress to display a thermometer to measure progress such as fundraising.
+Description: A dynamic fundraising thermometer with customisable height, currency, background colour, transparency and skins. Integrates with PayPal to retrieve an account balance as the current progress value.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 1.33
+Version: 1.40
 */
 
-/*
-/--------------------------------------------------------------------\
-|                                                                    |
-| License: GPL                                                       |
-|                                                                    |
-| Copyright (C) 2011, Oliver Shingler				     |
-| http://www.olivershingler.co.uk/oliblog/olimometer                 |
-| All rights reserved.                                               |
-|                                                                    |
-| This program is free software; you can redistribute it and/or      |
-| modify it under the terms of the GNU General Public License        |
-| as published by the Free Software Foundation; either version 2     |
-| of the License, or (at your option) any later version.             |
-|                                                                    |
-| This program is distributed in the hope that it will be useful,    |
-| but WITHOUT ANY WARRANTY; without even the implied warranty of     |
-| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      |
-| GNU General Public License for more details.                       |
-|                                                                    |
-| You should have received a copy of the GNU General Public License  |
-| along with this program; if not, write to the                      |
-| Free Software Foundation, Inc.                                     |
-| 51 Franklin Street, Fifth Floor                                    |
-| Boston, MA  02110-1301, USA                                        |   
-|                                                                    |
-\--------------------------------------------------------------------/
+
+/*  Copyright 2011 Oliver Shingler (email : oliver@shingler.co.uk)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License, version 2, as 
+    published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 
 add_action('admin_menu', 'olimometer_add_pages');
 add_filter('plugin_action_links', 'olimometer_action', -10, 2);
@@ -45,46 +35,8 @@ add_shortcode('show_olimometer','show_olimometer');
 /* Main Settings save */
 if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])) {
 
-	$uploadpath = wp_upload_dir();
-	$myFile = $uploadpath['basedir']."/olimometer_settings.txt";
-	$fh = fopen($myFile, 'w') or die("can't open file");
-
 	$olimometer_progress_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_progress_value']));
 	$olimometer_total_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_total_value']));
-
-
-	$stringData = $olimometer_progress_value."\n";
-	fwrite($fh, $stringData);
-	$stringData = $olimometer_total_value."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_currency']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_thermometer_bg_colour']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_text_colour']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_thermometer_height']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_thermometer_class']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_widget_title']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_transparent']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_show_progress']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_progress_label']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_font_height']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_width']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_suffix']."\n";
-	fwrite($fh, $stringData);
-	$stringData = $_REQUEST['olimometer_skin']."\n";
-	fwrite($fh, $stringData);	
-
-	fclose($fh);
 
 	update_option("olimometer_progress_value", $olimometer_progress_value);
 	update_option("olimometer_total_value", $olimometer_total_value);
@@ -101,52 +53,19 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 	update_option("olimometer_width", $_REQUEST['olimometer_width']);
 	update_option("olimometer_suffix", $_REQUEST['olimometer_suffix']);
 	update_option("olimometer_skin", $_REQUEST['olimometer_skin']);
+	update_option("olimometer_use_paypal", $_REQUEST['olimometer_use_paypal']);
+	update_option("olimometer_paypal_username", $_REQUEST['olimometer_paypal_username']);	
+	update_option("olimometer_paypal_password", $_REQUEST['olimometer_paypal_password']);
+	update_option("olimometer_paypal_signature", $_REQUEST['olimometer_paypal_signature']);
+	
 
 }
 
 /* Dashboard Widget save */
 if ($_REQUEST['olimometer_dw_submit'] && isset($_REQUEST['olimometer_total_value'])) {
 
-	$uploadpath = wp_upload_dir();
-	$myFile = $uploadpath['basedir']."/olimometer_settings.txt";
-	$fh = fopen($myFile, 'w') or die("can't open file");
-
 	$olimometer_progress_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_progress_value']));
 	$olimometer_total_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_total_value']));
-
-
-	$stringData = $olimometer_progress_value."\n";
-	fwrite($fh, $stringData);
-	$stringData = $olimometer_total_value."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_currency")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_thermometer_bg_colour")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_text_colour")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_thermometer_height")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_thermometer_class")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_widget_title")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_transparent")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_show_progress")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_progress_label")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_font_height")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_width")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_suffix")."\n";
-	fwrite($fh, $stringData);
-	$stringData = get_option("olimometer_skin")."\n";
-	fwrite($fh, $stringData);	
-
-	fclose($fh);
 
 	update_option("olimometer_progress_value", $olimometer_progress_value);
 	update_option("olimometer_total_value", $olimometer_total_value);
@@ -163,25 +82,64 @@ function olimometer_action($links, $file) {
 
 
 function olimometer_add_pages() {
-    //add_management_page('Olimometer', 'Olimometer', 8, 'olimometer_manage', 'olimometer_manage_page');
 	add_submenu_page('options-general.php','Olimometer Settings', 'Olimometer', 'manage_options', 'olimometer_manage', 'olimometer_manage_page');
 }
 
 function olimometer_manage_page() {
     echo '<div class="wrap">';
+
+?>
+<script language="javascript">
+function olimometer_progress_disable()
+{
+document.olimometer_form1.olimometer_progress_value.readOnly=true;
+document.olimometer_form1.olimometer_paypal_username.readOnly=false;
+document.olimometer_form1.olimometer_paypal_password.readOnly=false;
+document.olimometer_form1.olimometer_paypal_signature.readOnly=false;
+}
+
+function olimometer_progress_enable()
+{
+document.olimometer_form1.olimometer_progress_value.readOnly=false;
+document.olimometer_form1.olimometer_paypal_username.readOnly=true;
+document.olimometer_form1.olimometer_paypal_password.readOnly=true;
+document.olimometer_form1.olimometer_paypal_signature.readOnly=true;
+}
+
+</script>
+
+<?
 	echo '<h2>Olimometer</h2>';
+	echo '<a href="#progressvalues">Progress Values</a><br />';
+	echo '<a href="#appearance">Appearance and Layout</a><br />';
+	echo '<a href="#diagnostics">Diagnostics</a><br />';
+	echo '<a href="#OtherInformation">Other Information</a><br />';
 
-	if (extension_loaded('gd') && function_exists('gd_info')) {
-		echo "GD is installed: Olimometer should function okay.";
-	}
-	else {
-		echo "<font color=red><b>WARNING: Unable to detect the PHP GD Extension. Please contact your web server administrator if the Olimometer does not display at all.</b></font>";
-	}
-
-	echo '<form method="post">';
+	echo '<form method="post" id="olimometer_form1" name="olimometer_form1">';
+	echo '<hr /><a name="progressvalues"></a>';
+	echo '<h3>Progress Values</h3>';
 	
 	?>
 	<table class="form-table">
+		<tr class="form-required">
+			<th scope="row" valign="top"><label for="name">Manual or PayPal Link?</label></th>
+			<td><input name="olimometer_use_paypal" id="olimometer_use_paypal" type="radio" value="0"<?php
+if(get_option("olimometer_use_paypal") == 0) {
+	echo " checked";
+}
+
+?> onClick="olimometer_progress_enable();"> Manual<br />
+			    <input name="olimometer_use_paypal" id="olimometer_use_paypal" type="radio" value="1"<?php
+if(get_option("olimometer_use_paypal") == 1) {
+	echo " checked";
+}
+
+?> onClick="olimometer_progress_disable();"> PayPal
+
+            <p>Do you want to update the progress (current amount raised) manually or automatically by linking to a PayPal account?</p></td>
+
+		</tr>
+
 		<tr class="form-field form-required">
 			<th scope="row" valign="top"><label for="name">Current Amount Raised (Progress Value)</label></th>
 			<td><input name="olimometer_progress_value" id="olimometer_progress_value" type="text" value="<?php 
@@ -195,26 +153,42 @@ function olimometer_manage_page() {
 			<td><input name="olimometer_total_value" id="olimometer_total_value" type="text" value="<?php 
 				if(get_option("olimometer_total_value")) {echo get_option("olimometer_total_value");} else {echo "100";}
 			?>" size="40" aria-required="true" />
-            <p>Input the total amount of money you would like to raise.</p></td>
+            <p>Input the total amount you would like to raise.</p></td>
 		</tr>
 
-
-<!--
 		<tr class="form-field">
-			<th scope="row" valign="top"><label for="name">Currency</label></th>
-			<td><input name="olimometer_currency" id="olimometer_currency" type="text" value="<?php 
-				if(get_option("olimometer_currency")) {echo get_option("olimometer_currency");}
-			?>" size="40" aria-required="true" />
-            <p>(Optional) Decimal ASCII Value of the currency (for LiberationSans-Regular.ttf)</p>
+			<th scope="row" valign="top"><label for="name">PayPal API Username</label></th>
+			<td><input name="olimometer_paypal_username" id="olimometer_paypal_username" type="text" value="<?php 
+				if(get_option("olimometer_paypal_username")) {echo get_option("olimometer_paypal_username");}
+			?>" size="40" /></td>
+		</tr>
 
-		<p>Common currency values include:<br/>
-		&pound = 163<br/>
-		$ = 36<br/>
-		&#8364; = 128</p>
-		</td>
-		</tr>		
--->
+		<tr class="form-field">
+			<th scope="row" valign="top"><label for="name">PayPal API Password</label></th>
+			<td><input name="olimometer_paypal_password" id="olimometer_paypal_password" type="text" value="<?php 
+				if(get_option("olimometer_paypal_password")) {echo get_option("olimometer_paypal_password");}
+			?>" size="40" /></td>
+		</tr>
 
+		<tr class="form-field">
+			<th scope="row" valign="top"><label for="name">PayPal API Signature</label></th>
+			<td><input name="olimometer_paypal_signature" id="olimometer_paypal_signature" type="text" value="<?php 
+				if(get_option("olimometer_paypal_signature")) {echo get_option("olimometer_paypal_signature");}
+			?>" size="40" />
+<p>To get your PayPal API credentials log in to your PayPal account. Under My Account, choose Profile then My Selling Preferences. Under the Selling Online section, choose the update link next to API Access, and finally choose Option 2 (Request API credentials).</p>
+</td>
+		</tr>
+		
+
+
+	</table>
+<p class="submit"><input type="submit" class="button" name="olimometer_submit" value="Update" /></p>	
+<?
+	echo '<hr /><a name="appearance"></a>';
+	echo '<h3>Appearance and Layout</h3>';
+?>
+
+	<table class="form-table">
 		<tr class="form-field">
 			<th scope="row" valign="top"><label for="name">Currency</label></th>
 			<td><input name="olimometer_currency" id="olimometer_currency" type="text" value="<?php 
@@ -378,6 +352,29 @@ if( (get_option("olimometer_show_progress") == 0) && (strlen(get_option("olimome
 	<?php
 	echo '<input id="old" type="hidden" value="'.get_option("olimometer_progress").'">';
 	echo '</form>';
+
+	echo '<hr /><a name="diagnostics"></a>';
+	echo '<h3>Diagnostics</h3>';	
+	echo 'GD Extension: ';
+	if (extension_loaded('gd') && function_exists('gd_info')) {
+		echo "Installed";
+	}
+	else {
+		echo "<font color=red><b>NOT DETECTED</b></font>";
+	}
+	echo '<br />';
+	echo 'PayPal Integration: ';
+	
+	if(olimometer_get_paypal_balance() == FALSE) {
+		echo "<font color=red><b>NOT WORKING</b></font>";
+	}
+	else {
+		echo "OK. Current Balance = " . olimometer_get_paypal_balance();
+	}
+	echo '<br />';
+	echo '<hr /><a name="OtherInformation"></a>';
+	echo '<h3>Other Information</h3>';	
+
 	
 	echo "	<small><p><strong>Installation</strong></p>
 			<p>You can display the fundraising thermometer by placing the code <em>&lt;?php show_olimometer();?&gt;</em> anywhere in your theme or [show_olimometer] in a post.</p>
@@ -395,15 +392,37 @@ if( (get_option("olimometer_show_progress") == 0) && (strlen(get_option("olimome
 </td></tr></table>
 </p>
 			<p><strong>Credits</strong></p>
-			<p>Special thanks to <a href='http://thisismyurl.com/downloads/wordpress/plugins/fundraising-thermometer-for-wp/'>Christopher Ross</a>, author of the Our Progress Wordpress plugin from which the Olimometer has adapted the Wordpress plugin framework.</p>
-			<p>Images are adapted from the PHP Fundraising Thermometer Generator by Sairam Suresh at <a href='http://www.entropyfarm.org'>www.entropyfarm.org</a></p>
+			<p>The 'original' theme images are adapted from the PHP Fundraising Thermometer Generator by Sairam Suresh at <a href='http://www.entropyfarm.org'>www.entropyfarm.org</a></p>
 			<p>TrueType Font is from the <a href='https://fedorahosted.org/liberation-fonts/'>Liberation Fonts</a> collection.</p>";
 	
 	echo '</small></div>';
+
+
+?>
+<script language="javascript">
+
+if(document.olimometer_form1.olimometer_use_paypal[0].checked)
+{
+olimometer_progress_enable();
+}
+else
+{
+olimometer_progress_disable();
+}
+
+</script>
+<?
+
 }
 
 
 function show_olimometer() {
+	// If PayPal integration is configured, get the current balance and save it
+	if(get_option("olimometer_use_paypal") == 1) {
+		update_option("olimometer_progress_value", olimometer_get_paypal_balance());
+	}
+
+	// Get the rest of the saved values.
 	if(strlen(get_option("olimometer_total_value"))>0) {$total_value = get_option("olimometer_total_value");} else {$total_value= "100";}
 	if(strlen(get_option("olimometer_progress_value"))>0) {$progress_value = get_option("olimometer_progress_value");} else {$progress_value = 0;}
 	if(strlen(get_option("olimometer_currency"))>1) {$currency = get_option("olimometer_currency");} else {$currency = x;}
@@ -419,12 +438,14 @@ function show_olimometer() {
 	if(strlen(get_option("olimometer_width"))>1) {$olimometer_width = get_option("olimometer_width");} else {$olimometer_width = "100";}
 	if(strlen(get_option("olimometer_skin"))>0) {$olimometer_skin = get_option("olimometer_skin");} else {$olimometer_skin = "0";}
 
+
+
 	$image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
 	$the_olimometer_text = "<img src='".$image_location."?total=".$total_value."&progress=".$progress_value."&currency=".$currency."&bg=".$thermometer_bg_colour."&text_colour=".$text_colour."&height=".$thermometer_height."&transparent=".$thermometer_transparent."&show_progress=".$olimometer_show_progress."&progress_label=".$olimometer_progress_label."&font_height=".$olimometer_font_height."&width=".$olimometer_width."&suffix=".$olimometer_suffix."&skin=".$olimometer_skin."'";
 	if(strlen(get_option("olimometer_thermometer_class"))>0) {
 		$the_olimometer_text = $the_olimometer_text." class='".$thermometer_class."'";
 	}
-	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.33'>";
+	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.40'>";
 	return $the_olimometer_text;
 }
 
@@ -499,4 +520,77 @@ function olimometer_add_dashboard_widgets() {
 
 add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 
+
+
+
+
+// The following function is for PayPal balance retrieval
+function Olimometer_PPHttpPost($methodName_, $nvpStr_) {
+	$olimometer_pp_environment = 'live';
+
+	$API_UserName = urlencode(get_option("olimometer_paypal_username"));
+	$API_Password = urlencode(get_option("olimometer_paypal_password"));
+	$API_Signature = urlencode(get_option("olimometer_paypal_signature"));
+	$API_Endpoint = "https://api-3t.paypal.com/nvp";
+	if("sandbox" === $olimometer_pp_environment || "beta-sandbox" === $olimometer_pp_environment) {
+		$API_Endpoint = "https://api-3t.$olimometer_pp_environment.paypal.com/nvp";
+	}
+	$version = urlencode('51.0');
+
+	// setting the curl parameters.
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $API_Endpoint);
+	curl_setopt($ch, CURLOPT_VERBOSE, 1);
+
+	// turning off the server and peer verification(TrustManager Concept).
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_POST, 1);
+
+	// NVPRequest for submitting to server
+	$nvpreq = "METHOD=$methodName_&VERSION=$version&PWD=$API_Password&USER=$API_UserName&SIGNATURE=$API_Signature$nvpStr_";
+
+	// setting the nvpreq as POST FIELD to curl
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
+
+	// getting response from server
+	$httpResponse = curl_exec($ch);
+
+	if(!$httpResponse) {
+		exit("$methodName_ failed: ".curl_error($ch).'('.curl_errno($ch).')');
+	}
+
+	// Extract the RefundTransaction response details
+	$httpResponseAr = explode("&", $httpResponse);
+
+	$httpParsedResponseAr = array();
+	foreach ($httpResponseAr as $i => $value) {
+		$tmpAr = explode("=", $value);
+		if(sizeof($tmpAr) > 1) {
+			$httpParsedResponseAr[$tmpAr[0]] = $tmpAr[1];
+		}
+	}
+
+	if((0 == sizeof($httpParsedResponseAr)) || !array_key_exists('ACK', $httpParsedResponseAr)) {
+		exit("Invalid HTTP Response for POST request($nvpreq) to $API_Endpoint.");
+	}
+
+	return $httpParsedResponseAr;
+}
+
+function olimometer_get_paypal_balance()
+{
+	$nvpStr="";
+
+	$httpParsedResponseAr = olimometer_PPHttpPost('GetBalance', $nvpStr);
+
+	if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
+		return urldecode($httpParsedResponseAr[L_AMT0]);
+	}
+	else  {
+		return false;
+	}
+}
 ?>

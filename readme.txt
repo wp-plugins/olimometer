@@ -6,7 +6,7 @@ Requires at least: 3.1
 Tested up to: 3.1.3
 Stable tag: trunk
 
-A dynamic fundraising thermometer with customisable height, currency, background colour, transparency and skins.
+A dynamic fundraising thermometer with customisable height, currency, background colour, transparency and skins. Integrates with PayPal to retrieve an account balance as the current progress value.
 
 == Description ==
 
@@ -144,6 +144,10 @@ For best results follow these tips:
 * Replaced HTTP_GET_VARS with _GET which is what I should have done in the first place. Fixes a problem which prevents the Olimometer from displaying on a default PHP installation.
 * Automatically detects for the presence of the PHP GD extension upon which this plugin is dependent and displays a message on the admin page.
 
+= 1.40 =
+* PayPal integration: Progress value can optionally be updated by retrieving the balance from a PayPal account.
+* Tidied up administration page.
+* It can now cope if the progress value exceeds the target value.
 
 == Upgrade Notice ==
 
@@ -179,3 +183,6 @@ The show_olimometer shortcode now operates correctly fixing a bug which prevente
 Disabled error logging on thermometer.php to prevent buildup of large error_log file due to direct access from crawlers without correct parameters.
 Fixes a problem which prevents the Olimometer from displaying on a default PHP installation.
 Automatically detects for the presence of the PHP GD extension upon which this plugin is dependent and displays a message on the admin page.
+
+= 1.40 =
+PayPal integration: Progress value can optionally be updated by retrieving the balance from a PayPal account. Tidied up administration page and finally it can now cope if the progress value exceeds the target value.

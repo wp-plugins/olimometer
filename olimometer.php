@@ -2,7 +2,7 @@
 /*
 Plugin Name: Olimometer
 Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
-Description: A dynamic fundraising thermometer with customisable height, currency, background colour, transparency and skins. Integrates with PayPal to retrieve an account balance as the current progress value.
+Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
 Version: 1.40

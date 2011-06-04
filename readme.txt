@@ -149,6 +149,9 @@ For best results follow these tips:
 * Tidied up administration page.
 * It can now cope if the progress value exceeds the target value.
 
+= 1.41 =
+* Made the PayPal integration code a bit more efficient. Fewer lookups to the PayPal API and reduced unnecessary database writes.
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -186,3 +189,6 @@ Automatically detects for the presence of the PHP GD extension upon which this p
 
 = 1.40 =
 PayPal integration: Progress value can optionally be updated by retrieving the balance from a PayPal account. Tidied up administration page and finally it can now cope if the progress value exceeds the target value.
+
+= 1.41 =
+Made the PayPal integration code a bit more efficient. Fewer lookups to the PayPal API and reduced unnecessary database writes. This should speed up web page loading times when using the PayPal option as your progress value.

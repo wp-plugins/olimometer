@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 1.40
+Version: 1.41
 */
 
 
@@ -419,7 +419,20 @@ olimometer_progress_disable();
 function show_olimometer() {
 	// If PayPal integration is configured, get the current balance and save it
 	if(get_option("olimometer_use_paypal") == 1) {
-		update_option("olimometer_progress_value", olimometer_get_paypal_balance());
+		$olimometer_paypal_balance = olimometer_get_paypal_balance();
+		if($olimometer_paypal_balance == false) {
+			// If PayPal link is broken, set balance to 0
+			$olimometer_paypal_balance = 0;
+		}
+		else {
+			if(get_option("olimometer_progress_value") == $olimometer_paypal_balance) {
+				// PayPal balance hasn't changed since we last checked so don't do anything
+			}
+			else {
+				// It has changed, so save it
+				update_option("olimometer_progress_value", $olimometer_paypal_balance);
+			}
+		}
 	}
 
 	// Get the rest of the saved values.
@@ -445,7 +458,7 @@ function show_olimometer() {
 	if(strlen(get_option("olimometer_thermometer_class"))>0) {
 		$the_olimometer_text = $the_olimometer_text." class='".$thermometer_class."'";
 	}
-	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.40'>";
+	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.41'>";
 	return $the_olimometer_text;
 }
 

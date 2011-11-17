@@ -35,4 +35,16 @@
 		<bar_top>22</bar_top>		
 		<text_xpos>100</text_xpos>
 	</skin>
+	<skin>
+		<skin_name>Watermaster</skin_name>
+		<skin_folder>watermaster</skin_folder>
+		<bulb_file>watermaster-bottom.png</bulb_file>
+		<bar_file>watermaster-bar.png</bar_file>
+		<top_file>watermaster-top.png</top_file>
+		<bar_colour>3366ff</bar_colour>
+		<bar_xpos>84</bar_xpos>
+		<bar_width>24</bar_width>
+		<bar_top>130</bar_top>
+		<text_xpos>60</text_xpos>
+	</skin>
 </olimometer>

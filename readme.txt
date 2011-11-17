@@ -3,7 +3,7 @@ Contributors: oshingler
 Donate link: http://www.olivershingler.co.uk/oliblog/olimometer
 Tags: charities, charity, counter, donate, donate goals, donate meter, donation, donations, fund, fundraise, fundraising, fundraising goal, fundraising thermometer, goal, olimometer, paypal, progress, sidebar, sponsor, sponsorship, thermometer, widget
 Requires at least: 3.1
-Tested up to: 3.1.3
+Tested up to: 3.2.1
 Stable tag: trunk
 
 A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
@@ -152,6 +152,11 @@ For best results follow these tips:
 = 1.41 =
 * Made the PayPal integration code a bit more efficient. Fewer lookups to the PayPal API and reduced unnecessary database writes.
 
+= 1.42 =
+* Minor bug fix affecting the widget
+* Added Watermaster skin courtesy of http://www.fscinternational.com
+* Widget now supports custom header and footer text or HTML
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -192,3 +197,8 @@ PayPal integration: Progress value can optionally be updated by retrieving the b
 
 = 1.41 =
 Made the PayPal integration code a bit more efficient. Fewer lookups to the PayPal API and reduced unnecessary database writes. This should speed up web page loading times when using the PayPal option as your progress value.
+
+= 1.42 =
+* Minor bug fix affecting the widget
+* Added Watermaster skin courtesy of http://www.fscinternational.com
+* Widget now supports custom header and footer text or HTML

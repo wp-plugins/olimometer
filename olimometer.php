@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 1.41
+Version: 1.42
 */
 
 
@@ -57,6 +57,8 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 	update_option("olimometer_paypal_username", $_REQUEST['olimometer_paypal_username']);	
 	update_option("olimometer_paypal_password", $_REQUEST['olimometer_paypal_password']);
 	update_option("olimometer_paypal_signature", $_REQUEST['olimometer_paypal_signature']);
+	update_option("olimometer_widget_header", $_REQUEST['olimometer_widget_header']);
+	update_option("olimometer_widget_footer", $_REQUEST['olimometer_widget_footer']);
 	
 
 }
@@ -344,7 +346,22 @@ if( (get_option("olimometer_show_progress") == 0) && (strlen(get_option("olimome
 			?>" size="40" aria-required="false" />
             <p>(Optional) The title to appear on the Olimometer sidebar widget</p></td>
 		</tr>
+		
+		<tr class="form-field">
+			<th scope="row" valign="top"><label for="name">Widget Header</label></th>
+			<td><textarea name="olimometer_widget_header" id="olimometer_widget_header" aria-required="false" rows=5 cols=40><?php 
+				if(get_option("olimometer_widget_header")) {echo get_option("olimometer_widget_header");} else {echo "";}
+			?></textarea>
+            <p>(Optional) The text or HTML to appear above the widget</p></td>
+		</tr>
 
+		<tr class="form-field">
+			<th scope="row" valign="top"><label for="name">Widget Footer</label></th>
+			<td><textarea name="olimometer_widget_footer" id="olimometer_widget_footer" aria-required="false" rows=5 cols=40><?php 
+				if(get_option("olimometer_widget_footer")) {echo get_option("olimometer_widget_footer");} else {echo "";}
+			?></textarea>
+            <p>(Optional) The text or HTML to appear below the widget</p></td>
+		</tr>
         
         
 	</table>	
@@ -393,7 +410,8 @@ if( (get_option("olimometer_show_progress") == 0) && (strlen(get_option("olimome
 </p>
 			<p><strong>Credits</strong></p>
 			<p>The 'original' theme images are adapted from the PHP Fundraising Thermometer Generator by Sairam Suresh at <a href='http://www.entropyfarm.org'>www.entropyfarm.org</a></p>
-			<p>TrueType Font is from the <a href='https://fedorahosted.org/liberation-fonts/'>Liberation Fonts</a> collection.</p>";
+			<p>TrueType Font is from the <a href='https://fedorahosted.org/liberation-fonts/'>Liberation Fonts</a> collection.</p>
+			<p>Watermaster skin courtesy of <a href='http://www.fscinternational.com'>www.fscinternational.com</a></p>";
 	
 	echo '</small></div>';
 
@@ -477,11 +495,19 @@ function my_money_format($format, $num) {
 function widget_cr_olimometer() {
 
 	if(strlen(get_option("olimometer_widget_title"))>1) {$widget_title = get_option("olimometer_widget_title");} else {$widget_title = "";}
+	if(strlen(get_option("olimometer_widget_header"))>1) {$widget_header = get_option("olimometer_widget_header");} else {$widget_header = "";}
+	if(strlen(get_option("olimometer_widget_footer"))>1) {$widget_footer = get_option("olimometer_widget_footer");} else {$widget_footer = "";}
 ?>
-  <h2 class="widgettitle"><? echo $widget_title; ?></h2>
-<div style="display: inline-block;">
-  <?php echo show_olimometer(); ?>
-</div>
+<li id="olimometer_widget_li" class="widget">
+	<h2 class="widgettitle"><? echo $widget_title; ?></h2>
+	<? echo $widget_header; ?>
+	<div id="olimometer_widget" class="olimometer_widget">
+	
+	  <?php echo show_olimometer(); ?>
+	
+	</div><!-- olimometer_widget div -->
+	<? echo $widget_footer; ?>
+</li><!-- olimometer_widget -->
 
 <?php
 }

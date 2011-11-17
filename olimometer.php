@@ -476,7 +476,7 @@ function show_olimometer() {
 	if(strlen(get_option("olimometer_thermometer_class"))>0) {
 		$the_olimometer_text = $the_olimometer_text." class='".$thermometer_class."'";
 	}
-	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.41'>";
+	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.42'>";
 	return $the_olimometer_text;
 }
 

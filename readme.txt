@@ -157,6 +157,9 @@ For best results follow these tips:
 * Added Watermaster skin courtesy of http://www.fscinternational.com
 * Widget now supports custom header and footer text or HTML
 
+= 1.43 =
+* Fixed bug in Widget header and footer when using HTML. Characters now escape correctly.
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -202,3 +205,6 @@ Made the PayPal integration code a bit more efficient. Fewer lookups to the PayP
 * Minor bug fix affecting the widget
 * Added Watermaster skin courtesy of http://www.fscinternational.com
 * Widget now supports custom header and footer text or HTML
+
+= 1.43 =
+* Fixed bug in Widget header and footer when using HTML. Characters now escape correctly.

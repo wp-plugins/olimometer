@@ -3,7 +3,7 @@ Contributors: oshingler
 Donate link: http://www.olivershingler.co.uk/oliblog/olimometer
 Tags: charities, charity, counter, donate, donate goals, donate meter, donation, donations, fund, fundraise, fundraising, fundraising goal, fundraising thermometer, goal, olimometer, paypal, progress, sidebar, sponsor, sponsorship, thermometer, widget
 Requires at least: 3.1
-Tested up to: 3.2.1
+Tested up to: 3.3.1
 Stable tag: trunk
 
 A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
@@ -160,6 +160,10 @@ For best results follow these tips:
 = 1.43 =
 * Fixed bug in Widget header and footer when using HTML. Characters now escape correctly.
 
+= 1.50 =
+* Support for decimal places in displayed values. Olimometer now no longer rounds to the nearest whole number.
+* Prefix and suffix values can be selected from a drop-down list.
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -208,3 +212,7 @@ Made the PayPal integration code a bit more efficient. Fewer lookups to the PayP
 
 = 1.43 =
 * Fixed bug in Widget header and footer when using HTML. Characters now escape correctly.
+
+= 1.50 =
+* Support for decimal places in displayed values. Olimometer now no longer rounds to the nearest whole number.
+* Prefix and suffix values can be selected from a drop-down list.

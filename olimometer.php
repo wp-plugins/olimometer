@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 1.43
+Version: 1.50
 */
 
 
@@ -35,9 +35,12 @@ add_shortcode('show_olimometer','show_olimometer');
 /* Main Settings save */
 if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])) {
 
-	$olimometer_progress_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_progress_value']));
-	$olimometer_total_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_total_value']));
+	//$olimometer_progress_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_progress_value']));
+	//$olimometer_total_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_total_value']));
 
+	$olimometer_progress_value = $_REQUEST['olimometer_progress_value'];
+	$olimometer_total_value = $_REQUEST['olimometer_total_value'];
+	
 	update_option("olimometer_progress_value", $olimometer_progress_value);
 	update_option("olimometer_total_value", $olimometer_total_value);
 	update_option("olimometer_currency", $_REQUEST['olimometer_currency']);
@@ -66,8 +69,10 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 /* Dashboard Widget save */
 if ($_REQUEST['olimometer_dw_submit'] && isset($_REQUEST['olimometer_total_value'])) {
 
-	$olimometer_progress_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_progress_value']));
-	$olimometer_total_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_total_value']));
+	//$olimometer_progress_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_progress_value']));
+	//$olimometer_total_value = ereg_replace("[^0-9]", "", floor($_REQUEST['olimometer_total_value']));
+	$olimometer_progress_value = $_REQUEST['olimometer_progress_value'];
+	$olimometer_total_value = $_REQUEST['olimometer_total_value'];
 
 	update_option("olimometer_progress_value", $olimometer_progress_value);
 	update_option("olimometer_total_value", $olimometer_total_value);
@@ -192,8 +197,17 @@ if(get_option("olimometer_use_paypal") == 1) {
 
 	<table class="form-table">
 		<tr class="form-field">
-			<th scope="row" valign="top"><label for="name">Currency</label></th>
-			<td><input name="olimometer_currency" id="olimometer_currency" type="text" value="<?php 
+			<th scope="row" valign="top"><label for="name">Prefix</label></th>
+			<td>
+			<select name="olimometer_currency">
+			<option value="163" <?php if(get_option("olimometer_currency")=="163") { echo "SELECTED"; } ?>>&pound;</option>
+			<option value="36" <?php if(get_option("olimometer_currency")=="36") { echo "SELECTED"; } ?>>$</option>
+			<option value="128" <?php if(get_option("olimometer_currency")=="128") { echo "SELECTED"; } ?>>&#8364;</option>
+			<option value="37" <?php if(get_option("olimometer_currency")=="37") { echo "SELECTED"; } ?>>%</option>
+			<option value="" <?php if(get_option("olimometer_currency")=="") { echo "SELECTED"; } ?>>No Prefix</option>
+			</select>
+			</td>
+			<!--<td><input name="olimometer_currency" id="olimometer_currency" type="text" value="<?php 
 				if(get_option("olimometer_currency")) {echo get_option("olimometer_currency");}
 			?>" size="40" aria-required="true" />
             <p>(Optional) Decimal ASCII Value of the currency (for LiberationSans-Regular.ttf)</p>
@@ -202,12 +216,21 @@ if(get_option("olimometer_use_paypal") == 1) {
 		&pound = 163<br/>
 		$ = 36<br/>
 		&#8364; = 128</p>
-		</td>
+		</td>-->
 		</tr>		
 
 		<tr class="form-field">
 			<th scope="row" valign="top"><label for="name">Suffix</label></th>
-			<td><input name="olimometer_suffix" id="olimometer_suffix" type="text" value="<?php 
+			<td>
+			<select name="olimometer_suffix">
+			<option value="163" <?php if(get_option("olimometer_suffix")=="163") { echo "SELECTED"; } ?>>&pound;</option>
+			<option value="36" <?php if(get_option("olimometer_suffix")=="36") { echo "SELECTED"; } ?>>$</option>
+			<option value="128" <?php if(get_option("olimometer_suffix")=="128") { echo "SELECTED"; } ?>>&#8364;</option>
+			<option value="37" <?php if(get_option("olimometer_suffix")=="37") { echo "SELECTED"; } ?>>%</option>
+			<option value="" <?php if(get_option("olimometer_suffix")=="") { echo "SELECTED"; } ?>>No Suffix</option>
+			</select>
+			</td>
+			<!--<td><input name="olimometer_suffix" id="olimometer_suffix" type="text" value="<?php 
 				if(get_option("olimometer_suffix")) {echo get_option("olimometer_suffix");}
 			?>" size="40" aria-required="true" />
             <p>(Optional) Decimal ASCII Value of the suffix (character to go after the value)</p>
@@ -215,7 +238,7 @@ if(get_option("olimometer_use_paypal") == 1) {
 		<p>Common values include:<br/>
                 % = 37<br/>
                 </p>
-		</td>
+		</td>-->
 		</tr>
 		
 		<tr class="form-field form-required">
@@ -476,7 +499,7 @@ function show_olimometer() {
 	if(strlen(get_option("olimometer_thermometer_class"))>0) {
 		$the_olimometer_text = $the_olimometer_text." class='".$thermometer_class."'";
 	}
-	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.43'>";
+	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.50'>";
 	return $the_olimometer_text;
 }
 

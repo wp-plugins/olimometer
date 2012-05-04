@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 1.50
+Version: 1.51
 */
 
 
@@ -29,7 +29,7 @@ Version: 1.50
 add_action('admin_menu', 'olimometer_add_pages');
 add_filter('plugin_action_links', 'olimometer_action', -10, 2);
 
-add_shortcode('show_olimometer','show_olimometer');
+add_shortcode('show_olimometer','call_show_olimometer');
 
 
 /* Main Settings save */
@@ -47,8 +47,6 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 	update_option("olimometer_thermometer_bg_colour", $_REQUEST['olimometer_thermometer_bg_colour']);
 	update_option("olimometer_text_colour", $_REQUEST['olimometer_text_colour']);
 	update_option("olimometer_thermometer_height", $_REQUEST['olimometer_thermometer_height']);
-	update_option("olimometer_thermometer_class", $_REQUEST['olimometer_thermometer_class']);
-	update_option("olimometer_widget_title", $_REQUEST['olimometer_widget_title']);
 	update_option("olimometer_transparent", $_REQUEST['olimometer_transparent']);
 	update_option("olimometer_show_progress", $_REQUEST['olimometer_show_progress']);
 	update_option("olimometer_progress_label", $_REQUEST['olimometer_progress_label']);
@@ -60,8 +58,6 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 	update_option("olimometer_paypal_username", $_REQUEST['olimometer_paypal_username']);	
 	update_option("olimometer_paypal_password", $_REQUEST['olimometer_paypal_password']);
 	update_option("olimometer_paypal_signature", $_REQUEST['olimometer_paypal_signature']);
-	update_option("olimometer_widget_header", stripslashes($_REQUEST['olimometer_widget_header']));
-	update_option("olimometer_widget_footer", stripslashes($_REQUEST['olimometer_widget_footer']));
 	
 
 }
@@ -115,7 +111,7 @@ document.olimometer_form1.olimometer_paypal_signature.readOnly=true;
 
 </script>
 
-<?
+<?php
 	echo '<h2>Olimometer</h2>';
 	echo '<a href="#progressvalues">Progress Values</a><br />';
 	echo '<a href="#appearance">Appearance and Layout</a><br />';
@@ -190,7 +186,7 @@ if(get_option("olimometer_use_paypal") == 1) {
 
 	</table>
 <p class="submit"><input type="submit" class="button" name="olimometer_submit" value="Update" /></p>	
-<?
+<?php
 	echo '<hr /><a name="appearance"></a>';
 	echo '<h3>Appearance and Layout</h3>';
 ?>
@@ -352,39 +348,6 @@ if( (get_option("olimometer_show_progress") == 0) && (strlen(get_option("olimome
 			?>" size="40" aria-required="false" />
             <p>(Optional) The text string to display before the Progress Value. Default = "Raised so far:"</p></td>
 		</tr>
-
-
-		<tr class="form-field">
-			<th scope="row" valign="top"><label for="name">Image Class</label></th>
-			<td><input name="olimometer_thermometer_class" id="olimometer_thermometer_class" type="text" value="<?php 
-				if(get_option("olimometer_thermometer_class")) {echo get_option("olimometer_thermometer_class");} else {echo "";}
-			?>" size="40" aria-required="false" />
-            <p>(Optional) The name of a CSS Class for the thermometer image</p></td>
-		</tr>
-
-		<tr class="form-field">
-			<th scope="row" valign="top"><label for="name">Widget Title</label></th>
-			<td><input name="olimometer_widget_title" id="olimometer_widget_title" type="text" value="<?php 
-				if(get_option("olimometer_widget_title")) {echo get_option("olimometer_widget_title");} else {echo "";}
-			?>" size="40" aria-required="false" />
-            <p>(Optional) The title to appear on the Olimometer sidebar widget</p></td>
-		</tr>
-		
-		<tr class="form-field">
-			<th scope="row" valign="top"><label for="name">Widget Header</label></th>
-			<td><textarea name="olimometer_widget_header" id="olimometer_widget_header" aria-required="false" rows=5 cols=40><?php 
-				if(get_option("olimometer_widget_header")) {echo get_option("olimometer_widget_header");} else {echo "";}
-			?></textarea>
-            <p>(Optional) The text or HTML to appear above the widget</p></td>
-		</tr>
-
-		<tr class="form-field">
-			<th scope="row" valign="top"><label for="name">Widget Footer</label></th>
-			<td><textarea name="olimometer_widget_footer" id="olimometer_widget_footer" aria-required="false" rows=5 cols=40><?php 
-				if(get_option("olimometer_widget_footer")) {echo get_option("olimometer_widget_footer");} else {echo "";}
-			?></textarea>
-            <p>(Optional) The text or HTML to appear below the widget</p></td>
-		</tr>
         
         
 	</table>	
@@ -452,12 +415,26 @@ olimometer_progress_disable();
 }
 
 </script>
-<?
+<?php
 
 }
 
 
-function show_olimometer() {
+// Looks for shortcode parameters and calls show_olimometer with those parameters
+function call_show_olimometer($atts) {
+    extract( shortcode_atts( array(
+		'css_class' => '',
+	), $atts ) );
+
+	return show_olimometer($css_class);
+}
+
+
+// Displays the olimometer img.
+// Parameters:
+//      $css_class = a string of css classes to be applied to the img
+//
+function show_olimometer($css_class = '') {
 	// If PayPal integration is configured, get the current balance and save it
 	if(get_option("olimometer_use_paypal") == 1) {
 		$olimometer_paypal_balance = olimometer_get_paypal_balance();
@@ -477,29 +454,28 @@ function show_olimometer() {
 	}
 
 	// Get the rest of the saved values.
-	if(strlen(get_option("olimometer_total_value"))>0) {$total_value = get_option("olimometer_total_value");} else {$total_value= "100";}
-	if(strlen(get_option("olimometer_progress_value"))>0) {$progress_value = get_option("olimometer_progress_value");} else {$progress_value = 0;}
-	if(strlen(get_option("olimometer_currency"))>1) {$currency = get_option("olimometer_currency");} else {$currency = x;}
-	if(strlen(get_option("olimometer_suffix"))>1) {$olimometer_suffix = get_option("olimometer_suffix");} else {$olimometer_suffix = x;}
-	if(strlen(get_option("olimometer_thermometer_bg_colour"))>1) {$thermometer_bg_colour = get_option("olimometer_thermometer_bg_colour");} else {$thermometer_bg_colour= "FFFFFF";}
-	if(strlen(get_option("olimometer_text_colour"))>1) {$text_colour = get_option("olimometer_text_colour");} else {$text_colour= "000000";}
-	if(strlen(get_option("olimometer_thermometer_height"))>1) {$thermometer_height = get_option("olimometer_thermometer_height");} else {$thermometer_height = "200";}
-	if(strlen(get_option("olimometer_thermometer_class"))>1) {$thermometer_class = get_option("olimometer_thermometer_class");} else {$thermometer_class = "";}
-	if(strlen(get_option("olimometer_transparent"))>0) {$thermometer_transparent = get_option("olimometer_transparent");} else {$thermometer_transparent = "plop";}
-	if(strlen(get_option("olimometer_show_progress"))>0) {$olimometer_show_progress = get_option("olimometer_show_progress");} else {$olimometer_show_progress = "1";}
-	if(strlen(get_option("olimometer_progress_label"))>1) {$olimometer_progress_label = get_option("olimometer_progress_label");} else {$olimometer_progress_label = "Raised so far:";}
-	if(strlen(get_option("olimometer_font_height"))>1) {$olimometer_font_height = get_option("olimometer_font_height");} else {$olimometer_font_height = "8";}
-	if(strlen(get_option("olimometer_width"))>1) {$olimometer_width = get_option("olimometer_width");} else {$olimometer_width = "100";}
-	if(strlen(get_option("olimometer_skin"))>0) {$olimometer_skin = get_option("olimometer_skin");} else {$olimometer_skin = "0";}
+	if(strlen(get_option("olimometer_total_value") ) > 0 ) { $total_value = get_option("olimometer_total_value"); } else {$total_value= "100";}
+	if(strlen(get_option("olimometer_progress_value")) > 0) {$progress_value = get_option("olimometer_progress_value");} else {$progress_value = 0;}
+	if(strlen(get_option("olimometer_currency")) > 1) {$currency = get_option("olimometer_currency");} else {$currency = x;}
+	if(strlen(get_option("olimometer_suffix")) > 1) {$olimometer_suffix = get_option("olimometer_suffix");} else {$olimometer_suffix = x;}
+	if(strlen(get_option("olimometer_thermometer_bg_colour")) > 1) {$thermometer_bg_colour = get_option("olimometer_thermometer_bg_colour");} else {$thermometer_bg_colour= "FFFFFF";}
+	if(strlen(get_option("olimometer_text_colour")) > 1) {$text_colour = get_option("olimometer_text_colour");} else {$text_colour= "000000";}
+	if(strlen(get_option("olimometer_thermometer_height")) > 1) {$thermometer_height = get_option("olimometer_thermometer_height");} else {$thermometer_height = "200";}
+	if(strlen(get_option("olimometer_transparent")) > 0) {$thermometer_transparent = get_option("olimometer_transparent");} else {$thermometer_transparent = "plop";}
+	if(strlen(get_option("olimometer_show_progress")) > 0) {$olimometer_show_progress = get_option("olimometer_show_progress");} else {$olimometer_show_progress = "1";}
+	if(strlen(get_option("olimometer_progress_label")) > 1) {$olimometer_progress_label = get_option("olimometer_progress_label");} else {$olimometer_progress_label = "Raised so far:";}
+	if(strlen(get_option("olimometer_font_height")) > 1) {$olimometer_font_height = get_option("olimometer_font_height");} else {$olimometer_font_height = "8";}
+	if(strlen(get_option("olimometer_width")) > 1) {$olimometer_width = get_option("olimometer_width");} else {$olimometer_width = "100";}
+	if(strlen(get_option("olimometer_skin")) > 0) {$olimometer_skin = get_option("olimometer_skin");} else {$olimometer_skin = "0";}
 
 
 
 	$image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
 	$the_olimometer_text = "<img src='".$image_location."?total=".$total_value."&progress=".$progress_value."&currency=".$currency."&bg=".$thermometer_bg_colour."&text_colour=".$text_colour."&height=".$thermometer_height."&transparent=".$thermometer_transparent."&show_progress=".$olimometer_show_progress."&progress_label=".$olimometer_progress_label."&font_height=".$olimometer_font_height."&width=".$olimometer_width."&suffix=".$olimometer_suffix."&skin=".$olimometer_skin."'";
-	if(strlen(get_option("olimometer_thermometer_class"))>0) {
-		$the_olimometer_text = $the_olimometer_text." class='".$thermometer_class."'";
+	if(strlen($css_class) > 0) {
+		$the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
 	}
-	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.50'>";
+	$the_olimometer_text = $the_olimometer_text." alt='Olimometer 1.51'>";
 	return $the_olimometer_text;
 }
 
@@ -515,31 +491,77 @@ function my_money_format($format, $num) {
      
     }
 
-function widget_cr_olimometer() {
 
-	if(strlen(get_option("olimometer_widget_title"))>1) {$widget_title = get_option("olimometer_widget_title");} else {$widget_title = "";}
-	if(strlen(get_option("olimometer_widget_header"))>1) {$widget_header = get_option("olimometer_widget_header");} else {$widget_header = "";}
-	if(strlen(get_option("olimometer_widget_footer"))>1) {$widget_footer = get_option("olimometer_widget_footer");} else {$widget_footer = "";}
-?>
-<li id="olimometer_widget_li" class="widget">
-	<h2 class="widgettitle"><? echo $widget_title; ?></h2>
-	<? echo $widget_header; ?>
-	<div id="olimometer_widget" class="olimometer_widget">
-	
-	  <?php echo show_olimometer(); ?>
-	
-	</div><!-- olimometer_widget div -->
-	<? echo $widget_footer; ?>
-</li><!-- olimometer_widget -->
+/***************
+Olimometer Sidebar Widget
+****************/
 
-<?php
-}
-function cr_olimometer_init()
+class OlimometerWidget extends WP_Widget
 {
-  register_sidebar_widget(__('Olimometer'), 'widget_cr_olimometer');
+  function OlimometerWidget()
+  {
+    $widget_ops = array('classname' => 'OlimometerWidget', 'description' => 'Displays the Olimometer in a sidebar widget' );
+    $this->WP_Widget('OlimometerWidget', 'Olimometer', $widget_ops);
+  }
+ 
+  function form($instance)
+  {
+    $instance = wp_parse_args( (array) $instance, array( 'title' => '', 'header' => '', 'footer' => '', 'img_css' => '', 'div_css' => '' ) );
+    $title = $instance['title'];
+    $header = $instance['header'];
+    $footer = $instance['footer'];
+    $img_css = $instance['img_css'];
+    $div_css = $instance['div_css'];
+?>
+  <p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
+  <p><label for="<?php echo $this->get_field_id('header'); ?>">Header: <textarea class="widefat" rows=4 id="<?php echo $this->get_field_id('header'); ?>" name="<?php echo $this->get_field_name('header'); ?>"><?php echo attribute_escape($header); ?></textarea></label></p>
+  <p><label for="<?php echo $this->get_field_id('footer'); ?>">Footer: <textarea class="widefat" rows=4 id="<?php echo $this->get_field_id('footer'); ?>" name="<?php echo $this->get_field_name('footer'); ?>"><?php echo attribute_escape($footer); ?></textarea></label></p>
+  <p><label for="<?php echo $this->get_field_id('img_css'); ?>">CSS class(es) for image: <input class="widefat" id="<?php echo $this->get_field_id('img_css'); ?>" name="<?php echo $this->get_field_name('img_css'); ?>" type="text" value="<?php echo attribute_escape($img_css); ?>" /></label></p>
+  <p><label for="<?php echo $this->get_field_id('div_css'); ?>">CSS class(es) for widget: <input class="widefat" id="<?php echo $this->get_field_id('div_css'); ?>" name="<?php echo $this->get_field_name('div_css'); ?>" type="text" value="<?php echo attribute_escape($div_css); ?>" /></label></p>
+<?php
+  }
+ 
+  function update($new_instance, $old_instance)
+  {
+    $instance = $old_instance;
+    $instance['title'] = $new_instance['title'];
+    $instance['header'] = $new_instance['header'];
+    $instance['footer'] = $new_instance['footer'];
+    $instance['img_css'] = $new_instance['img_css'];
+    $instance['div_css'] = $new_instance['div_css'];
+    return $instance;
+  }
+ 
+  function widget($args, $instance)
+  {
+    extract($args, EXTR_SKIP);
+ 
+    echo $before_widget;
+    $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
+    $header = $instance['header'];
+    $footer = $instance['footer'];
+    $img_css = $instance['img_css'];
+    $div_css = $instance['div_css'];
+ 
+    if (!empty($title))
+      echo $before_title . $title . $after_title;
+ 
+    // WIDGET CODE GOES HERE
+    echo "<div id='olimometer_widget'";
+    if(strlen($div_css) > 0) { 
+        echo " class='$div_css'";
+    }
+    echo ">";
+    echo $header;
+    echo show_olimometer($img_css);
+    echo $footer;
+	echo "</div><!-- olimometer_widget div -->";    
+    
+    echo $after_widget;
+  }
+ 
 }
-add_action("plugins_loaded", "cr_olimometer_init");
-
+add_action( 'widgets_init', create_function('', 'return register_widget("OlimometerWidget");') );
 
 
 /* *****

@@ -40,6 +40,12 @@ Either install using the automatic WordPress plugin installation method, or do i
 
 You may not have the GD libraries installed as part of PHP, you'll need to speak to your web server administrator
 
+= Can I apply my own CSS to the Olimometer image? =
+
+Yes! When you call the Olimometer, simply pass in the name of the CSS class you wish to use as a parameter.
+For example, to use a class called align_right, use the following code:
+
+`<?php echo show_olimometer('align_right');?>` in your templates or [show_olimometer css_class="align_right"] in a post.
 
 = I've found a bug / have a suggestion =
 
@@ -164,6 +170,13 @@ For best results follow these tips:
 * Support for decimal places in displayed values. Olimometer now no longer rounds to the nearest whole number.
 * Prefix and suffix values can be selected from a drop-down list.
 
+= 1.51 =
+* Minor bug fix for PHP running on IIS
+* Re-jigged the widget layout to conform to latest Wordpress standards. This removes the annoying dot in the widget that some people have noticed.
+* Widget settings are per widget now and no longer stored amongst the Olimometer settings
+* The CSS class for the Olimometer is now set via shortcode or function parameters. See the FAQ for details.
+* These changes are all in preparation of a rework to allow multiple Olimometers on a blog
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -216,3 +229,10 @@ Made the PayPal integration code a bit more efficient. Fewer lookups to the PayP
 = 1.50 =
 * Support for decimal places in displayed values. Olimometer now no longer rounds to the nearest whole number.
 * Prefix and suffix values can be selected from a drop-down list.
+
+= 1.51 =
+* Minor bug fix for PHP running on IIS
+* Re-jigged the widget layout to conform to latest Wordpress standards. This removes the annoying dot in the widget that some people have noticed.
+* Widget settings are per widget now and no longer stored amongst the Olimometer settings
+* The CSS class for the Olimometer is now set via shortcode or function parameters. See the FAQ for details.
+* These changes are all in preparation of a rework to allow multiple Olimometers on a blog

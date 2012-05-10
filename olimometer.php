@@ -1000,7 +1000,7 @@ class Olimometer
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.00'>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.02'>";
         return $the_olimometer_text;
     }
     

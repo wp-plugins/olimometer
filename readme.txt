@@ -182,6 +182,9 @@ For best results follow these tips:
 * Preview your Olimometers on the settings page
 * Added 'Our Progress' styled thermometer skins in blue, red and green.
 
+= 2.01 =
+* Quick bug fix to prevent data loss when upgrading.
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -250,4 +253,14 @@ Made the PayPal integration code a bit more efficient. Fewer lookups to the PayP
 * Shortcode is now [olimometer] to reduce confusion
 * Colour picker installed to allow you to easily choose font and background colours
 * Preview your Olimometers on the settings page
+* Added 'Our Progress' styled thermometer skins in blue, red and green.
+
+= 2.01 =
+* Multiple Olimometers now supported with independent progress tracking.
+* Added extra currency and suffix symbols (Yen, Cent, Pence, Lira, Pesetas, Degree).
+* Automatic width calculation of the thermometer image - no more manual guesswork.
+* Target values can now be enabled and disabled.
+* Shortcode is now [olimometer] to reduce confusion.
+* Colour picker installed to allow you to easily choose font and background colours.
+* Preview your Olimometers on the settings page.
 * Added 'Our Progress' styled thermometer skins in blue, red and green.

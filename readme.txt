@@ -3,16 +3,20 @@ Contributors: oshingler
 Donate link: http://www.olivershingler.co.uk/oliblog/olimometer
 Tags: charities, charity, counter, donate, donate goals, donate meter, donation, donations, fund, fundraise, fundraising, fundraising goal, fundraising thermometer, goal, olimometer, paypal, progress, sidebar, sponsor, sponsorship, thermometer, widget
 Requires at least: 3.1
-Tested up to: 3.3.1
+Tested up to: 3.3.2
 Stable tag: trunk
 
-A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
+A fully customisable fundraising thermometer with PayPal integration, custom skins and support for multiple thermometers throughout your site.
 
 == Description ==
 
-A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
+A fully customisable fundraising thermometer with PayPal integration and custom skin support.
 
-The background of the thermometer image (the part with the text labels on) can be customised to fit in with your site's design. The height (or length?!?) of the thermometer can be customised, and the scale of the mercury bar will automatically adjust accordingly. The thermometer image can be customised using one of the preset skins, or by creating your own. See the FAQ for guidelines on creating your own skins. Don't forget to share your skins with me so I can include them in a future release. Also includes a widget for use on sidebars and a dashboard widget for quick updating of the progress and target values directly from the admin dashboard.
+Multiple thermometers can be configured and displayed separately on different pages or posts. Each thermometer supports indivudual customisation, targets, currencies and progress tracking.
+
+Thermometers can be placed in sidebar widgets with custom headers, footers and CSS classes.
+
+Choose from a number of pre-installed thermometer skins, or create your own and share it.
 
 This plugin requires that the GD libraries are available within PHP.
 
@@ -30,7 +34,7 @@ Either install using the automatic WordPress plugin installation method, or do i
 1. Upload all files to to the `/wp-content/plugins/olimometer` directory (create it if it doesn't exist) within your Wordpress Installation
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Configure the settings to your personal requirements
-4. Place `<?php echo show_olimometer();?>` in your templates or [show_olimometer] in a post.
+4. Place `<?php echo show_olimometer(olimometer_id,olimometer_css);?>` in your templates or [olimometer id=olimometer_id css_class=olimometer_css] in a post, where olimometer_id = the Olimometer's id found on the settings page and olimometer_css = an optional string containing the name of the CSS class to apply to the image.
 
 
 == Frequently Asked Questions ==
@@ -45,7 +49,7 @@ You may not have the GD libraries installed as part of PHP, you'll need to speak
 Yes! When you call the Olimometer, simply pass in the name of the CSS class you wish to use as a parameter.
 For example, to use a class called align_right, use the following code:
 
-`<?php echo show_olimometer('align_right');?>` in your templates or [show_olimometer css_class="align_right"] in a post.
+`<?php echo show_olimometer(1,'align_right');?>` in your templates or [olimometer id=1 css_class="align_right"] in a post replacing 1 with the actual id of your Olimometer.
 
 = I've found a bug / have a suggestion =
 
@@ -84,28 +88,20 @@ Then create yourself three new files, naming them according to that specified in
 For best results follow these tips:
 
 * Each image file should be of equal width.
-
 * The background of each image should be an identical solid colour to enable seamless placement and transparency.
-
 * Use a droplet tool or other suitable colour identifier to identify a suitable bar_colour value using the mercury colour in your bulb_file image.
-
 * Make sure the top_file image includes a copy of the bar_file underneath it, but cleaned of any marks or bars - see the built in skins for an example. This is to avoid a gap being left between the top image and the bar image at certain image heights.
-
 * Share your skins with me - contact me using the Wordpress forums, tweet me @OliverShingler, or leave a comment on the Olimometer page: http://www.olivershingler.co.uk/oliblog/olimometer
-
 * Keep a backup of skins.xml and your image files. When you update the Olimometer it will overwrite any skins you have created, this is why it is important to share them with me if possible to be included in a future release.
-
-
-
+* Added 'Our Progress' styled thermometer skins in blue, red and green.
 
 
 == Screenshots ==
 
-1. The Olimometer in a sidebar widget - default skin
-2. The configuration interface (as of v1.0)
-3. Skin: Red and Rounded
-4. The Dashboard Widget
-5. Bold and Chunky
+1. The Olimometer in a sidebar widget with default skin
+2. The Red and Rounded skin in a widget with a header
+3. Olimometer settings page
+
 
 == Changelog ==
 
@@ -177,6 +173,16 @@ For best results follow these tips:
 * The CSS class for the Olimometer is now set via shortcode or function parameters. See the FAQ for details.
 * These changes are all in preparation of a rework to allow multiple Olimometers on a blog
 
+= 2.00 =
+* Multiple Olimometers now supported with independent progress tracking.
+* Added extra currency and suffix symbols (Yen, Cent, Pence, Lira, Pesetas, Degree)
+* Automatic width calculation of the thermometer image - no more manual guesswork
+* Target values can now be enabled and disabled
+* Shortcode is now [olimometer] to reduce confusion
+* Colour picker installed to allow you to easily choose font and background colours
+* Preview your Olimometers on the settings page
+* Added 'Our Progress' styled thermometer skins in blue, red and green.
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -236,3 +242,13 @@ Made the PayPal integration code a bit more efficient. Fewer lookups to the PayP
 * Widget settings are per widget now and no longer stored amongst the Olimometer settings
 * The CSS class for the Olimometer is now set via shortcode or function parameters. See the FAQ for details.
 * These changes are all in preparation of a rework to allow multiple Olimometers on a blog
+
+= 2.00 =
+* Multiple Olimometers now supported with independent progress tracking.
+* Added extra currency and suffix symbols (Yen, Cent, Pence, Lira, Pesetas, Degree)
+* Automatic width calculation of the thermometer image - no more manual guesswork
+* Target values can now be enabled and disabled
+* Shortcode is now [olimometer] to reduce confusion
+* Colour picker installed to allow you to easily choose font and background colours
+* Preview your Olimometers on the settings page
+* Added 'Our Progress' styled thermometer skins in blue, red and green.

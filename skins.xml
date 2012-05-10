@@ -47,4 +47,40 @@
 		<bar_top>130</bar_top>
 		<text_xpos>60</text_xpos>
 	</skin>
+	<skin>
+		<skin_name>Our Progress - Blue</skin_name>
+		<skin_folder>ourprogress-blue</skin_folder>
+		<bulb_file>therm_bulb.png</bulb_file>
+		<bar_file>therm_bar_empty.png</bar_file>
+		<top_file>therm_top.png</top_file>
+		<bar_colour>164589</bar_colour>
+		<bar_xpos>30</bar_xpos>
+		<bar_width>12</bar_width>
+		<bar_top>24</bar_top>
+		<text_xpos>70</text_xpos>
+	</skin>
+	<skin>
+		<skin_name>Our Progress - Green</skin_name>
+		<skin_folder>ourprogress-green</skin_folder>
+		<bulb_file>therm_bulb.png</bulb_file>
+		<bar_file>therm_bar_empty.png</bar_file>
+		<top_file>therm_top.png</top_file>
+		<bar_colour>05854a</bar_colour>
+		<bar_xpos>30</bar_xpos>
+		<bar_width>12</bar_width>
+		<bar_top>24</bar_top>
+		<text_xpos>70</text_xpos>
+	</skin>  
+	<skin>
+		<skin_name>Our Progress - Red</skin_name>
+		<skin_folder>ourprogress-red</skin_folder>
+		<bulb_file>therm_bulb.png</bulb_file>
+		<bar_file>therm_bar_empty.png</bar_file>
+		<top_file>therm_top.png</top_file>
+		<bar_colour>891619</bar_colour>
+		<bar_xpos>30</bar_xpos>
+		<bar_width>12</bar_width>
+		<bar_top>24</bar_top>
+		<text_xpos>70</text_xpos>
+	</skin>      
 </olimometer>

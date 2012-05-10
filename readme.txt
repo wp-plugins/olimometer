@@ -93,7 +93,6 @@ For best results follow these tips:
 * Make sure the top_file image includes a copy of the bar_file underneath it, but cleaned of any marks or bars - see the built in skins for an example. This is to avoid a gap being left between the top image and the bar image at certain image heights.
 * Share your skins with me - contact me using the Wordpress forums, tweet me @OliverShingler, or leave a comment on the Olimometer page: http://www.olivershingler.co.uk/oliblog/olimometer
 * Keep a backup of skins.xml and your image files. When you update the Olimometer it will overwrite any skins you have created, this is why it is important to share them with me if possible to be included in a future release.
-* Added 'Our Progress' styled thermometer skins in blue, red and green.
 
 
 == Screenshots ==

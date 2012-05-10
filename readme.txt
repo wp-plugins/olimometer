@@ -12,7 +12,7 @@ A fully customisable fundraising thermometer with PayPal integration, custom ski
 
 A fully customisable fundraising thermometer with PayPal integration and custom skin support.
 
-Multiple thermometers can be configured and displayed separately on different pages or posts. Each thermometer supports indivudual customisation, targets, currencies and progress tracking.
+Multiple thermometers can be configured and displayed separately on different pages or posts. Each thermometer supports individual customisation, targets, currencies and progress tracking.
 
 Thermometers can be placed in sidebar widgets with custom headers, footers and CSS classes.
 

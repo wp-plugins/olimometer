@@ -1123,11 +1123,8 @@ function olimometer_install() {
    add_option("olimometer_db_version", $olimometer_db_version);
    
     // Now, create the first olimometer object if one doesn't exist:
-    $olimometer_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $table_name;" ) );
-    if($olimometer_count == 0) {
         $first_olimometer = new Olimometer();
-        $first_olimometer->save();
-    }   
+        $first_olimometer->save();  
 }
 
 
@@ -1141,7 +1138,12 @@ function update_check() {
     }
     else
     {
+    
         // No it hasn't, so we need to import the old variables and save as the first olimometer
+        
+        // Create the database
+        olimometer_install();
+        
         $old_olimometer = new Olimometer();
         $old_olimometer->olimometer_id = 1;
         

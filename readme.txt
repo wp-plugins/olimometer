@@ -185,6 +185,9 @@ For best results follow these tips:
 = 2.03 =
 * Quick bug fix to prevent data loss when upgrading.
 
+= 2.04 =
+* Quick fix to stop some error notifications if running in debug mode
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -264,3 +267,6 @@ Made the PayPal integration code a bit more efficient. Fewer lookups to the PayP
 * Colour picker installed to allow you to easily choose font and background colours.
 * Preview your Olimometers on the settings page.
 * Added 'Our Progress' styled thermometer skins in blue, red and green.
+
+= 2.04 =
+* Quick fix to stop some error notifications if running in debug mode

@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.03
+Version: 2.04
 */
 
 
@@ -25,7 +25,6 @@ Version: 2.03
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 add_action('admin_menu', 'olimometer_add_pages');
 add_filter('plugin_action_links', 'olimometer_action', -10, 2);
 
@@ -38,7 +37,7 @@ add_action('plugins_loaded', 'update_check');
 
 
 /* Create new Olimometer*/
-if ($_REQUEST['olimometer_create'] && isset($_REQUEST['olimometer_description'])) {
+if (isset($_REQUEST['olimometer_create']) && isset($_REQUEST['olimometer_description'])) {
     $new_olimometer = new Olimometer();
     $new_olimometer->olimometer_description = $_REQUEST['olimometer_description'];
     $new_olimometer->save();
@@ -46,7 +45,7 @@ if ($_REQUEST['olimometer_create'] && isset($_REQUEST['olimometer_description'])
 }
 
 /* Delete an Olimometer*/
-if ($_REQUEST['olimometer_delete']) {
+if (isset($_REQUEST['olimometer_delete'])) {
     if($_REQUEST['olimometer_id'] == 1)
     {
         // This is Olimometer #1... Can't delete it!
@@ -62,13 +61,13 @@ if ($_REQUEST['olimometer_delete']) {
 }
 
 /* Load an Olimometer */
-if ($_REQUEST['olimometer_load']) {
+if (isset($_REQUEST['olimometer_load'])) {
     // Which one?
     update_option("olimometer_last", $_REQUEST['olimometer_id']);
 }
 
 /* Main Settings save */
-if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])) {
+if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_value'])) {
    
     // Which olimometer do they wish to save?
     $current_olimometer_id = $_REQUEST['olimometer_id'];
@@ -103,7 +102,7 @@ if ($_REQUEST['olimometer_submit'] && isset($_REQUEST['olimometer_total_value'])
 }
 
 /* Dashboard Widget save */
-if ($_REQUEST['olimometer_dw_submit'] && isset($_REQUEST['olimometer_total_value'])) {
+if (isset($_REQUEST['olimometer_dw_submit']) && isset($_REQUEST['olimometer_total_value'])) {
 
     // Which olimometer do they wish to save?
     $current_olimometer_id = $_REQUEST['olimometer_id'];

@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.04
+Version: 2.10
 */
 
 
@@ -34,6 +34,11 @@ add_shortcode('olimometer','call_show_olimometer');
 register_activation_hook(__FILE__,'olimometer_install');
 add_action('plugins_loaded', 'update_check');
 
+/* Create the capabilities for this plugin
+    - Make sure the administrator can always access this */
+$olimometer_capability_dashboard = "olimometer_dashboard_widget";
+$role = get_role( 'administrator' );
+$role->add_cap( $olimometer_capability_dashboard );
 
 
 /* Create new Olimometer*/
@@ -41,7 +46,8 @@ if (isset($_REQUEST['olimometer_create']) && isset($_REQUEST['olimometer_descrip
     $new_olimometer = new Olimometer();
     $new_olimometer->olimometer_description = $_REQUEST['olimometer_description'];
     $new_olimometer->save();
-    update_option("olimometer_last", $new_olimometer->olimometer_id);
+    //update_option("olimometer_last", $new_olimometer->olimometer_id);
+    update_olimometer_last($new_olimometer->olimometer_id);
 }
 
 /* Delete an Olimometer*/
@@ -56,14 +62,49 @@ if (isset($_REQUEST['olimometer_delete'])) {
         
         $dead_olimometer->load($_REQUEST['olimometer_id']);
         $dead_olimometer->delete();
-        update_option("olimometer_last", 1);
+        //update_option("olimometer_last", 1);
+        update_olimometer_last(1);
     }
 }
 
 /* Load an Olimometer */
 if (isset($_REQUEST['olimometer_load'])) {
     // Which one?
-    update_option("olimometer_last", $_REQUEST['olimometer_id']);
+    //update_option("olimometer_last", $_REQUEST['olimometer_id']);
+    update_olimometer_last($_REQUEST['olimometer_id']);
+}
+
+
+/* Global Options Save*/
+if (isset($_REQUEST['olimometer_global_submit'])) {
+    
+    // What was the old role?
+    $old_olimometer_dashboard_role = get_option('olimometer_dashboard_role','administrator');
+    
+    // Need to save the dashboard role
+    $new_olimometer_dashboard_role = $_REQUEST['olimometer_dashboard_role'];
+    update_option("olimometer_dashboard_role",$new_olimometer_dashboard_role);
+    
+
+    
+    if($old_olimometer_dashboard_role == $new_olimometer_dashboard_role) {
+        // No change.. do nothing
+    }
+    else {
+        // Right, so we need to remove the old role's permissions as long as this isn't the administrator
+        if($old_olimometer_dashboard_role == 'administrator') {
+            // Don't do it.... we don't want to lock them out
+        }
+        else {
+            // Bye bye capability for the old role
+            $role = get_role( $old_olimometer_dashboard_role );
+            $role->remove_cap( $olimometer_capability_dashboard );
+        }
+        // Now, we add the capability for the new role
+        $role = get_role( $new_olimometer_dashboard_role );
+        $role->add_cap( $olimometer_capability_dashboard );
+    }
+    
 }
 
 /* Main Settings save */
@@ -164,19 +205,22 @@ document.olimometer_form1.olimometer_paypal_signature.readOnly=true;
     // Load the olimometer values:
     //$current_olimometer_id = 1; // Hard coded for the moment
     // If we are being asked to load a particular Olimometer's settings
-    if ($_REQUEST['olimometer_load']) {
+    if (isset($_REQUEST['olimometer_load'])) {
         // Which one?
-        update_option("olimometer_last", $_REQUEST['olimometer_id']);
+        //update_option("olimometer_last", $_REQUEST['olimometer_id']);
+        update_olimometer_last($_REQUEST['olimometer_id']);
         $current_olimometer_id = $_REQUEST['olimometer_id'];
         
     }
     else {
-        if(get_option("olimometer_last") == 0)
+        //if(get_option("olimometer_last") == 0)
+        if(get_olimometer_last() == 0)
         {
             $current_olimometer_id = 1;
         }
         else {
-            $current_olimometer_id = get_option("olimometer_last");
+            //$current_olimometer_id = get_option("olimometer_last");
+            $current_olimometer_id = get_olimometer_last();
         }
     }
     
@@ -227,28 +271,74 @@ document.olimometer_form1.olimometer_paypal_signature.readOnly=true;
     
     
     <hr />
+<div id="olimometer_global_wrapper">
+    <div class="alignleft" style="padding-right:12px;margin-right:12px;border-right:1px dashed grey;">
+    <h3><?php echo $current_olimometer->olimometer_description; ?> Options</h3>
     <?php
 
     
     
     // Now start the main options page
-	echo '<p><a href="#progressvalues">Progress Values</a><br />';
+	echo '<p>';
+    echo '<a href="#olimometer_details">Olimometer Details</a><br />';
+    echo '<a href="#progressvalues">Progress Values</a><br />';
 	echo '<a href="#appearance">Appearance and Layout</a><br />';
 	echo '<a href="#diagnostics">Diagnostics</a><br />';
 	echo '<a href="#OtherInformation">Other Information</a></p>';
 
-	echo '<form method="post" id="olimometer_form1" name="olimometer_form1">';
-    echo '<input type="hidden" id="olimometer_id" name="olimometer_id" value="'.$current_olimometer_id.'">';
-    echo '<hr />';
+
     
     //    global $wpdb;
     //$table_name = $wpdb->prefix . "olimometer_olimometers";
     //echo $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $table_name;" ) );
     ?>
-    
-    <a name="olimometer_details"></a>
+    </div>
+    <div id="olimometer_global_options">
+        <!-- Global Options -->
+        <h3>Global Options</h3>
+        <form method="post" id="olimometer_global_options" name="olimometer_global_options">
+        <table>
+           	<tr class="form-field form-required">
+                <td valign="center" align="left">Dashboard Widget Role:</td>
+                <td><select name="olimometer_dashboard_role" id="olimometer_dashboard_role" aria-required="true" >
+                <?php
+                // What's the current saved role for this option? administrator is default
+                $olimometer_dashboard_role = get_option("olimometer_dashboard_role", "administrator");
+                
+                // Display a drop-down list of all available roles, with the current saved one selected
+                wp_dropdown_roles($selected = $olimometer_dashboard_role);
+                ?>
+                </select>
+                
+                </td>
+            </tr>
+            
+        <tr>
+           <td colspan=2><span class="description">Administrators will always have access to both the settings and dashboard widget.</span> </td>
+        </tr>
+        <tr>
+           <td colspan=2>
+        <input type="submit" class="button-primary" name="olimometer_global_submit" value="Save Global Options" />    
+            </td>
+        </tr>
+            
+        
+        </table>
+        
+        </form>
+        
+    </div>
+</div> <!-- olimometer_global_wrapper -->
 
-    <div class="alignleft" style="margin-right:10px;">
+<a name="olimometer_details"></a>
+
+<div id="olimometer_details_wrapper" style="clear:both;">
+<hr />
+
+    <form method="post" id="olimometer_form1" name="olimometer_form1">
+    <input type="hidden" id="olimometer_id" name="olimometer_id" value="<?php echo $current_olimometer_id; ?>">
+
+    <div class="alignleft" style="clear:both;margin-right:10px;">
     <h3>Olimometer Details</h3>
     
     	<table class="form-table">
@@ -269,10 +359,12 @@ document.olimometer_form1.olimometer_paypal_signature.readOnly=true;
         <p class="submit"><input type="submit" class="button-primary" name="olimometer_submit" value="Save Changes" /><input type="submit" class="button-primary" name="olimometer_delete" value="Delete this Olimometer" /></p>
         
         </div><!-- Olimometer Details -->
-        <div>
-           <h3>Preview</h3>
+        <div><h3>Preview</h3>
             <?php echo show_olimometer($current_olimometer_id); ?>
         </div>
+        
+    </div><!-- olimometer_details_wrapper -->        
+        
     <div id="restofform" style="clear:both;">
     <?php
 	echo '<hr /><a name="progressvalues"></a>';
@@ -751,9 +843,11 @@ Start of Dashboard Widget section
 function olimometer_dashboard_widget_function() {
     echo '<div class="wrap">';
     
-    if(strlen(get_option("olimometer_last")) > 0)
+    //if(strlen(get_option("olimometer_last")) > 0)
+    if(strlen(get_olimometer_last()) > 0)
     {
-        $current_olimometer_id = get_option("olimometer_last");
+        //$current_olimometer_id = get_option("olimometer_last");
+        $current_olimometer_id = get_olimometer_last();
     }
     else {
         $current_olimometer_id = 1;
@@ -825,7 +919,9 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 } 
 
 function olimometer_add_dashboard_widgets() {
-	wp_add_dashboard_widget('olimometer_dashboard_widget', 'Olimometer', 'olimometer_dashboard_widget_function');	
+    if ( current_user_can( "olimometer_dashboard_widget" ) ) {
+	    wp_add_dashboard_widget('olimometer_dashboard_widget', 'Olimometer', 'olimometer_dashboard_widget_function');	
+    }
 } 
 
 add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
@@ -1205,6 +1301,28 @@ function olimometer_list($selected_olimometer,$form_id,$form_name)
                
     $return_string = $return_string . "</select>";
     return $return_string;
+}
+
+
+// Saves the olimometer_last value for this user
+function update_olimometer_last($last_olimometer_id) {
+    // What is this user's user_id?
+    require_once (ABSPATH . WPINC . '/pluggable.php');
+    global $current_user;
+    get_currentuserinfo();
+    
+    update_option('olimometer_last_' . $current_user->user_login, $last_olimometer_id);
+}
+
+// Returns the olimometer_last value for this user
+function get_olimometer_last() {
+    // What is this user's user_id?
+    require_once (ABSPATH . WPINC . '/pluggable.php');
+    global $current_user;
+    get_currentuserinfo();
+    
+    $olimometer_last = get_option('olimometer_last_' . $current_user->user_login);
+    return $olimometer_last;
 }
 
 ?>

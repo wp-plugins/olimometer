@@ -188,6 +188,10 @@ For best results follow these tips:
 = 2.04 =
 * Quick fix to stop some error notifications if running in debug mode
 
+= 2.10 =
+* Added role assignment for the dashboard widget - delegate updating the progress values to editors or any other available role.
+* Now remembers last viewed Olimometer on a per-user basis not per-installation within the admin pages.
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -270,3 +274,7 @@ Made the PayPal integration code a bit more efficient. Fewer lookups to the PayP
 
 = 2.04 =
 * Quick fix to stop some error notifications if running in debug mode
+
+= 2.10 =
+* Added role assignment for the dashboard widget - delegate updating the progress values to editors or any other available role.
+* Now remembers last viewed Olimometer on a per-user basis not per-installation within the admin pages.

@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.10
+Version: 2.20
 */
 
 
@@ -39,6 +39,13 @@ add_action('plugins_loaded', 'update_check');
 $olimometer_capability_dashboard = "olimometer_dashboard_widget";
 $role = get_role( 'administrator' );
 $role->add_cap( $olimometer_capability_dashboard );
+
+require_once("olimometer-class.php");
+
+
+/* Make sure we know where the Olimometer skins are stored */
+update_option("olimometer_skins_location",WP_PLUGIN_DIR."/".plugin_basename(dirname(__FILE__))."/");
+update_option("olimometer_skins_custom_location",WP_CONTENT_DIR."/uploads/olimometer/");
 
 
 /* Create new Olimometer*/
@@ -131,7 +138,8 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
 	$an_olimometer->olimometer_progress_label = $_REQUEST['olimometer_progress_label'];
 	$an_olimometer->olimometer_font_height = $_REQUEST['olimometer_font_height'];
 	$an_olimometer->olimometer_suffix = $_REQUEST['olimometer_suffix'];
-	$an_olimometer->olimometer_skin = $_REQUEST['olimometer_skin'];
+	//$an_olimometer->olimometer_skin = $_REQUEST['olimometer_skin'];
+    $an_olimometer->olimometer_skin_slug = $_REQUEST['olimometer_skin_slug'];
 	$an_olimometer->olimometer_use_paypal = $_REQUEST['olimometer_use_paypal'];
 	$an_olimometer->olimometer_paypal_username = $_REQUEST['olimometer_paypal_username'];
 	$an_olimometer->olimometer_paypal_password = $_REQUEST['olimometer_paypal_password'];
@@ -494,24 +502,36 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 		
 		<tr class="form-field form-required">
 			<th scope="row" valign="top"><label for="name">Thermometer Skin</label></th>
-			<td><select name="olimometer_skin" id="olimometer_skin" aria-required="true" >
+			<td><select name="olimometer_skin_slug" id="olimometer_skin_slug" aria-required="true" >
 
 <?php
 // Import list of Olimometer skins from XML file
-$olimometer_skin_xml_file = WP_PLUGIN_DIR."/".plugin_basename(dirname(__FILE__).'/skins.xml');
+//$olimometer_skin_xml_file = WP_PLUGIN_DIR."/".plugin_basename(dirname(__FILE__).'/skins.xml');
+//$olimometer_skin_xml_file = get_option("olimometer_skins_location")."skins.xml";
+//echo $olimometer_skin_xml_file;
+//$olimometer_skins_location = get_option("olimometer_skins_location");
+//$olimometer_skins_custom_location = get_option("olimometer_skins_custom_location");
 include_once('skins.php');	
-$olimometer_current_skin=0;
+
+$olimometer_skins = new Olimometer_Skins();
+$olimometer_skins->olimometer_skins_location = get_option("olimometer_skins_location");
+$olimometer_skins->olimometer_skins_custom_location = get_option("olimometer_skins_custom_location");
+$olimometer_skins->load();
+
+//$olimometer_current_skin=0;
 $olimometer_skin_names = array();
-$olimometer_skin_names = olimometer_get_skin_names();
+//$olimometer_skin_slugs = array();
+$olimometer_skin_names = $olimometer_skins->get_skin_names();
+//$olimometer_skin_slugs = olimometer_get_skin_slugs();
 
 // Loop around each skin name and display in a drop-down list
 foreach ($olimometer_skin_names as $olimometer_skin_name) {
-	echo "<option value=".$olimometer_current_skin;
-	if($current_olimometer->olimometer_skin == $olimometer_current_skin) {
+	echo "<option value='".$olimometer_skin_name["skin_slug"]."'";
+	if($current_olimometer->olimometer_skin_slug == $olimometer_skin_name["skin_slug"]) {
 		echo " selected";
 	}
-	echo ">".$olimometer_skin_name."</option>";	
-	$olimometer_current_skin++;
+	echo ">".$olimometer_skin_name["skin_name"]."</option>";	
+	//$olimometer_current_skin++;
 }
 
 
@@ -523,11 +543,11 @@ foreach ($olimometer_skin_names as $olimometer_skin_name) {
 		</tr>
 
 		<tr class="form-field form-required">
-			<th scope="row" valign="top"><label for="name">Thermometer Height</label></th>
+			<th scope="row" valign="top"><label for="name">Thermometer Height/Width</label></th>
 			<td><input name="olimometer_thermometer_height" id="olimometer_thermometer_height" type="text" value="<?php 
 				echo $current_olimometer->olimometer_thermometer_height;
 			?>" size="40" aria-required="true" />
-            <p><span class="description">The height of the thermometer in pixels. Default = 200</span></p></td>
+            <p><span class="description">The height (or width if using a horizontal skin) of the thermometer in pixels. Default = 200</span></p></td>
 		</tr>
 
 		<tr class="form-field form-required">
@@ -685,6 +705,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
             <li>- TrueType Font is from the <a href='https://fedorahosted.org/liberation-fonts/'>Liberation Fonts</a> collection.</li>
 			<li>- Watermaster skin courtesy of <a href='http://www.fscinternational.com'>www.fscinternational.com</a></li>
             <li>- The 'Our Progress' skins are based on the thermometer in the <a href="http://wordpress.org/extend/plugins/fundraising-thermometer-plugin-for-wordpress/" target="_blank">Our Progress</a> Wordpress plugin.</li>
+            <li>- The 'ProgPress' skins are based on the progress meters of the <a href="http://wordpress.org/extend/plugins/progpress/" target="_blank">ProgPress</a> plugin for Wordpress</li>
             </ul>
 			
             
@@ -769,14 +790,14 @@ class OlimometerWidget extends WP_Widget
     $div_css = $instance['div_css'];
 ?>
   <p><label for="<?php echo $this->get_field_id('olimometer_id'); ?>">Olimometer: <?php
-                echo olimometer_list(attribute_escape($olimometer_id),$this->get_field_id('olimometer_id'),$this->get_field_name('olimometer_id'));
+                echo olimometer_list(esc_attr($olimometer_id),$this->get_field_id('olimometer_id'),$this->get_field_name('olimometer_id'));
                 ?>
     </label></p>
-  <p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
-  <p><label for="<?php echo $this->get_field_id('header'); ?>">Header: <textarea class="widefat" rows=4 id="<?php echo $this->get_field_id('header'); ?>" name="<?php echo $this->get_field_name('header'); ?>"><?php echo attribute_escape($header); ?></textarea></label></p>
-  <p><label for="<?php echo $this->get_field_id('footer'); ?>">Footer: <textarea class="widefat" rows=4 id="<?php echo $this->get_field_id('footer'); ?>" name="<?php echo $this->get_field_name('footer'); ?>"><?php echo attribute_escape($footer); ?></textarea></label></p>
-  <p><label for="<?php echo $this->get_field_id('img_css'); ?>">CSS class(es) for image: <input class="widefat" id="<?php echo $this->get_field_id('img_css'); ?>" name="<?php echo $this->get_field_name('img_css'); ?>" type="text" value="<?php echo attribute_escape($img_css); ?>" /></label></p>
-  <p><label for="<?php echo $this->get_field_id('div_css'); ?>">CSS class(es) for widget: <input class="widefat" id="<?php echo $this->get_field_id('div_css'); ?>" name="<?php echo $this->get_field_name('div_css'); ?>" type="text" value="<?php echo attribute_escape($div_css); ?>" /></label></p>
+  <p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></label></p>
+  <p><label for="<?php echo $this->get_field_id('header'); ?>">Header: <textarea class="widefat" rows=4 id="<?php echo $this->get_field_id('header'); ?>" name="<?php echo $this->get_field_name('header'); ?>"><?php echo esc_attr($header); ?></textarea></label></p>
+  <p><label for="<?php echo $this->get_field_id('footer'); ?>">Footer: <textarea class="widefat" rows=4 id="<?php echo $this->get_field_id('footer'); ?>" name="<?php echo $this->get_field_name('footer'); ?>"><?php echo esc_attr($footer); ?></textarea></label></p>
+  <p><label for="<?php echo $this->get_field_id('img_css'); ?>">CSS class(es) for image: <input class="widefat" id="<?php echo $this->get_field_id('img_css'); ?>" name="<?php echo $this->get_field_name('img_css'); ?>" type="text" value="<?php echo esc_attr($img_css); ?>" /></label></p>
+  <p><label for="<?php echo $this->get_field_id('div_css'); ?>">CSS class(es) for widget: <input class="widefat" id="<?php echo $this->get_field_id('div_css'); ?>" name="<?php echo $this->get_field_name('div_css'); ?>" type="text" value="<?php echo esc_attr($div_css); ?>" /></label></p>
 <?php
   }
  
@@ -933,246 +954,6 @@ add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 
 
 
-class Olimometer
-{
-    function Olimometer()
-    {
-        // Constructor
-    }
-    
-    // Properties
-    public $olimometer_id = -1;
-    public $olimometer_description = "Olimometer";
-    public $olimometer_progress_value = 0;
-	public $olimometer_total_value = 100;
-	public $olimometer_currency = "163";
-	public $olimometer_thermometer_bg_colour = "FFFFFF";
-	public $olimometer_text_colour = "000000";
-	public $olimometer_thermometer_height = 200;
-	public $olimometer_transparent = 0;
-	public $olimometer_show_target = 1;
-    public $olimometer_show_progress = 1;
-	public $olimometer_progress_label = "Raised so far:";
-	public $olimometer_font_height = 8;
-	public $olimometer_suffix = "";
-	public $olimometer_skin = 0;
-	public $olimometer_use_paypal = 0;
-	public $olimometer_paypal_username;
-	public $olimometer_paypal_password;
-	public $olimometer_paypal_signature;
-    
-    private $olimometer_table_name = "olimometer_olimometers";
-    
-    // Loads database values based on supplied id
-    function load($olimometer_id)
-    {     
-        global $wpdb;
-        $table_name = $wpdb->prefix . $this->olimometer_table_name;
-        $query_results = $wpdb->get_row("SELECT * FROM $table_name WHERE olimometer_id = $olimometer_id", ARRAY_A);
-        
-        $this->olimometer_id = $olimometer_id;
-        $this->olimometer_description = $query_results['olimometer_description'];
-        $this->olimometer_progress_value = $query_results['olimometer_progress_value'];
-        $this->olimometer_total_value = $query_results['olimometer_total_value'];
-        $this->olimometer_currency = $query_results['olimometer_currency'];
-        $this->olimometer_thermometer_bg_colour = $query_results['olimometer_thermometer_bg_colour'];
-        $this->olimometer_text_colour = $query_results['olimometer_text_colour'];
-        $this->olimometer_thermometer_height = $query_results['olimometer_thermometer_height'];
-        $this->olimometer_transparent = $query_results['olimometer_transparent'];
-        $this->olimometer_show_target = $query_results['olimometer_show_target'];
-        $this->olimometer_show_progress = $query_results['olimometer_show_progress'];
-        $this->olimometer_progress_label = $query_results['olimometer_progress_label'];
-        $this->olimometer_font_height = $query_results['olimometer_font_height'];
-        $this->olimometer_suffix = $query_results['olimometer_suffix'];
-        $this->olimometer_skin = $query_results['olimometer_skin'];
-        $this->olimometer_use_paypal = $query_results['olimometer_use_paypal'];
-        $this->olimometer_paypal_username = $query_results['olimometer_paypal_username'];	
-        $this->olimometer_paypal_password = $query_results['olimometer_paypal_password'];
-        $this->olimometer_paypal_signature = $query_results['olimometer_paypal_signature'];
-
-    }
-    
-    // Delete the olimometer from the database
-    function delete()
-    {
-        global $wpdb;
-        $table_name = $wpdb->prefix . $this->olimometer_table_name;
-        $wpdb->query( "DELETE FROM $table_name
-                       WHERE olimometer_id = $this->olimometer_id
-                      "
-                    );
-
-    }
-    
-    // Saves the olimometer to the database
-    function save()
-    { 
-        global $wpdb;
-        $table_name = $wpdb->prefix . $this->olimometer_table_name;
-            
-        // Is this an existing olimometer or a new one to be saved?
-        if($this->olimometer_id == -1)
-        {
-            // This is a new one
-            $rows_affected = $wpdb->insert( $table_name, array( 'olimometer_description' => $this->olimometer_description,
-                                                                'olimometer_progress_value' => $this->olimometer_progress_value,
-                                                                'olimometer_total_value' => $this->olimometer_total_value,
-                                                                'olimometer_currency' => $this->olimometer_currency,
-                                                                'olimometer_thermometer_bg_colour' => $this->olimometer_thermometer_bg_colour,
-                                                                'olimometer_text_colour' => $this->olimometer_text_colour,
-                                                                'olimometer_thermometer_height' => $this->olimometer_thermometer_height,
-                                                                'olimometer_transparent' => $this->olimometer_transparent,
-                                                                'olimometer_show_target' => $this->olimometer_show_target,
-                                                                'olimometer_show_progress' => $this->olimometer_show_progress,
-                                                                'olimometer_progress_label' => $this->olimometer_progress_label,
-                                                                'olimometer_font_height' => $this->olimometer_font_height,
-                                                                'olimometer_suffix' => $this->olimometer_suffix,
-                                                                'olimometer_skin' => $this->olimometer_skin,
-                                                                'olimometer_use_paypal' => $this->olimometer_use_paypal,
-                                                                'olimometer_paypal_username' => $this->olimometer_paypal_username,	
-                                                                'olimometer_paypal_password' => $this->olimometer_paypal_password,
-                                                                'olimometer_paypal_signature' => $this->olimometer_paypal_signature ) );
-            
-            // Find out the olimometer_id of the record just created and save it to the object.
-            $this->olimometer_id = $wpdb->insert_id;
-        }
-        else
-        {
-            // This is an existing one
-            $wpdb->update($table_name, 
-                        array(  'olimometer_description' => $this->olimometer_description,
-                                'olimometer_progress_value' => $this->olimometer_progress_value,
-                                'olimometer_total_value' => $this->olimometer_total_value,
-                                'olimometer_currency' => $this->olimometer_currency,
-                                'olimometer_thermometer_bg_colour' => $this->olimometer_thermometer_bg_colour,
-                                'olimometer_text_colour' => $this->olimometer_text_colour,
-                                'olimometer_thermometer_height' => $this->olimometer_thermometer_height,
-                                'olimometer_transparent' => $this->olimometer_transparent,
-                                'olimometer_show_target' => $this->olimometer_show_target,
-                                'olimometer_show_progress' => $this->olimometer_show_progress,
-                                'olimometer_progress_label' => $this->olimometer_progress_label,
-                                'olimometer_font_height' => $this->olimometer_font_height,
-                                'olimometer_suffix' => $this->olimometer_suffix,
-                                'olimometer_skin' => $this->olimometer_skin,
-                                'olimometer_use_paypal' => $this->olimometer_use_paypal,
-                                'olimometer_paypal_username' => $this->olimometer_paypal_username,	
-                                'olimometer_paypal_password' => $this->olimometer_paypal_password,
-                                'olimometer_paypal_signature' => $this->olimometer_paypal_signature 
-                        ), 
-                        array( 'olimometer_id' => $this->olimometer_id )
-                    );
-        }
-      
-    }
-    
-    // Returns the olimometer display code
-    function show($css_class = '')
-    {
-        // If PayPal integration is configured, get the current balance and save it
-        if($this->olimometer_use_paypal == 1) {
-            $olimometer_paypal_balance = $this->get_paypal_balance();
-            if($olimometer_paypal_balance == false) {
-                // If PayPal link is broken, set balance to 0
-                $olimometer_paypal_balance = 0;
-            }
-            else {
-                if($this->olimometer_progress_value == $olimometer_paypal_balance) {
-                    // PayPal balance hasn't changed since we last checked so don't do anything
-                }
-                else {
-                    // It has changed, so save it
-                    $this->olimometer_progress_value = $olimometer_paypal_balance;
-                    $this->save();
-                }
-            }
-        }
-    
-    
-        $olimometer_font = "LiberationSans-Regular.ttf";
-
-        $image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
-        $the_olimometer_text = "<img src='".$image_location."?total=".$this->olimometer_total_value."&progress=".$this->olimometer_progress_value."&currency=".$this->olimometer_currency."&bg=".$this->olimometer_thermometer_bg_colour."&text_colour=".$this->olimometer_text_colour."&height=".$this->olimometer_thermometer_height."&transparent=".$this->olimometer_transparent."&show_progress=".$this->olimometer_show_progress."&show_target=".$this->olimometer_show_target."&progress_label=".$this->olimometer_progress_label."&font_height=".$this->olimometer_font_height."&suffix=".$this->olimometer_suffix."&skin=".$this->olimometer_skin."&font=".$olimometer_font."'";
-        if(strlen($css_class) > 0) {
-            $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
-        }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.03'>";
-        return $the_olimometer_text;
-    }
-    
-    
-    
-    // The following function is for PayPal balance retrieval
-    function PPHttpPost($methodName_, $nvpStr_) {
-        $olimometer_pp_environment = 'live';
-    
-        $API_UserName = urlencode($this->olimometer_paypal_username);
-        $API_Password = urlencode($this->olimometer_paypal_password);
-        $API_Signature = urlencode($this->olimometer_paypal_signature);
-        $API_Endpoint = "https://api-3t.paypal.com/nvp";
-        if("sandbox" === $olimometer_pp_environment || "beta-sandbox" === $olimometer_pp_environment) {
-            $API_Endpoint = "https://api-3t.$olimometer_pp_environment.paypal.com/nvp";
-        }
-        $version = urlencode('51.0');
-    
-        // setting the curl parameters.
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $API_Endpoint);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-    
-        // turning off the server and peer verification(TrustManager Concept).
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-    
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-    
-        // NVPRequest for submitting to server
-        $nvpreq = "METHOD=$methodName_&VERSION=$version&PWD=$API_Password&USER=$API_UserName&SIGNATURE=$API_Signature$nvpStr_";
-    
-        // setting the nvpreq as POST FIELD to curl
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
-    
-        // getting response from server
-        $httpResponse = curl_exec($ch);
-    
-        if(!$httpResponse) {
-            exit("$methodName_ failed: ".curl_error($ch).'('.curl_errno($ch).')');
-        }
-    
-        // Extract the RefundTransaction response details
-        $httpResponseAr = explode("&", $httpResponse);
-    
-        $httpParsedResponseAr = array();
-        foreach ($httpResponseAr as $i => $value) {
-            $tmpAr = explode("=", $value);
-            if(sizeof($tmpAr) > 1) {
-                $httpParsedResponseAr[$tmpAr[0]] = $tmpAr[1];
-            }
-        }
-    
-        if((0 == sizeof($httpParsedResponseAr)) || !array_key_exists('ACK', $httpParsedResponseAr)) {
-            exit("Invalid HTTP Response for POST request($nvpreq) to $API_Endpoint.");
-        }
-    
-        return $httpParsedResponseAr;
-    }
-    
-    function get_paypal_balance()
-    {
-        $nvpStr="";
-    
-        $httpParsedResponseAr = $this->PPHttpPost('GetBalance', $nvpStr);
-    
-        if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
-            return urldecode($httpParsedResponseAr[L_AMT0]);
-        }
-        else  {
-            return false;
-        }
-    }
-
-    
-}
 
 
 
@@ -1180,7 +961,7 @@ class Olimometer
 Database Functions
 ************************/
 global $olimometer_db_version;
-$olimometer_db_version = "2.00";
+$olimometer_db_version = "2.20";
 
 function olimometer_install() {
    global $wpdb;
@@ -1204,7 +985,7 @@ function olimometer_install() {
   olimometer_progress_label VARCHAR(255),
   olimometer_font_height smallint,
   olimometer_suffix VARCHAR(255),
-  olimometer_skin smallint,
+  olimometer_skin_slug VARCHAR(255),
   olimometer_use_paypal tinyint,
   olimometer_paypal_username VARCHAR(255),
   olimometer_paypal_password VARCHAR(255),
@@ -1215,7 +996,7 @@ function olimometer_install() {
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
  
-   add_option("olimometer_db_version", $olimometer_db_version);
+   update_option("olimometer_db_version", $olimometer_db_version);
    
     // Now, create the first olimometer object if one doesn't exist:
     $olimometer_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $table_name;" ) );
@@ -1234,6 +1015,70 @@ function update_check() {
     if( (strlen(get_option("olimometer_updated_to_two")) > 0) && (strlen(get_option("olimometer_db_version")) > 0))
     {
         // Yes it has!
+        // If currently installed database version is less than current version required for this plugin, then we need to upgrade
+        $required_db_version = 2.20;
+        $installed_db_version = get_option("olimometer_db_version");
+        if($installed_db_version < $required_db_version) {
+            olimometer_install();
+            // Now we need to do one-off upgrades for specific versions:
+            if($installed_db_version < 2.20) {
+                // Skin upgrade, we need to work out which skins were used in the database and write the slug names in
+                global $wpdb;
+                $table_name = $wpdb->prefix . "olimometer_olimometers";
+                $search_results = $wpdb->get_results( 
+                    "
+                    SELECT *
+                    FROM $table_name
+                    "
+                );
+                
+                // Loop around results:
+                foreach ( $search_results as $search_result ) 
+                {
+                    // What is the id of the olimometer?
+                    $search_olimometer_id = $search_result->olimometer_id;
+                    
+                    // What was the skin id used?
+                    $search_skin = $search_result->olimometer_skin;
+                    
+                    // Check the skin id and create a slug accordingly
+                    $new_slug = "";
+                    switch ($search_skin) {
+                        case 0:
+                            $new_slug = "oli-default";
+                            break;
+                        case 1:
+                            $new_slug = "oli-rounded";
+                            break;
+                        case 2:
+                            $new_slug = "oli-bold-chunky";
+                            break;
+                        case 3:
+                            $new_slug = "oli-watermaster";
+                            break;
+                        case 4:
+                            $new_slug = "oli-ourprogress-blue";
+                            break;                            
+                        case 5:
+                            $new_slug = "oli-ourprogress-green";
+                            break;
+                        case 6:
+                            $new_slug = "oli-ourprogress-red";
+                            break;                           
+                    }
+                    
+                    // Now insert that in to the database:
+                    $wpdb->update($table_name, 
+                        array(  'olimometer_skin_slug' => $new_slug 
+                        ), 
+                        array( 'olimometer_id' => $search_olimometer_id )
+                    );
+                }
+      
+                
+            }
+        }
+        
     }
     else
     {

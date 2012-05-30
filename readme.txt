@@ -59,7 +59,8 @@ You can contact me via Twitter @OliverShingler or you can leave a comment on the
 See: How do I create my own skin?
 
 = How do I create my own skin? =
-To create your own skins, follow these steps, please note these steps have changed recently:
+To create your own skins, follow these steps. Please note these steps have changed recently:
+
 * Create a folder within your Wordpress structure /wp-content/uploads/olimometer
 * Create a folder within your Wordpress structure /wp-content/uploads/olimometer/skins
 * Copy this file to /wp-content/uploads/olimometer/skins.xml

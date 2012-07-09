@@ -104,6 +104,10 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.30 =
+* Offline donations can now be tracked when using a PayPal integrated balance.
+* Fixed issue causing debug error message within PayPal integration code.
+
 = 2.20 =
 * Custom skins will no longer be overwritten on upgrade from now on, BUT they will be overwritten when you install this version and you MUST change your custom skins to the new format.
 * Horizontal thermometers are now available
@@ -196,6 +200,10 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.30 =
+* Offline donations can now be tracked when using a PayPal integrated balance.
+* Fixed issue causing debug error message within PayPal integration code.
 
 = 2.20 =
 * Custom skins will no longer be overwritten on upgrade from now on, BUT they will be overwritten when you install this version and you MUST change your custom skins to the new format.

@@ -1,6 +1,7 @@
 <?php
 // Class to define an Olimometer object
 
+
 class Olimometer
 {
     function Olimometer()
@@ -29,8 +30,11 @@ class Olimometer
 	public $olimometer_paypal_username;
 	public $olimometer_paypal_password;
 	public $olimometer_paypal_signature;
+    public $olimometer_paypal_extra_value = 0.00;
     
     private $olimometer_table_name = "olimometer_olimometers";
+    
+    
     
     // Loads database values based on supplied id
     function load($olimometer_id)
@@ -59,6 +63,7 @@ class Olimometer
         $this->olimometer_paypal_username = $query_results['olimometer_paypal_username'];	
         $this->olimometer_paypal_password = $query_results['olimometer_paypal_password'];
         $this->olimometer_paypal_signature = $query_results['olimometer_paypal_signature'];
+        $this->olimometer_paypal_extra_value = $query_results['olimometer_paypal_extra_value'];
 
     }
     
@@ -101,7 +106,8 @@ class Olimometer
                                                                 'olimometer_use_paypal' => $this->olimometer_use_paypal,
                                                                 'olimometer_paypal_username' => $this->olimometer_paypal_username,	
                                                                 'olimometer_paypal_password' => $this->olimometer_paypal_password,
-                                                                'olimometer_paypal_signature' => $this->olimometer_paypal_signature ) );
+                                                                'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
+                                                                'olimometer_paypal_extra_value' => $this->olimometer_paypal_extra_value ) );
             
             // Find out the olimometer_id of the record just created and save it to the object.
             $this->olimometer_id = $wpdb->insert_id;
@@ -127,7 +133,8 @@ class Olimometer
                                 'olimometer_use_paypal' => $this->olimometer_use_paypal,
                                 'olimometer_paypal_username' => $this->olimometer_paypal_username,	
                                 'olimometer_paypal_password' => $this->olimometer_paypal_password,
-                                'olimometer_paypal_signature' => $this->olimometer_paypal_signature 
+                                'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
+                                'olimometer_paypal_extra_value' => $this->olimometer_paypal_extra_value
                         ), 
                         array( 'olimometer_id' => $this->olimometer_id )
                     );
@@ -146,14 +153,14 @@ class Olimometer
                 $olimometer_paypal_balance = 0;
             }
             else {
-                if($this->olimometer_progress_value == $olimometer_paypal_balance) {
-                    // PayPal balance hasn't changed since we last checked so don't do anything
-                }
-                else {
-                    // It has changed, so save it
-                    $this->olimometer_progress_value = $olimometer_paypal_balance;
-                    $this->save();
-                }
+                    if($this->olimometer_progress_value == ($olimometer_paypal_balance + $this->olimometer_paypal_extra_value) ) {
+                        // PayPal balance hasn't changed since we last checked so don't do anything
+                    }
+                    else {
+                        // It has changed, so save it
+                        $this->olimometer_progress_value = $olimometer_paypal_balance + $this->olimometer_paypal_extra_value;
+                        $this->save();
+                    }
             }
         }
     
@@ -239,11 +246,13 @@ class Olimometer
     function get_paypal_balance()
     {
         $nvpStr="";
-    
+        
+        
+        
         $httpParsedResponseAr = $this->PPHttpPost('GetBalance', $nvpStr);
     
         if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) {
-            return urldecode($httpParsedResponseAr[L_AMT0]);
+            return urldecode($httpParsedResponseAr["L_AMT0"]);
         }
         else  {
             return false;

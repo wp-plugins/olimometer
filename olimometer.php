@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.20
+Version: 2.30
 */
 
 
@@ -144,6 +144,7 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
 	$an_olimometer->olimometer_paypal_username = $_REQUEST['olimometer_paypal_username'];
 	$an_olimometer->olimometer_paypal_password = $_REQUEST['olimometer_paypal_password'];
 	$an_olimometer->olimometer_paypal_signature = $_REQUEST['olimometer_paypal_signature'];
+    $an_olimometer->olimometer_paypal_extra_value = $_REQUEST['olimometer_paypal_extra_value'];
     
     // Save it
     $an_olimometer->save();
@@ -197,6 +198,7 @@ document.olimometer_form1.olimometer_progress_value.readOnly=true;
 document.olimometer_form1.olimometer_paypal_username.readOnly=false;
 document.olimometer_form1.olimometer_paypal_password.readOnly=false;
 document.olimometer_form1.olimometer_paypal_signature.readOnly=false;
+document.olimometer_form1.olimometer_paypal_extra_value.readOnly=false;
 }
 
 function olimometer_progress_enable()
@@ -205,6 +207,7 @@ document.olimometer_form1.olimometer_progress_value.readOnly=false;
 document.olimometer_form1.olimometer_paypal_username.readOnly=true;
 document.olimometer_form1.olimometer_paypal_password.readOnly=true;
 document.olimometer_form1.olimometer_paypal_signature.readOnly=true;
+document.olimometer_form1.olimometer_paypal_extra_value.readOnly=true;
 }
 
 </script>
@@ -436,6 +439,15 @@ if($current_olimometer->olimometer_use_paypal == 1) {
 			?>" size="40" />
 <p><span class="description">To get your PayPal API credentials log in to your PayPal account. Under My Account, choose Profile then My Selling Preferences. Under the Selling Online section, choose the update link next to API Access, and finally choose Option 2 (Request API credentials).</span></p>
 </td>
+		</tr>
+        
+       <tr class="form-field form-required">
+			<th scope="row" valign="top"><label for="name">Offline Donations</label></th>
+			<td><input name="olimometer_paypal_extra_value" id="olimometer_paypal_extra_value" type="text" value="<?php 
+				echo $current_olimometer->olimometer_paypal_extra_value;
+			
+			?>" size="40" aria-required="true" />
+            <p><span class="description">How much has been raised offline? This amount will be added to the PayPal total.</span></p></td>
 		</tr>
 		
 
@@ -961,7 +973,7 @@ add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 Database Functions
 ************************/
 global $olimometer_db_version;
-$olimometer_db_version = "2.20";
+$olimometer_db_version = "2.30";
 
 function olimometer_install() {
    global $wpdb;
@@ -987,6 +999,7 @@ function olimometer_install() {
   olimometer_suffix VARCHAR(255),
   olimometer_skin_slug VARCHAR(255),
   olimometer_use_paypal tinyint,
+  olimometer_paypal_extra_value DOUBLE,
   olimometer_paypal_username VARCHAR(255),
   olimometer_paypal_password VARCHAR(255),
   olimometer_paypal_signature VARCHAR(255),
@@ -1016,7 +1029,7 @@ function update_check() {
     {
         // Yes it has!
         // If currently installed database version is less than current version required for this plugin, then we need to upgrade
-        $required_db_version = 2.20;
+        $required_db_version = 2.30;
         $installed_db_version = get_option("olimometer_db_version");
         if($installed_db_version < $required_db_version) {
             olimometer_install();

@@ -2,7 +2,7 @@
 
 // Turn off all error reporting
 error_reporting(0);
-//log_errors(1);
+ //log_errors(1);
 
 //header('Content-type: image/jpeg');
 
@@ -46,7 +46,8 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
     $therm_bar_merc_width = $olimometer_skin_data["bar_width"];
     $therm_bar_merc_top = $olimometer_skin_data["bar_end"];
     $therm_text_xpos = $olimometer_skin_data["text_pos"];
-    $font_name = "LiberationSans-Regular.ttf";
+	$olimometer_dir = dirname(__FILE__);
+    $font_name = $olimometer_dir."/LiberationSans-Regular.ttf";
     $olimometer_skin_xml_file = "skins.xml";
     
     

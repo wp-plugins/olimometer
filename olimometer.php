@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.31
+Version: 2.32
 */
 
 
@@ -124,6 +124,10 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
     $an_olimometer = new Olimometer();
     $an_olimometer->olimometer_id = $current_olimometer_id;
     
+
+        
+    
+    
     // Get values from form and dump in to the object
     $an_olimometer->olimometer_description = $_REQUEST['olimometer_description'];
     $an_olimometer->olimometer_progress_value = $_REQUEST['olimometer_progress_value'];
@@ -145,6 +149,7 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
 	$an_olimometer->olimometer_paypal_password = $_REQUEST['olimometer_paypal_password'];
 	$an_olimometer->olimometer_paypal_signature = $_REQUEST['olimometer_paypal_signature'];
     $an_olimometer->olimometer_paypal_extra_value = $_REQUEST['olimometer_paypal_extra_value'];
+    $an_olimometer->olimometer_number_format = $_REQUEST['olimometer_number_format'];
     
     // Save it
     $an_olimometer->save();
@@ -416,6 +421,18 @@ if($current_olimometer->olimometer_use_paypal == 1) {
 				echo $current_olimometer->olimometer_total_value;
 			?>" size="40" aria-required="true" />
             <p><span class="description">Input the total amount you would like to raise.</span></p></td>
+		</tr>
+        
+        <tr class="form-field form-required">
+			<th scope="row" valign="top"><label for="name">Number Format</label></th>
+			<td>
+                <select name="olimometer_number_format">
+			<option value="0" <?php if($current_olimometer->olimometer_number_format==0) { echo "SELECTED"; } ?>>1000</option>
+			<option value="1" <?php if($current_olimometer->olimometer_number_format==1) { echo "SELECTED"; } ?>>1,000</option>
+			<option value="2" <?php if($current_olimometer->olimometer_number_format==2) { echo "SELECTED"; } ?>>1000.00</option>
+			<option value="3" <?php if($current_olimometer->olimometer_number_format==3) { echo "SELECTED"; } ?>>1,000.00</option>
+			</select>
+            <p><span class="description">Please choose a display format for your values.</span></p></td>
 		</tr>
 
 		<tr class="form-field">
@@ -973,7 +990,7 @@ add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 Database Functions
 ************************/
 global $olimometer_db_version;
-$olimometer_db_version = "2.30";
+$olimometer_db_version = "2.32";
 
 function olimometer_install() {
    global $wpdb;
@@ -1003,6 +1020,7 @@ function olimometer_install() {
   olimometer_paypal_username VARCHAR(255),
   olimometer_paypal_password VARCHAR(255),
   olimometer_paypal_signature VARCHAR(255),
+  olimometer_number_format tinyint,
   UNIQUE KEY olimometer_id (olimometer_id)
     );";
 
@@ -1029,7 +1047,7 @@ function update_check() {
     {
         // Yes it has!
         // If currently installed database version is less than current version required for this plugin, then we need to upgrade
-        $required_db_version = 2.30;
+        $required_db_version = 2.32;
         $installed_db_version = get_option("olimometer_db_version");
         if($installed_db_version < $required_db_version) {
             olimometer_install();

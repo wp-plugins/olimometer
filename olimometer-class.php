@@ -31,6 +31,7 @@ class Olimometer
 	public $olimometer_paypal_password;
 	public $olimometer_paypal_signature;
     public $olimometer_paypal_extra_value = 0.00;
+    public $olimometer_number_format = 0;
     
     private $olimometer_table_name = "olimometer_olimometers";
     
@@ -64,6 +65,7 @@ class Olimometer
         $this->olimometer_paypal_password = $query_results['olimometer_paypal_password'];
         $this->olimometer_paypal_signature = $query_results['olimometer_paypal_signature'];
         $this->olimometer_paypal_extra_value = $query_results['olimometer_paypal_extra_value'];
+        $this->olimometer_number_format = $query_results['olimometer_number_format'];
 
     }
     
@@ -107,7 +109,9 @@ class Olimometer
                                                                 'olimometer_paypal_username' => $this->olimometer_paypal_username,	
                                                                 'olimometer_paypal_password' => $this->olimometer_paypal_password,
                                                                 'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
-                                                                'olimometer_paypal_extra_value' => $this->olimometer_paypal_extra_value ) );
+                                                                'olimometer_paypal_extra_value' => $this->olimometer_paypal_extra_value,
+                                                                'olimometer_number_format' => $this->olimometer_number_format
+                                                                 ) );
             
             // Find out the olimometer_id of the record just created and save it to the object.
             $this->olimometer_id = $wpdb->insert_id;
@@ -134,7 +138,8 @@ class Olimometer
                                 'olimometer_paypal_username' => $this->olimometer_paypal_username,	
                                 'olimometer_paypal_password' => $this->olimometer_paypal_password,
                                 'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
-                                'olimometer_paypal_extra_value' => $this->olimometer_paypal_extra_value
+                                'olimometer_paypal_extra_value' => $this->olimometer_paypal_extra_value,
+                                'olimometer_number_format' => $this->olimometer_number_format
                         ), 
                         array( 'olimometer_id' => $this->olimometer_id )
                     );
@@ -179,7 +184,7 @@ class Olimometer
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.31'>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.32'>";
         
         return $the_olimometer_text;
         //return null;

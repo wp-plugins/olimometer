@@ -104,6 +104,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.32 =
+* Values can be formatted, for example with decimal places and a comma to delimit thousands. See the Number Format option on the settings page.
+
 = 2.31 =
 * Fixed bug causing image creation failure on some systems (literal path requirements)
 
@@ -203,6 +206,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.32 =
+* Values can be formatted, for example with decimal places and a comma to delimit thousands. See the Number Format option on the settings page.
 
 = 2.31 =
 * Fixed bug causing image creation failure on some systems (literal path requirements)

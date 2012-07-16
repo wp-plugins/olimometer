@@ -173,18 +173,13 @@ class Olimometer
         $olimometer_font = "LiberationSans-Regular.ttf";
 
         $image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
-        /*$the_olimometer_text = "<img src='".$image_location."?total=".$this->olimometer_total_value."&progress=".$this->olimometer_progress_value."&currency=".$this->olimometer_currency."&bg=".$this->olimometer_thermometer_bg_colour."&text_colour=".$this->olimometer_text_colour."&height=".$this->olimometer_thermometer_height."&transparent=".$this->olimometer_transparent."&show_progress=".$this->olimometer_show_progress."&show_target=".$this->olimometer_show_target."&progress_label=".$this->olimometer_progress_label."&font_height=".$this->olimometer_font_height."&suffix=".$this->olimometer_suffix."&skin=".$this->olimometer_skin_slug."&font=".$olimometer_font."'";
-        if(strlen($css_class) > 0) {
-            $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
-        }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.20'>";*/
         
         
         $the_olimometer_text = "<img src='".$image_location."?olimometer_id=".$this->olimometer_id."'";
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.32'>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.33'>";
         
         return $the_olimometer_text;
         //return null;

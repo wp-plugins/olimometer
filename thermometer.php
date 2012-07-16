@@ -70,24 +70,50 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         // No dp, no thousands
         $olimometer_display_array[0][0] = 0;
         $olimometer_display_array[0][1] = '';
+        $olimometer_display_array[0][2] = '.';
         // no dp, thousands marker
         $olimometer_display_array[1][0] = 0;
         $olimometer_display_array[1][1] = ',';
+        $olimometer_display_array[1][2] = '.';
         // 2dp, no thousands
         $olimometer_display_array[2][0] = 2;
         $olimometer_display_array[2][1] = '';
+        $olimometer_display_array[2][2] = '.';
         // 2dp, thousands marker
         $olimometer_display_array[3][0] = 2;
         $olimometer_display_array[3][1] = ',';
+        $olimometer_display_array[3][2] = '.';
+        // no dp, period thousands marker
+        $olimometer_display_array[4][0] = 0;
+        $olimometer_display_array[4][1] = '.';
+        $olimometer_display_array[4][2] = ',';
+        // 2dp (comma), period thousands marker
+        $olimometer_display_array[5][0] = 2;
+        $olimometer_display_array[5][1] = '.';
+        $olimometer_display_array[5][2] = ',';
+        // no dp, space thousands marker
+        $olimometer_display_array[6][0] = 0;
+        $olimometer_display_array[6][1] = ' ';
+        $olimometer_display_array[6][2] = '.';
+        // 2dp (comma), space thousands marker
+        $olimometer_display_array[7][0] = 2;
+        $olimometer_display_array[7][1] = ' ';
+        $olimometer_display_array[7][2] = ',';
+        // 2dp (period), space thousands marker
+        $olimometer_display_array[8][0] = 2;
+        $olimometer_display_array[8][1] = '.';
+        $olimometer_display_array[8][2] = ' ';
+        
         
     // Display converted values:
     $olimometer_display_dp = $olimometer_display_array[$olimometer_to_display->olimometer_number_format][0];
     $olimometer_display_thousands = $olimometer_display_array[$olimometer_to_display->olimometer_number_format][1];
+    $olimometer_display_decimal = $olimometer_display_array[$olimometer_to_display->olimometer_number_format][2];
     //$olimometer_display_dp = 2;
     //$olimometer_display_thousands = ',';
-    $display_total_value = number_format($total_value,$olimometer_display_dp,'.',$olimometer_display_thousands);
-    $display_progress_value = number_format($progress_value,$olimometer_display_dp,'.',$olimometer_display_thousands);
-    $display_zero = number_format(0,$olimometer_display_dp,'.',$olimometer_display_thousands);
+    $display_total_value = number_format($total_value,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);
+    $display_progress_value = number_format($progress_value,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);
+    $display_zero = number_format(0,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);
     
 
 

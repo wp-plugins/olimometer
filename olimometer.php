@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.32
+Version: 2.33
 */
 
 
@@ -431,7 +431,12 @@ if($current_olimometer->olimometer_use_paypal == 1) {
 			<option value="1" <?php if($current_olimometer->olimometer_number_format==1) { echo "SELECTED"; } ?>>1,000</option>
 			<option value="2" <?php if($current_olimometer->olimometer_number_format==2) { echo "SELECTED"; } ?>>1000.00</option>
 			<option value="3" <?php if($current_olimometer->olimometer_number_format==3) { echo "SELECTED"; } ?>>1,000.00</option>
-			</select>
+            <option value="4" <?php if($current_olimometer->olimometer_number_format==4) { echo "SELECTED"; } ?>>1.000</option>
+            <option value="5" <?php if($current_olimometer->olimometer_number_format==5) { echo "SELECTED"; } ?>>1.000,00</option>			
+            <option value="6" <?php if($current_olimometer->olimometer_number_format==6) { echo "SELECTED"; } ?>>1 000</option>
+            <option value="7" <?php if($current_olimometer->olimometer_number_format==7) { echo "SELECTED"; } ?>>1 000,00</option>
+            <option value="8" <?php if($current_olimometer->olimometer_number_format==8) { echo "SELECTED"; } ?>>1 000.00</option>                    
+            </select>
             <p><span class="description">Please choose a display format for your values.</span></p></td>
 		</tr>
 

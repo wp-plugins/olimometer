@@ -104,6 +104,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.33 =
+* Added some more number format options.
+
 = 2.32 =
 * Values can be formatted, for example with decimal places and a comma to delimit thousands. See the Number Format option on the settings page.
 
@@ -206,6 +209,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.33 =
+* Added some more number format options.
 
 = 2.32 =
 * Values can be formatted, for example with decimal places and a comma to delimit thousands. See the Number Format option on the settings page.

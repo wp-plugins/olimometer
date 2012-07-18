@@ -22,7 +22,7 @@ This plugin requires that the GD libraries are available within PHP.
 
 If you wish the thermometer to have a transparent background then I suggest you still choose a background colour close to the actual background on which the thermometer will appear. This will ensure that the image blends in perfectly.
 
-If you have *any* problems installing or using this plugin, or if it doesn't quite meet your needs then please let me know. Visit http://www.olivershingler.co.uk/oliblog/olimometer and leave a comment, or via Twitter @OliverShingler
+If you have *any* problems installing or using this plugin, or if it doesn't quite meet your needs then please let me know. Post your query on the forum http://wordpress.org/support/plugin/olimometer or visit http://www.olivershingler.co.uk/oliblog/olimometer and leave a comment, or via Twitter @OliverShingler
  
 
 == Installation ==
@@ -53,7 +53,7 @@ For example, to use a class called align_right, use the following code:
 
 = I've found a bug / have a suggestion =
 
-You can contact me via Twitter @OliverShingler or you can leave a comment on the plugin's official page http://www.olivershingler.co.uk/oliblog/olimometer. I can't make any promises but I will do my best.
+You can contact me via Twitter @OliverShingler, chat on the forum http://wordpress.org/support/plugin/olimometer or you can leave a comment on the plugin's official page http://www.olivershingler.co.uk/oliblog/olimometer. I can't make any promises but I will do my best.
 
 = How do I change the thermometer image? =
 See: How do I create my own skin?

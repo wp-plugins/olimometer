@@ -175,11 +175,11 @@ class Olimometer
         $image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
         
         
-        $the_olimometer_text = "<img src='".$image_location."?olimometer_id=".$this->olimometer_id."'";
+        $the_olimometer_text = "<a href='http://www.olivershingler.co.uk/oliblog/olimometer/' target=_blank><img src='".$image_location."?olimometer_id=".$this->olimometer_id."' border=0";
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.33'>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.34'></a>";
         
         return $the_olimometer_text;
         //return null;

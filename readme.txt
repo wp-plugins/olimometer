@@ -104,6 +104,10 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.34 =
+* Fixed GD image output issue on some web servers (header and flush requirements)
+* Added kr as prefix/suffix option
+
 = 2.33 =
 * Added some more number format options.
 
@@ -209,6 +213,10 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.34 =
+* Fixed GD image output issue on some web servers (header and flush requirements)
+* Added kr as prefix/suffix option
 
 = 2.33 =
 * Added some more number format options.

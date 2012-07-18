@@ -115,6 +115,40 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
     $display_progress_value = number_format($progress_value,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);
     $display_zero = number_format(0,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);
     
+    // Figure out prefix and suffix values
+    switch($currency) {
+        case 128:
+            $currency_symbol = "&#8364;";
+            break;
+        case '':
+            $currency_symbol = "";
+            break;
+        case 'x':
+            $currency_symbol = "";
+            break;
+        case '10000':
+            $currency_symbol = "kr ";
+            break;
+        default:
+            $currency_symbol = "&#$currency;";
+    }
+    
+    switch($suffix) {
+        case 128:
+            $suffix_symbol = "&#8364;";
+            break;
+        case '':
+            $suffix_symbol = "";
+            break;
+        case 'x':
+            $suffix_symbol = "";
+            break;
+        case '10000':
+            $suffix_symbol = " kr";
+            break;
+        default:
+            $suffix_symbol = "&#$suffix;";
+    }
 
 
     // Are we making a horizontal or a vertical thermometer?
@@ -182,21 +216,50 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         //write labels
         $text_color_array = rgb2array($text_colour);
         $text_colour_rgb = imagecolorallocate($temp_new_image, $text_color_array[0], $text_color_array[1], $text_color_array[2]);
-        if ($currency == 128)
-            $currency_symbol = "&#8364;";
-        else if (($currency == '') || ($currency == 'x'))
+/*        
+        switch($currency) {
+            case 128:
+                $currency_symbol = "&#8364;";
+                break;
+            case '':
                 $currency_symbol = "";
-        else
-            $currency_symbol = "&#$currency;";
+                break;
+            case 'x':
+                $currency_symbol = "";
+                break;
+            case '10000':
+                $currency_symbol = "";
+                break;
+            default:
+                $currency_symbol = "kr";
+        }*/
         
-        if (($suffix == '') || ($suffix == 'x')) {
+        /*if ($currency == 128) {
+            $currency_symbol = "&#8364;";
+        }
+        elseif (($currency == '') || ($currency == 'x')) {
+                $currency_symbol = "";
+        }
+        elseif($currency == 10000) {
+            // Krone
+            $currency_symbol = "kr ";
+        }
+        else {
+            $currency_symbol = "&#$currency;";
+        }*/
+        
+        /*if (($suffix == '') || ($suffix == 'x')) {
             $suffix_symbol = "";
+        }
+        elseif($suffix == 10000) {
+            // Krone
+            $suffix_symbol = " kr";
         }
         else {
                 $suffix_symbol = "&#$suffix;";
-        }
-        
-        
+        }*/
+        //$currency_symbol = "YYY";
+        //$suffix_symbol = "XXX";
         
         // What is the width of the top label?
         $new_image_width = $image_height; // default width!
@@ -349,7 +412,8 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         //write labels
         $text_color_array = rgb2array($text_colour);
         $text_colour_rgb = imagecolorallocate($temp_new_image, $text_color_array[0], $text_color_array[1], $text_color_array[2]);
-        if ($currency == 128)
+        
+        /*if ($currency == 128)
             $currency_symbol = "&#8364;";
         else if (($currency == '') || ($currency == 'x'))
                 $currency_symbol = "";
@@ -361,7 +425,7 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         }
         else {
                 $suffix_symbol = "&#$suffix;";
-        }
+        }*/
         
         
         
@@ -432,8 +496,10 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
     }    
     
     //output the image to the browser
-
+    header('Content-type: image/png');
     imagepng($new_image, NULL);
+    ob_end_flush();
+
 
 
 

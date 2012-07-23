@@ -104,6 +104,11 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.35 =
+* You can now customise the image's hyperlink
+* Fixed saving issue when trying to blank out certain values
+* Fixed bug preventing image display when upgrading to a version using currency formatting.
+
 = 2.34 =
 * Fixed GD image output issue on some web servers (header and flush requirements)
 * Added kr as prefix/suffix option
@@ -213,6 +218,11 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.35 =
+* You can now customise the image's hyperlink
+* Fixed saving issue when trying to blank out certain values
+* Fixed bug preventing image display when upgrading to a version using currency formatting.
 
 = 2.34 =
 * Fixed GD image output issue on some web servers (header and flush requirements)

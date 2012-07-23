@@ -65,6 +65,14 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
     $font_height = $olimometer_to_display->olimometer_font_height;
     $suffix = $olimometer_to_display->olimometer_suffix;
     
+    if($olimometer_to_display->olimometer_number_format == null) {
+        $olimometer_number_format = 0;
+    }
+    else {
+        $olimometer_number_format = $olimometer_to_display->olimometer_number_format;
+    }
+    
+    
     // Value layout array:
     
         // No dp, no thousands
@@ -106,9 +114,9 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         
         
     // Display converted values:
-    $olimometer_display_dp = $olimometer_display_array[$olimometer_to_display->olimometer_number_format][0];
-    $olimometer_display_thousands = $olimometer_display_array[$olimometer_to_display->olimometer_number_format][1];
-    $olimometer_display_decimal = $olimometer_display_array[$olimometer_to_display->olimometer_number_format][2];
+    $olimometer_display_dp = $olimometer_display_array[$olimometer_number_format][0];
+    $olimometer_display_thousands = $olimometer_display_array[$olimometer_number_format][1];
+    $olimometer_display_decimal = $olimometer_display_array[$olimometer_number_format][2];
     //$olimometer_display_dp = 2;
     //$olimometer_display_thousands = ',';
     $display_total_value = number_format($total_value,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);

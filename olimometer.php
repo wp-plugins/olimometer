@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.34
+Version: 2.35
 */
 
 
@@ -150,6 +150,7 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
 	$an_olimometer->olimometer_paypal_signature = $_REQUEST['olimometer_paypal_signature'];
     $an_olimometer->olimometer_paypal_extra_value = $_REQUEST['olimometer_paypal_extra_value'];
     $an_olimometer->olimometer_number_format = $_REQUEST['olimometer_number_format'];
+    $an_olimometer->olimometer_link = $_REQUEST['olimometer_link'];
     
     // Save it
     $an_olimometer->save();
@@ -672,6 +673,14 @@ if( ($current_olimometer->olimometer_show_progress == 0)) {
             <p><span class="description">(Optional) The text string to display before the Progress Value. Default = "Raised so far:"</span></p></td>
 		</tr>
         
+        <tr class="form-field">
+			<th scope="row" valign="top"><label for="name">Olimometer Hyperlink URL</label></th>
+			<td><input name="olimometer_link" id="olimometer_link" type="text" value="<?php 
+				echo $current_olimometer->olimometer_link;
+			?>" size="40" aria-required="false" />
+            <p><span class="description">(Optional) The URL users are directed to when clicking on an Olimometer image.</span></p></td>
+		</tr>
+        
         
 	</table>	
 	<p class="submit"><input type="submit" class="button-primary" name="olimometer_submit" value="Save Changes" /></p>
@@ -997,7 +1006,7 @@ add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 Database Functions
 ************************/
 global $olimometer_db_version;
-$olimometer_db_version = "2.32";
+$olimometer_db_version = "2.35";
 
 function olimometer_install() {
    global $wpdb;
@@ -1028,6 +1037,7 @@ function olimometer_install() {
   olimometer_paypal_password VARCHAR(255),
   olimometer_paypal_signature VARCHAR(255),
   olimometer_number_format tinyint,
+  olimometer_link VARCHAR(255),
   UNIQUE KEY olimometer_id (olimometer_id)
     );";
 
@@ -1054,7 +1064,7 @@ function update_check() {
     {
         // Yes it has!
         // If currently installed database version is less than current version required for this plugin, then we need to upgrade
-        $required_db_version = 2.32;
+        $required_db_version = 2.35;
         $installed_db_version = get_option("olimometer_db_version");
         if($installed_db_version < $required_db_version) {
             olimometer_install();

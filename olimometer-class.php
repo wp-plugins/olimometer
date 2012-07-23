@@ -32,8 +32,11 @@ class Olimometer
 	public $olimometer_paypal_signature;
     public $olimometer_paypal_extra_value = 0.00;
     public $olimometer_number_format = 0;
+    public $olimometer_link = "";
     
+    private $olimometer_default_link = "http://www.olivershingler.co.uk/oliblog/olimometer/";
     private $olimometer_table_name = "olimometer_olimometers";
+    
     
     
     
@@ -66,6 +69,13 @@ class Olimometer
         $this->olimometer_paypal_signature = $query_results['olimometer_paypal_signature'];
         $this->olimometer_paypal_extra_value = $query_results['olimometer_paypal_extra_value'];
         $this->olimometer_number_format = $query_results['olimometer_number_format'];
+        
+        if($query_results['olimometer_link'] == "" || $query_results['olimometer_link'] == null) {
+            $this->olimometer_link = $this->olimometer_default_link;
+        }
+        else {
+            $this->olimometer_link = $query_results['olimometer_link'];
+        }
 
     }
     
@@ -86,13 +96,28 @@ class Olimometer
     { 
         global $wpdb;
         $table_name = $wpdb->prefix . $this->olimometer_table_name;
+        
+        // Sanitize data
+        if($this->olimometer_paypal_extra_value == '') {
+            $olimometer_paypal_extra_value = 0.00;
+        }
+        else {
+            $olimometer_paypal_extra_value = $this->olimometer_paypal_extra_value;
+        }
+        
+        if($this->olimometer_progress_value == '') {
+            $olimometer_progress_value = 0.00;
+        }
+        else {
+            $olimometer_progress_value = $this->olimometer_progress_value;
+        }
             
         // Is this an existing olimometer or a new one to be saved?
         if($this->olimometer_id == -1)
         {
             // This is a new one
             $rows_affected = $wpdb->insert( $table_name, array( 'olimometer_description' => $this->olimometer_description,
-                                                                'olimometer_progress_value' => $this->olimometer_progress_value,
+                                                                'olimometer_progress_value' => $olimometer_progress_value,
                                                                 'olimometer_total_value' => $this->olimometer_total_value,
                                                                 'olimometer_currency' => $this->olimometer_currency,
                                                                 'olimometer_thermometer_bg_colour' => $this->olimometer_thermometer_bg_colour,
@@ -109,8 +134,9 @@ class Olimometer
                                                                 'olimometer_paypal_username' => $this->olimometer_paypal_username,	
                                                                 'olimometer_paypal_password' => $this->olimometer_paypal_password,
                                                                 'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
-                                                                'olimometer_paypal_extra_value' => $this->olimometer_paypal_extra_value,
-                                                                'olimometer_number_format' => $this->olimometer_number_format
+                                                                'olimometer_paypal_extra_value' => $olimometer_paypal_extra_value,
+                                                                'olimometer_number_format' => $this->olimometer_number_format,
+                                                                'olimometer_link' => $this->olimometer_link
                                                                  ) );
             
             // Find out the olimometer_id of the record just created and save it to the object.
@@ -121,7 +147,7 @@ class Olimometer
             // This is an existing one
             $wpdb->update($table_name, 
                         array(  'olimometer_description' => $this->olimometer_description,
-                                'olimometer_progress_value' => $this->olimometer_progress_value,
+                                'olimometer_progress_value' => $olimometer_progress_value,
                                 'olimometer_total_value' => $this->olimometer_total_value,
                                 'olimometer_currency' => $this->olimometer_currency,
                                 'olimometer_thermometer_bg_colour' => $this->olimometer_thermometer_bg_colour,
@@ -138,8 +164,9 @@ class Olimometer
                                 'olimometer_paypal_username' => $this->olimometer_paypal_username,	
                                 'olimometer_paypal_password' => $this->olimometer_paypal_password,
                                 'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
-                                'olimometer_paypal_extra_value' => $this->olimometer_paypal_extra_value,
-                                'olimometer_number_format' => $this->olimometer_number_format
+                                'olimometer_paypal_extra_value' => $olimometer_paypal_extra_value,
+                                'olimometer_number_format' => $this->olimometer_number_format,
+                                'olimometer_link' => $this->olimometer_link
                         ), 
                         array( 'olimometer_id' => $this->olimometer_id )
                     );
@@ -175,11 +202,11 @@ class Olimometer
         $image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
         
         
-        $the_olimometer_text = "<a href='http://www.olivershingler.co.uk/oliblog/olimometer/' target=_blank><img src='".$image_location."?olimometer_id=".$this->olimometer_id."' border=0";
+        $the_olimometer_text = "<a href='".$this->olimometer_link."' target=_blank><img src='".$image_location."?olimometer_id=".$this->olimometer_id."' border=0";
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.34'></a>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.35'></a>";
         
         return $the_olimometer_text;
         //return null;

@@ -24,7 +24,6 @@ class Olimometer
 	public $olimometer_progress_label = "Raised so far:";
 	public $olimometer_font_height = 8;
 	public $olimometer_suffix = "";
-	//public $olimometer_skin = 0;
     public $olimometer_skin_slug = "oli-default";
 	public $olimometer_use_paypal = 0;
 	public $olimometer_paypal_username;
@@ -61,7 +60,6 @@ class Olimometer
         $this->olimometer_progress_label = $query_results['olimometer_progress_label'];
         $this->olimometer_font_height = $query_results['olimometer_font_height'];
         $this->olimometer_suffix = $query_results['olimometer_suffix'];
-        //$this->olimometer_skin = $query_results['olimometer_skin'];
         $this->olimometer_skin_slug = $query_results['olimometer_skin_slug'];
         $this->olimometer_use_paypal = $query_results['olimometer_use_paypal'];
         $this->olimometer_paypal_username = $query_results['olimometer_paypal_username'];	

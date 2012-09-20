@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.35
+Version: 2.36
 */
 
 
@@ -53,7 +53,6 @@ if (isset($_REQUEST['olimometer_create']) && isset($_REQUEST['olimometer_descrip
     $new_olimometer = new Olimometer();
     $new_olimometer->olimometer_description = $_REQUEST['olimometer_description'];
     $new_olimometer->save();
-    //update_option("olimometer_last", $new_olimometer->olimometer_id);
     update_olimometer_last($new_olimometer->olimometer_id);
 }
 
@@ -69,7 +68,6 @@ if (isset($_REQUEST['olimometer_delete'])) {
         
         $dead_olimometer->load($_REQUEST['olimometer_id']);
         $dead_olimometer->delete();
-        //update_option("olimometer_last", 1);
         update_olimometer_last(1);
     }
 }
@@ -77,7 +75,6 @@ if (isset($_REQUEST['olimometer_delete'])) {
 /* Load an Olimometer */
 if (isset($_REQUEST['olimometer_load'])) {
     // Which one?
-    //update_option("olimometer_last", $_REQUEST['olimometer_id']);
     update_olimometer_last($_REQUEST['olimometer_id']);
 }
 
@@ -123,11 +120,7 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
     // Create a new object with that value
     $an_olimometer = new Olimometer();
     $an_olimometer->olimometer_id = $current_olimometer_id;
-    
 
-        
-    
-    
     // Get values from form and dump in to the object
     $an_olimometer->olimometer_description = $_REQUEST['olimometer_description'];
     $an_olimometer->olimometer_progress_value = $_REQUEST['olimometer_progress_value'];
@@ -220,23 +213,19 @@ document.olimometer_form1.olimometer_paypal_extra_value.readOnly=true;
 
 <?php
     // Load the olimometer values:
-    //$current_olimometer_id = 1; // Hard coded for the moment
     // If we are being asked to load a particular Olimometer's settings
     if (isset($_REQUEST['olimometer_load'])) {
         // Which one?
-        //update_option("olimometer_last", $_REQUEST['olimometer_id']);
         update_olimometer_last($_REQUEST['olimometer_id']);
         $current_olimometer_id = $_REQUEST['olimometer_id'];
         
     }
     else {
-        //if(get_option("olimometer_last") == 0)
         if(get_olimometer_last() == 0)
         {
             $current_olimometer_id = 1;
         }
         else {
-            //$current_olimometer_id = get_option("olimometer_last");
             $current_olimometer_id = get_olimometer_last();
         }
     }
@@ -248,11 +237,6 @@ document.olimometer_form1.olimometer_paypal_extra_value.readOnly=true;
     
     
 	echo '<div class="icon32" id="icon-options-general"><br></div><h2>Olimometer - '.$current_olimometer->olimometer_description.'</h2>';
-    
-
-
-
-    
     
     ?>
     <table>
@@ -303,11 +287,6 @@ document.olimometer_form1.olimometer_paypal_extra_value.readOnly=true;
 	echo '<a href="#diagnostics">Diagnostics</a><br />';
 	echo '<a href="#OtherInformation">Other Information</a></p>';
 
-
-    
-    //    global $wpdb;
-    //$table_name = $wpdb->prefix . "olimometer_olimometers";
-    //echo $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $table_name;" ) );
     ?>
     </div>
     <div id="olimometer_global_options">
@@ -543,11 +522,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <?php
 // Import list of Olimometer skins from XML file
-//$olimometer_skin_xml_file = WP_PLUGIN_DIR."/".plugin_basename(dirname(__FILE__).'/skins.xml');
-//$olimometer_skin_xml_file = get_option("olimometer_skins_location")."skins.xml";
-//echo $olimometer_skin_xml_file;
-//$olimometer_skins_location = get_option("olimometer_skins_location");
-//$olimometer_skins_custom_location = get_option("olimometer_skins_custom_location");
 include_once('skins.php');	
 
 $olimometer_skins = new Olimometer_Skins();
@@ -555,11 +529,8 @@ $olimometer_skins->olimometer_skins_location = get_option("olimometer_skins_loca
 $olimometer_skins->olimometer_skins_custom_location = get_option("olimometer_skins_custom_location");
 $olimometer_skins->load();
 
-//$olimometer_current_skin=0;
 $olimometer_skin_names = array();
-//$olimometer_skin_slugs = array();
 $olimometer_skin_names = $olimometer_skins->get_skin_names();
-//$olimometer_skin_slugs = olimometer_get_skin_slugs();
 
 // Loop around each skin name and display in a drop-down list
 foreach ($olimometer_skin_names as $olimometer_skin_name) {
@@ -567,8 +538,7 @@ foreach ($olimometer_skin_names as $olimometer_skin_name) {
 	if($current_olimometer->olimometer_skin_slug == $olimometer_skin_name["skin_slug"]) {
 		echo " selected";
 	}
-	echo ">".$olimometer_skin_name["skin_name"]."</option>";	
-	//$olimometer_current_skin++;
+	echo ">".$olimometer_skin_name["skin_name"]."</option>";
 }
 
 
@@ -685,7 +655,6 @@ if( ($current_olimometer->olimometer_show_progress == 0)) {
 	</table>	
 	<p class="submit"><input type="submit" class="button-primary" name="olimometer_submit" value="Save Changes" /></p>
 	<?php
-	//echo '<input id="old" type="hidden" value="'.get_option("olimometer_progress").'">';
 	echo '</form>';
     
     ?>
@@ -909,10 +878,8 @@ Start of Dashboard Widget section
 function olimometer_dashboard_widget_function() {
     echo '<div class="wrap">';
     
-    //if(strlen(get_option("olimometer_last")) > 0)
     if(strlen(get_olimometer_last()) > 0)
     {
-        //$current_olimometer_id = get_option("olimometer_last");
         $current_olimometer_id = get_olimometer_last();
     }
     else {
@@ -972,12 +939,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
 </p>
 	<p><input type="submit" class="button-primary" name="olimometer_dw_submit" value="Update" />
-	<?php
-	//echo '<input id="old" type="hidden" value="'.get_option("olimometer_progress").'">';
-	?>
 
-        
-        
 &nbsp;&nbsp;<a href='options-general.php?page=olimometer_manage'>Settings</a>
 	<?php
 	echo '</p></form></div>'; 

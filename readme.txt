@@ -104,6 +104,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.36 =
+* Tidy up of code
+
 = 2.35 =
 * You can now customise the image's hyperlink
 * Fixed saving issue when trying to blank out certain values
@@ -218,6 +221,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.36 =
+* Tidy up of code
 
 = 2.35 =
 * You can now customise the image's hyperlink

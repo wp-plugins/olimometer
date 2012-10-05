@@ -104,6 +104,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.40 =
+* Added the ability to overlay a custom image over the top of the Olimometer. This feature can be found at the bottom of the Appearance and Layout section of the admin page.
+
 = 2.36 =
 * Tidy up of code
 
@@ -221,6 +224,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.40 =
+* Added the ability to overlay a custom image over the top of the Olimometer. This feature can be found at the bottom of the Appearance and Layout section of the admin page.
 
 = 2.36 =
 * Tidy up of code

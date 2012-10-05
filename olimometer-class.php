@@ -32,6 +32,10 @@ class Olimometer
     public $olimometer_paypal_extra_value = 0.00;
     public $olimometer_number_format = 0;
     public $olimometer_link = "";
+    public $olimometer_overlay = 0;
+    public $olimometer_overlay_image = "";
+    public $olimometer_overlay_x = 0;
+    public $olimometer_overlay_y = 0;
     
     private $olimometer_default_link = "http://www.olivershingler.co.uk/oliblog/olimometer/";
     private $olimometer_table_name = "olimometer_olimometers";
@@ -67,6 +71,10 @@ class Olimometer
         $this->olimometer_paypal_signature = $query_results['olimometer_paypal_signature'];
         $this->olimometer_paypal_extra_value = $query_results['olimometer_paypal_extra_value'];
         $this->olimometer_number_format = $query_results['olimometer_number_format'];
+        $this->olimometer_overlay = $query_results['olimometer_overlay'];
+        $this->olimometer_overlay_image = $query_results['olimometer_overlay_image'];
+        $this->olimometer_overlay_x = $query_results['olimometer_overlay_x'];
+        $this->olimometer_overlay_y = $query_results['olimometer_overlay_y'];
         
         if($query_results['olimometer_link'] == "" || $query_results['olimometer_link'] == null) {
             $this->olimometer_link = $this->olimometer_default_link;
@@ -109,6 +117,20 @@ class Olimometer
         else {
             $olimometer_progress_value = $this->olimometer_progress_value;
         }
+
+        // Set the default overlay co-ordinates to 0,0
+        if($this->olimometer_overlay_x == "" || $this->olimometer_overlay_x == null) {
+            $this->olimometer_overlay_x = 0;
+        }
+
+        if($this->olimometer_overlay_y == "" || $this->olimometer_overlay_y == null) {
+            $this->olimometer_overlay_y = 0;
+        }
+
+        // If the overlay image url box is null or empty, disable the overlay
+        if($this->olimometer_overlay_image == "" || $this->olimometer_overlay_image == null) {
+            $this->olimometer_overlay = 0;
+        }
             
         // Is this an existing olimometer or a new one to be saved?
         if($this->olimometer_id == -1)
@@ -134,7 +156,11 @@ class Olimometer
                                                                 'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
                                                                 'olimometer_paypal_extra_value' => $olimometer_paypal_extra_value,
                                                                 'olimometer_number_format' => $this->olimometer_number_format,
-                                                                'olimometer_link' => $this->olimometer_link
+                                                                'olimometer_link' => $this->olimometer_link,
+                                                                'olimometer_overlay' => $this->olimometer_overlay,
+                                                                'olimometer_overlay_image' => $this->olimometer_overlay_image,
+                                                                'olimometer_overlay_x' => $this->olimometer_overlay_x,
+                                                                'olimometer_overlay_y' => $this->olimometer_overlay_y
                                                                  ) );
             
             // Find out the olimometer_id of the record just created and save it to the object.
@@ -164,10 +190,45 @@ class Olimometer
                                 'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
                                 'olimometer_paypal_extra_value' => $olimometer_paypal_extra_value,
                                 'olimometer_number_format' => $this->olimometer_number_format,
-                                'olimometer_link' => $this->olimometer_link
+                                'olimometer_link' => $this->olimometer_link,
+                                'olimometer_overlay' => $this->olimometer_overlay,
+                                'olimometer_overlay_image' => $this->olimometer_overlay_image,
+                                'olimometer_overlay_x' => $this->olimometer_overlay_x,
+                                'olimometer_overlay_y' => $this->olimometer_overlay_y
                         ), 
                         array( 'olimometer_id' => $this->olimometer_id )
                     );
+/*
+            $wpdb->update($table_name, 
+                        array(  'olimometer_description' => $this->olimometer_description,
+                                'olimometer_progress_value' => $olimometer_progress_value,
+                                'olimometer_total_value' => $this->olimometer_total_value,
+                                'olimometer_currency' => $this->olimometer_currency,
+                                'olimometer_thermometer_bg_colour' => $this->olimometer_thermometer_bg_colour,
+                                'olimometer_text_colour' => $this->olimometer_text_colour,
+                                'olimometer_thermometer_height' => $this->olimometer_thermometer_height,
+                                'olimometer_transparent' => $this->olimometer_transparent,
+                                'olimometer_show_target' => $this->olimometer_show_target,
+                                'olimometer_show_progress' => $this->olimometer_show_progress,
+                                'olimometer_progress_label' => $this->olimometer_progress_label,
+                                'olimometer_font_height' => $this->olimometer_font_height,
+                                'olimometer_suffix' => $this->olimometer_suffix,
+                                'olimometer_skin_slug' => $this->olimometer_skin_slug,
+                                'olimometer_use_paypal' => $this->olimometer_use_paypal,
+                                'olimometer_paypal_username' => $this->olimometer_paypal_username,	
+                                'olimometer_paypal_password' => $this->olimometer_paypal_password,
+                                'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
+                                'olimometer_paypal_extra_value' => $olimometer_paypal_extra_value,
+                                'olimometer_number_format' => $this->olimometer_number_format,
+                                'olimometer_link' => $this->olimometer_link,
+                                'olimometer_overlay' => $this->olimometer_overlay,
+                                'olimometer_overlay_image' => $this->olimometer_overlay_image,
+                                'olimometer_overlay_x' => $this->olimometer_overlay_x,
+                                'olimometer_overlay_y' => $this->olimometer_overlay_y
+                        ), 
+                        array( 'olimometer_id' => $this->olimometer_id )
+                    );
+*/
         }
       
     }
@@ -204,7 +265,7 @@ class Olimometer
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.35'></a>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.40'></a>";
         
         return $the_olimometer_text;
         //return null;

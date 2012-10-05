@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.36
+Version: 2.40
 */
 
 
@@ -144,6 +144,11 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
     $an_olimometer->olimometer_paypal_extra_value = $_REQUEST['olimometer_paypal_extra_value'];
     $an_olimometer->olimometer_number_format = $_REQUEST['olimometer_number_format'];
     $an_olimometer->olimometer_link = $_REQUEST['olimometer_link'];
+    //echo "Overlay = xxx".$_REQUEST['olimometer_overlay']."xxx";
+    $an_olimometer->olimometer_overlay = $_REQUEST['olimometer_overlay'];
+    $an_olimometer->olimometer_overlay_image = $_REQUEST['upload_image'];
+    $an_olimometer->olimometer_overlay_x = $_REQUEST['olimometer_overlay_x'];
+    $an_olimometer->olimometer_overlay_y = $_REQUEST['olimometer_overlay_y'];
     
     // Save it
     $an_olimometer->save();
@@ -184,30 +189,63 @@ function olimometer_add_pages() {
 	add_submenu_page('options-general.php','Olimometer Settings', 'Olimometer', 'manage_options', 'olimometer_manage', 'olimometer_manage_page');
 }
 
+function olimometer_admin_scripts() {
+    //echo "loading admin scripts";
+    wp_enqueue_script('media-upload');
+    wp_enqueue_script('thickbox');
+    wp_register_script('my-upload', WP_PLUGIN_URL.'/olimometer/my-script.js', array('jquery','media-upload','thickbox'));
+    wp_enqueue_script('my-upload');
+    }
+ 
+function olimometer_admin_styles() {
+    //echo "loading admin styles";
+    wp_enqueue_style('thickbox');
+    }
+
+if (isset($_GET['page']) && $_GET['page'] == 'olimometer_manage') {
+        // Add hooks to load image upload scripts
+        add_action('admin_print_scripts', 'olimometer_admin_scripts');
+        add_action('admin_print_styles', 'olimometer_admin_styles');
+        }
+
 function olimometer_manage_page() {
     echo '<div class="wrap">';
+
 
 ?>
 <script type="text/javascript" src="<?php echo plugins_url(); ?>/olimometer/jscolor/jscolor.js"></script>
 
 <script language="javascript">
-function olimometer_progress_disable()
-{
-document.olimometer_form1.olimometer_progress_value.readOnly=true;
-document.olimometer_form1.olimometer_paypal_username.readOnly=false;
-document.olimometer_form1.olimometer_paypal_password.readOnly=false;
-document.olimometer_form1.olimometer_paypal_signature.readOnly=false;
-document.olimometer_form1.olimometer_paypal_extra_value.readOnly=false;
-}
+    function olimometer_progress_disable() {
+        document.olimometer_form1.olimometer_progress_value.readOnly = true;
+        document.olimometer_form1.olimometer_paypal_username.readOnly = false;
+        document.olimometer_form1.olimometer_paypal_password.readOnly = false;
+        document.olimometer_form1.olimometer_paypal_signature.readOnly = false;
+        document.olimometer_form1.olimometer_paypal_extra_value.readOnly = false;
+    }
 
-function olimometer_progress_enable()
-{
-document.olimometer_form1.olimometer_progress_value.readOnly=false;
-document.olimometer_form1.olimometer_paypal_username.readOnly=true;
-document.olimometer_form1.olimometer_paypal_password.readOnly=true;
-document.olimometer_form1.olimometer_paypal_signature.readOnly=true;
-document.olimometer_form1.olimometer_paypal_extra_value.readOnly=true;
-}
+    function olimometer_progress_enable() {
+        document.olimometer_form1.olimometer_progress_value.readOnly = false;
+        document.olimometer_form1.olimometer_paypal_username.readOnly = true;
+        document.olimometer_form1.olimometer_paypal_password.readOnly = true;
+        document.olimometer_form1.olimometer_paypal_signature.readOnly = true;
+        document.olimometer_form1.olimometer_paypal_extra_value.readOnly = true;
+    }
+
+
+    function olimometer_overlay_disable() {
+        document.olimometer_form1.upload_image.readOnly = true;
+        document.olimometer_form1.olimometer_overlay_x.readOnly = true;
+        document.olimometer_form1.olimometer_overlay_y.readOnly = true;
+        document.olimometer_form1.upload_image_button.disabled = true;
+    }
+
+    function olimometer_overlay_enable() {
+        document.olimometer_form1.upload_image.readOnly = false;
+        document.olimometer_form1.olimometer_overlay_x.readOnly = false;
+        document.olimometer_form1.olimometer_overlay_y.readOnly = false;
+        document.olimometer_form1.upload_image_button.disabled = false;
+    }
 
 </script>
 
@@ -650,7 +688,51 @@ if( ($current_olimometer->olimometer_show_progress == 0)) {
 			?>" size="40" aria-required="false" />
             <p><span class="description">(Optional) The URL users are directed to when clicking on an Olimometer image.</span></p></td>
 		</tr>
+
+
+        <!-- Overlay Image Begin -->
+
+        <tr class="form-required">
+			<th scope="row" valign="top"><label for="name">Would you like to overlay an image on to the Olimometer?</label></th>
+			<td><input name="olimometer_overlay" id="olimometer_overlay" type="radio" value="0"<?php
+if($current_olimometer->olimometer_overlay == 0) {
+	echo " checked";
+}
+
+?> onClick="olimometer_overlay_disable();"> No<br />
+			    <input name="olimometer_overlay" id="olimometer_overlay" type="radio" value="1"<?php
+if($current_olimometer->olimometer_overlay == 1) {
+	echo " checked";
+}
+
+?> onClick="olimometer_overlay_enable();"> Yes
+
+            <p><span class="description">The overlay image will be placed over the top of the Olimometer. You will need to specify x and y co-ordinates, in pixels, corresponding to where you would like to position the overlay in respect to the top-left corner of the Olimometer. This feature only works on vertical Olimometers.</span></p></td>
+
+		</tr>
+
+        <tr class="form-field">
+            <th scope="row" valign="top"><label for="name">Overlay Image</label></th>
+            <td><label for="upload_image"><input id="upload_image" type="text" size="36" name="upload_image" value="<?php 
+				echo $current_olimometer->olimometer_overlay_image;
+			?>" /><input id="upload_image_button" type="button" value="Upload Image" /><br />Enter a URL or upload an image for the overlay. NOTE: Only .PNG files are supported. Once uploaded, click on the 'Insert Into Post' button to auto-complete this field with your chosen image.</label></td>
+        </tr>
         
+        <tr class="form-field">
+			<th scope="row" valign="top"><label for="name">Overlay X Co-ordinate</label></th>
+			<td><input name="olimometer_overlay_x" id="olimometer_overlay_x" type="text" value="<?php 
+				echo $current_olimometer->olimometer_overlay_x;
+			?>" size="40" aria-required="false" />
+            <p><span class="description"></span></p></td>
+		</tr>
+        <tr class="form-field">
+			<th scope="row" valign="top"><label for="name">Overlay Y Co-ordinate</label></th>
+			<td><input name="olimometer_overlay_y" id="olimometer_overlay_y" type="text" value="<?php 
+				echo $current_olimometer->olimometer_overlay_y;
+			?>" size="40" aria-required="false" />
+            <p><span class="description"></span></p></td>
+		</tr>
+
         
 	</table>	
 	<p class="submit"><input type="submit" class="button-primary" name="olimometer_submit" value="Save Changes" /></p>
@@ -663,7 +745,7 @@ if( ($current_olimometer->olimometer_show_progress == 0)) {
 <script type="text/javascript"><!--
 google_ad_client = "ca-pub-9213372745182820";
 /* Olimometer - Leaderboard */
-google_ad_slot = "8984536418";
+google_ad_slot = "8984536418    ";
 google_ad_width = 728;
 google_ad_height = 90;
 //-->
@@ -693,7 +775,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	}
 	echo '<br />';
 	echo '<hr /><a name="OtherInformation"></a>';
-	echo '<h3>Other Information</h3>';	
+	echo '<h3>Other Information</h3>';
 
 	?>
 	        <small><p><strong>Installation</strong></p>
@@ -702,6 +784,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 			<p><strong>Want to say thank you?</strong></p>
 		  	<p>You can visit the my site for more information or to make a donation: <a href='http://www.olivershingler.co.uk/oliblog/olimometer'>http://www.olivershingler.co.uk/oliblog/olimometer</a>.</p>
+
+
 <p>
 <table><tr><td style='background-color:white;'>
 <form action='https://www.paypal.com/cgi-bin/webscr' method='post' border=0>
@@ -712,6 +796,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </form>
 </td></tr></table>
 </p>
+
+
+
+
 			<p><strong>Credits</strong>
 			<ul>
             <li>- The 'original' theme images are adapted from the PHP Fundraising Thermometer Generator by Sairam Suresh at <a href='http://www.entropyfarm.org'>www.entropyfarm.org</a></li>
@@ -736,6 +824,15 @@ olimometer_progress_enable();
 else
 {
 olimometer_progress_disable();
+}
+
+if(document.olimometer_form1.olimometer_overlay[0].checked)
+{
+olimometer_overlay_disable();
+}
+else
+{
+olimometer_overlay_enable();
 }
 
 </script>
@@ -890,6 +987,7 @@ function olimometer_dashboard_widget_function() {
     $dash_olimometer = new Olimometer();
     $dash_olimometer->load($current_olimometer_id);
 	
+
 	?>
     
     <table>
@@ -968,7 +1066,7 @@ add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 Database Functions
 ************************/
 global $olimometer_db_version;
-$olimometer_db_version = "2.35";
+$olimometer_db_version = "2.40";
 
 function olimometer_install() {
    global $wpdb;
@@ -1000,6 +1098,10 @@ function olimometer_install() {
   olimometer_paypal_signature VARCHAR(255),
   olimometer_number_format tinyint,
   olimometer_link VARCHAR(255),
+  olimometer_overlay tinyint,
+  olimometer_overlay_image VARCHAR(255),
+  olimometer_overlay_x int,
+  olimometer_overlay_y int,
   UNIQUE KEY olimometer_id (olimometer_id)
     );";
 
@@ -1026,7 +1128,7 @@ function update_check() {
     {
         // Yes it has!
         // If currently installed database version is less than current version required for this plugin, then we need to upgrade
-        $required_db_version = 2.35;
+        $required_db_version = 2.40;
         $installed_db_version = get_option("olimometer_db_version");
         if($installed_db_version < $required_db_version) {
             olimometer_install();

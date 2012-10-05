@@ -64,6 +64,12 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
     $progress_label = $olimometer_to_display->olimometer_progress_label;
     $font_height = $olimometer_to_display->olimometer_font_height;
     $suffix = $olimometer_to_display->olimometer_suffix;
+
+    // Overlay Variables
+    $overlay = $olimometer_to_display->olimometer_overlay;
+    $overlay_image = $olimometer_to_display->olimometer_overlay_image;
+    $overlay_x = $olimometer_to_display->olimometer_overlay_x;
+    $overlay_y = $olimometer_to_display->olimometer_overlay_y;
     
     if($olimometer_to_display->olimometer_number_format == null) {
         $olimometer_number_format = 0;
@@ -224,50 +230,7 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         //write labels
         $text_color_array = rgb2array($text_colour);
         $text_colour_rgb = imagecolorallocate($temp_new_image, $text_color_array[0], $text_color_array[1], $text_color_array[2]);
-/*        
-        switch($currency) {
-            case 128:
-                $currency_symbol = "&#8364;";
-                break;
-            case '':
-                $currency_symbol = "";
-                break;
-            case 'x':
-                $currency_symbol = "";
-                break;
-            case '10000':
-                $currency_symbol = "";
-                break;
-            default:
-                $currency_symbol = "kr";
-        }*/
-        
-        /*if ($currency == 128) {
-            $currency_symbol = "&#8364;";
-        }
-        elseif (($currency == '') || ($currency == 'x')) {
-                $currency_symbol = "";
-        }
-        elseif($currency == 10000) {
-            // Krone
-            $currency_symbol = "kr ";
-        }
-        else {
-            $currency_symbol = "&#$currency;";
-        }*/
-        
-        /*if (($suffix == '') || ($suffix == 'x')) {
-            $suffix_symbol = "";
-        }
-        elseif($suffix == 10000) {
-            // Krone
-            $suffix_symbol = " kr";
-        }
-        else {
-                $suffix_symbol = "&#$suffix;";
-        }*/
-        //$currency_symbol = "YYY";
-        //$suffix_symbol = "XXX";
+
         
         // What is the width of the top label?
         $new_image_width = $image_height; // default width!
@@ -294,15 +257,6 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
                         $new_image_width = $progress_text_width;
                 }
         }
-        
-        // What is the width of the thermometer template image?
-        // Is it wider than the current estimate for width?
-        /*if ($therm_bulb_width > $new_image_width) {
-            // Yup... use this instead
-            $new_image_width = $therm_bulb_width;
-        }*/
-        
-        
         
         
         // Assemble the image:
@@ -371,6 +325,9 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         $thermometer_height = $image_height;
         }
         
+
+        
+
         //create temporary image
         $temp_new_image = imagecreatetruecolor(50, $image_height);
         
@@ -421,21 +378,6 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         $text_color_array = rgb2array($text_colour);
         $text_colour_rgb = imagecolorallocate($temp_new_image, $text_color_array[0], $text_color_array[1], $text_color_array[2]);
         
-        /*if ($currency == 128)
-            $currency_symbol = "&#8364;";
-        else if (($currency == '') || ($currency == 'x'))
-                $currency_symbol = "";
-        else
-            $currency_symbol = "&#$currency;";
-        
-        if (($suffix == '') || ($suffix == 'x')) {
-            $suffix_symbol = "";
-        }
-        else {
-                $suffix_symbol = "&#$suffix;";
-        }*/
-        
-        
         
         // What is the width of the top label?
         $new_image_width = 0; // default width!
@@ -470,6 +412,32 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
             $new_image_width = $therm_bulb_width;
         }
         
+
+        // Are we using an overlay image?
+        if($overlay == 1) {
+            // Convert the image URL to a real file path
+            //$wp_root_path = str_replace('/wp-content/themes', '', get_theme_root());
+            //$converted_overlay_image = $wp_root_path.wp_make_link_relative( $overlay_image );
+
+            // Load the overlay PNG
+            $overlay_image_object = imagecreatefrompng($overlay_image);
+
+            // Get the overlay image dimensions
+            list($overlay_image_object_width, $overlay_image_object_height) = getimagesize($overlay_image);
+
+            // Do we need to adjust the width of the Olimometer to fit this in?
+            if($new_image_width < ($overlay_image_object_width+$overlay_x)) {
+                // Yes
+                $new_image_width = $overlay_image_object_width+$overlay_x;
+            }
+
+            // Do we need to adjust the height of the Olimometer to fit this in?
+            if($image_height < ($overlay_image_object_height+$overlay_y)) {
+                // Yes
+                $image_height = $overlay_image_object_height+$overlay_y;
+            }
+
+        }
         
         
         
@@ -497,6 +465,13 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         if($show_progress == 1) {
         imagettftext($new_image, $font_height, 0, 0, $image_height-(ceil($font_height/2)), $text_colour_rgb, $font_name, $progress_label.' '.$currency_symbol.$display_progress_value.$suffix_symbol);
         }
+
+        // Overlay the overlay if needed!
+        if($overlay == 1) {
+            imagecopyresampled($new_image, $overlay_image_object, $overlay_x, $overlay_y, 0, 0, $overlay_image_object_width, $overlay_image_object_height, $overlay_image_object_width, $overlay_image_object_height);
+        }
+        
+
         // - Set transparancy if required using supplied background colour as mask
         if ($transparent == 1) {
             imagecolortransparent($new_image, $background_colour);

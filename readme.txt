@@ -6,11 +6,11 @@ Requires at least: 3.1
 Tested up to: 3.3.2
 Stable tag: trunk
 
-A fully customisable fundraising thermometer with PayPal integration, custom skins and support for multiple vertical and horizontal thermometers.
+A fully customisable fundraising thermometer with PayPal and StayClassy integration, custom skins and support for multiple vertical and horizontal thermometers.
 
 == Description ==
 
-A fully customisable fundraising thermometer with PayPal integration and custom skin support.
+A fully customisable fundraising thermometer with PayPal and StayClassy integration and custom skin support.
 
 Multiple thermometers can be configured and displayed separately on different pages or posts. Each thermometer supports individual customisation, targets, currencies and progress tracking.
 
@@ -103,6 +103,9 @@ For best results follow these tips:
 
 
 == Changelog ==
+
+= 2.41 =
+* Added support for tracking StayClassy.org fundraising totals
 
 = 2.40 =
 * Added the ability to overlay a custom image over the top of the Olimometer. This feature can be found at the bottom of the Appearance and Layout section of the admin page.
@@ -224,6 +227,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.41 =
+* Added support for tracking StayClassy.org fundraising totals
 
 = 2.40 =
 * Added the ability to overlay a custom image over the top of the Olimometer. This feature can be found at the bottom of the Appearance and Layout section of the admin page.

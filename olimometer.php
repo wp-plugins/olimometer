@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.40
+Version: 2.41
 */
 
 
@@ -149,6 +149,7 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
     $an_olimometer->olimometer_overlay_image = $_REQUEST['upload_image'];
     $an_olimometer->olimometer_overlay_x = $_REQUEST['olimometer_overlay_x'];
     $an_olimometer->olimometer_overlay_y = $_REQUEST['olimometer_overlay_y'];
+    $an_olimometer->olimometer_stayclassypid = $_REQUEST['olimometer_stayclassypid'];
     
     // Save it
     $an_olimometer->save();
@@ -216,22 +217,68 @@ function olimometer_manage_page() {
 <script type="text/javascript" src="<?php echo plugins_url(); ?>/olimometer/jscolor/jscolor.js"></script>
 
 <script language="javascript">
+
+    /*
     function olimometer_progress_disable() {
-        document.olimometer_form1.olimometer_progress_value.readOnly = true;
-        document.olimometer_form1.olimometer_paypal_username.readOnly = false;
-        document.olimometer_form1.olimometer_paypal_password.readOnly = false;
-        document.olimometer_form1.olimometer_paypal_signature.readOnly = false;
-        document.olimometer_form1.olimometer_paypal_extra_value.readOnly = false;
+    document.olimometer_form1.olimometer_progress_value.readOnly = true;
+    document.olimometer_form1.olimometer_paypal_username.readOnly = false;
+    document.olimometer_form1.olimometer_paypal_password.readOnly = false;
+    document.olimometer_form1.olimometer_paypal_signature.readOnly = false;
+    document.olimometer_form1.olimometer_paypal_extra_value.readOnly = false;
     }
 
     function olimometer_progress_enable() {
-        document.olimometer_form1.olimometer_progress_value.readOnly = false;
-        document.olimometer_form1.olimometer_paypal_username.readOnly = true;
-        document.olimometer_form1.olimometer_paypal_password.readOnly = true;
-        document.olimometer_form1.olimometer_paypal_signature.readOnly = true;
-        document.olimometer_form1.olimometer_paypal_extra_value.readOnly = true;
+    document.olimometer_form1.olimometer_progress_value.readOnly = false;
+    document.olimometer_form1.olimometer_paypal_username.readOnly = true;
+    document.olimometer_form1.olimometer_paypal_password.readOnly = true;
+    document.olimometer_form1.olimometer_paypal_signature.readOnly = true;
+    document.olimometer_form1.olimometer_paypal_extra_value.readOnly = true;
+    }*/
+
+    function olimometer_progress($progress_type) {
+        // 0 = Manual
+        // 1 = PayPal
+        // 2 = StayClassy
+        if ($progress_type == 0) {
+            // Enable manual
+            olimometer_disable_manual(false);
+            // Disable PayPal
+            olimometer_disable_paypal(true);
+            // Disable StayClassy
+            olimometer_disable_stayclassy(true);
+        }
+        if ($progress_type == 1) {
+            // Enable PayPal
+            olimometer_disable_paypal(false);
+            // Disable Manual
+            olimometer_disable_manual(true);
+            // Disable StayClassy
+            olimometer_disable_stayclassy(true);
+        }
+        if ($progress_type == 2) {
+            // Enable StayClassy
+            olimometer_disable_stayclassy(false);
+            // Disable PayPal
+            olimometer_disable_paypal(true);
+            // Disable Manual
+            olimometer_disable_manual(true);
+        }
     }
 
+    function olimometer_disable_manual($tof) {
+        document.olimometer_form1.olimometer_progress_value.readOnly = $tof;
+    }
+
+    function olimometer_disable_paypal($tof) {
+        document.olimometer_form1.olimometer_paypal_username.readOnly = $tof;
+        document.olimometer_form1.olimometer_paypal_password.readOnly = $tof;
+        document.olimometer_form1.olimometer_paypal_signature.readOnly = $tof;
+        document.olimometer_form1.olimometer_paypal_extra_value.readOnly = $tof;
+    }
+
+    function olimometer_disable_stayclassy($tof) {
+        document.olimometer_form1.olimometer_stayclassypid.readOnly = $tof;
+    }
 
     function olimometer_overlay_disable() {
         document.olimometer_form1.upload_image.readOnly = true;
@@ -407,21 +454,27 @@ function olimometer_manage_page() {
 	?>
 	<table class="form-table">
 		<tr class="form-required">
-			<th scope="row" valign="top"><label for="name">Manual or PayPal Link?</label></th>
+			<th scope="row" valign="top"><label for="name">Manual or Automatic Progress Tracking?</label></th>
 			<td><input name="olimometer_use_paypal" id="olimometer_use_paypal" type="radio" value="0"<?php
 if($current_olimometer->olimometer_use_paypal == 0) {
 	echo " checked";
 }
 
-?> onClick="olimometer_progress_enable();"> Manual<br />
+?> onClick="olimometer_progress(0);"> Manual<br />
 			    <input name="olimometer_use_paypal" id="olimometer_use_paypal" type="radio" value="1"<?php
 if($current_olimometer->olimometer_use_paypal == 1) {
 	echo " checked";
 }
 
-?> onClick="olimometer_progress_disable();"> PayPal
+?> onClick="olimometer_progress(1);"> PayPal<br />
+			    <input name="olimometer_use_paypal" id="olimometer_use_paypal" type="radio" value="2"<?php
+if($current_olimometer->olimometer_use_paypal == 2) {
+	echo " checked";
+}
 
-            <p><span class="description">Do you want to update the progress (current amount raised) manually or automatically by linking to a PayPal account?</span></p></td>
+?> onClick="olimometer_progress(2);"> StayClassy
+
+            <p><span class="description">Do you want to update the progress (current amount raised) manually or automatically by linking to a PayPal or StayClassy account?</span></p></td>
 
 		</tr>
 
@@ -490,6 +543,14 @@ if($current_olimometer->olimometer_use_paypal == 1) {
             <p><span class="description">How much has been raised offline? This amount will be added to the PayPal total.</span></p></td>
 		</tr>
 		
+        <tr class="form-field form-required">
+			<th scope="row" valign="top"><label for="name">StayClassy PID</label></th>
+			<td><input name="olimometer_stayclassypid" id="olimometer_stayclassypid" type="text" value="<?php 
+				echo $current_olimometer->olimometer_stayclassypid;
+			
+			?>" size="40" aria-required="true" />
+            <p><span class="description">Please enter your unique StayClassy.org project ID for which you would like to track the total.</span></p></td>
+		</tr>
 
 
 	</table>
@@ -819,11 +880,15 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 if(document.olimometer_form1.olimometer_use_paypal[0].checked)
 {
-olimometer_progress_enable();
+olimometer_progress(0);
 }
-else
+if(document.olimometer_form1.olimometer_use_paypal[1].checked)
 {
-olimometer_progress_disable();
+olimometer_progress(1);
+}
+if(document.olimometer_form1.olimometer_use_paypal[2].checked)
+{
+olimometer_progress(2);
 }
 
 if(document.olimometer_form1.olimometer_overlay[0].checked)
@@ -1066,7 +1131,7 @@ add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 Database Functions
 ************************/
 global $olimometer_db_version;
-$olimometer_db_version = "2.40";
+$olimometer_db_version = "2.41";
 
 function olimometer_install() {
    global $wpdb;
@@ -1102,6 +1167,7 @@ function olimometer_install() {
   olimometer_overlay_image VARCHAR(255),
   olimometer_overlay_x int,
   olimometer_overlay_y int,
+  olimometer_stayclassypid int,
   UNIQUE KEY olimometer_id (olimometer_id)
     );";
 
@@ -1128,7 +1194,7 @@ function update_check() {
     {
         // Yes it has!
         // If currently installed database version is less than current version required for this plugin, then we need to upgrade
-        $required_db_version = 2.40;
+        $required_db_version = 2.41;
         $installed_db_version = get_option("olimometer_db_version");
         if($installed_db_version < $required_db_version) {
             olimometer_install();
@@ -1281,5 +1347,10 @@ function get_olimometer_last() {
     $olimometer_last = get_option('olimometer_last_' . $current_user->user_login);
     return $olimometer_last;
 }
+
+
+
+	
+
 
 ?>

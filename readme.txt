@@ -6,7 +6,7 @@ Requires at least: 3.1
 Tested up to: 3.3.2
 Stable tag: trunk
 
-A fully customisable fundraising thermometer with PayPal and StayClassy integration, custom skins and support for multiple vertical and horizontal thermometers.
+A fully customisable fundraising thermometer with PayPal integration, custom skins and support for multiple vertical and horizontal thermometers.
 
 == Description ==
 

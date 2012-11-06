@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.41
+Version: 2.42
 */
 
 
@@ -957,13 +957,65 @@ class OlimometerWidget extends WP_Widget
  
   function form($instance)
   {
-    $instance = wp_parse_args( (array) $instance, array( 'title' => '', 'header' => '', 'footer' => '', 'img_css' => '', 'div_css' => '' ) );
+    $instance = wp_parse_args( (array) $instance, array( 'title' => '', 'header' => '', 'footer' => '', 'img_css' => '', 'div_css' => '', 'olimometer_donate_address' => '', 'olimometer_donate_currency' => '', 'olimometer_donate_locale' => '' ) );
     $title = $instance['title'];
     $olimometer_id = $instance['olimometer_id'];
     $header = $instance['header'];
     $footer = $instance['footer'];
     $img_css = $instance['img_css'];
     $div_css = $instance['div_css'];
+    $olimometer_donate_address = $instance['olimometer_donate_address'];
+    $olimometer_donate_currency = $instance['olimometer_donate_currency'];
+    $olimometer_donate_locale = $instance['olimometer_donate_locale'];
+
+    if($olimometer_donate_locale == '') {
+        // Set default locale
+        $olimometer_donate_locale = 'en_US';
+    }
+
+
+    $currency_codes = array('AUD' => 'Australian Dollars (A $)',
+						   	'CAD' => 'Canadian Dollars (C $)',
+						   	'EUR' => 'Euros (&euro;)',
+						   	'GBP' => 'Pounds Sterling (&pound;)',
+						   	'JPY' => 'Yen (&yen;)',
+						   	'USD' => 'U.S. Dollars ($)',
+						   	'NZD' => 'New Zealand Dollar ($)',
+						   	'CHF' => 'Swiss Franc',
+						   	'HKD' => 'Hong Kong Dollar ($)',
+						   	'SGD' => 'Singapore Dollar ($)',
+						   	'SEK' => 'Swedish Krona',
+						   	'DKK' => 'Danish Krone',
+						   	'PLN' => 'Polish Zloty',
+						   	'NOK' => 'Norwegian Krone',
+						   	'HUF' => 'Hungarian Forint',
+						   	'CZK' => 'Czech Koruna',
+						   	'ILS' => 'Israeli Shekel',
+						   	'MXN' => 'Mexican Peso',
+						   	'BRL' => 'Brazilian Real',
+						   	'TWD' => 'Taiwan New Dollar',
+						   	'PHP' => 'Philippine Peso',
+						   	'TRY' => 'Turkish Lira',
+						   	'THB' => 'Thai Baht');
+
+    $localized_buttons = array('en_AU' => 'Australia - Australian English',
+								   'de_DE/AT' => 'Austria - German',
+								   'nl_NL/BE' => 'Belgium - Dutch',
+								   'fr_XC' => 'Canada - French',
+								   'zh_XC' => 'China - Simplified Chinese',
+								   'fr_FR/FR' => 'France - French',
+								   'de_DE/DE' => 'Germany - German',
+								   'it_IT/IT' => 'Italy - Italian',
+								   'ja_JP/JP' => 'Japan - Japanese',
+								   'es_XC' => 'Mexico - Spanish',
+								   'nl_NL/NL' => 'Netherlands - Dutch',
+								   'pl_PL/PL' => 'Poland - Polish',
+								   'es_ES/ES' => 'Spain - Spanish',
+								   'de_DE/CH' => 'Switzerland - German',
+								   'fr_FR/CH' => 'Switzerland - French',
+								   'en_US' => 'United States - U.S. English');
+
+
 ?>
   <p><label for="<?php echo $this->get_field_id('olimometer_id'); ?>">Olimometer: <?php
                 echo olimometer_list(esc_attr($olimometer_id),$this->get_field_id('olimometer_id'),$this->get_field_name('olimometer_id'));
@@ -974,6 +1026,27 @@ class OlimometerWidget extends WP_Widget
   <p><label for="<?php echo $this->get_field_id('footer'); ?>">Footer: <textarea class="widefat" rows=4 id="<?php echo $this->get_field_id('footer'); ?>" name="<?php echo $this->get_field_name('footer'); ?>"><?php echo esc_attr($footer); ?></textarea></label></p>
   <p><label for="<?php echo $this->get_field_id('img_css'); ?>">CSS class(es) for image: <input class="widefat" id="<?php echo $this->get_field_id('img_css'); ?>" name="<?php echo $this->get_field_name('img_css'); ?>" type="text" value="<?php echo esc_attr($img_css); ?>" /></label></p>
   <p><label for="<?php echo $this->get_field_id('div_css'); ?>">CSS class(es) for widget: <input class="widefat" id="<?php echo $this->get_field_id('div_css'); ?>" name="<?php echo $this->get_field_name('div_css'); ?>" type="text" value="<?php echo esc_attr($div_css); ?>" /></label></p>
+  <p><label for="<?php echo $this->get_field_id('olimometer_donate_address'); ?>">If you'd like a PayPal donate button, enter your account email address here: <input class="widefat" id="<?php echo $this->get_field_id('olimometer_donate_address'); ?>" name="<?php echo $this->get_field_name('olimometer_donate_address'); ?>" type="text" value="<?php echo esc_attr($olimometer_donate_address); ?>" /></label></p>
+  <p><label for="<?php echo $this->get_field_id('olimometer_donate_currency'); ?>">PayPal donation currency:<select name="<?php echo $this->get_field_name('olimometer_donate_currency'); ?>" id="<?php echo $this->get_field_id('olimometer_donate_currency'); ?>">
+    <?php 
+		foreach ( $currency_codes as $key => $code ) {
+	        echo '<option value="'.$key.'"';
+			if (esc_attr($olimometer_donate_currency) == $key) {
+                echo ' selected="selected"';
+            }
+			echo '>'.$code.'</option>';
+		} ?></select></label></p>
+  <p><label for="<?php echo $this->get_field_id('olimometer_donate_locale'); ?>">PayPal donation locale:<select name="<?php echo $this->get_field_name('olimometer_donate_locale'); ?>" id="<?php echo $this->get_field_id('olimometer_donate_locale'); ?>">
+    <?php 
+		foreach ( $localized_buttons as $key => $code ) {
+	        echo '<option value="'.$key.'"';
+			if (esc_attr($olimometer_donate_locale) == $key) {
+                echo ' selected="selected"';
+            }
+			echo '>'.$code.'</option>';
+		} ?></select></label></p>
+
+
 <?php
   }
  
@@ -986,6 +1059,9 @@ class OlimometerWidget extends WP_Widget
     $instance['img_css'] = $new_instance['img_css'];
     $instance['div_css'] = $new_instance['div_css'];
     $instance['olimometer_id'] = $new_instance['olimometer_id'];
+    $instance['olimometer_donate_address'] = $new_instance['olimometer_donate_address'];
+    $instance['olimometer_donate_currency'] = $new_instance['olimometer_donate_currency'];
+    $instance['olimometer_donate_locale'] = $new_instance['olimometer_donate_locale'];
     return $instance;
   }
  
@@ -1000,6 +1076,9 @@ class OlimometerWidget extends WP_Widget
     $footer = $instance['footer'];
     $img_css = $instance['img_css'];
     $div_css = $instance['div_css'];
+    $olimometer_donate_address = $instance['olimometer_donate_address'];
+    $olimometer_donate_currency = $instance['olimometer_donate_currency'];
+    $olimometer_donate_locale = $instance['olimometer_donate_locale'];
     
     if($olimometer_id > 0)
     {
@@ -1024,6 +1103,16 @@ class OlimometerWidget extends WP_Widget
     echo $header;
     echo show_olimometer($olimometer_id,$img_css);
     echo $footer;
+
+    if($olimometer_donate_address == "") {
+        // It's empty, so don't display a paypal button
+    }
+    else {
+        ?>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><div class="paypal-payments"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="<?php echo $olimometer_donate_address; ?>" /><input type="hidden" name="currency_code" value="<?php echo $olimometer_donate_currency; ?>" /><input type="image" style="padding: 5px 0;" id="ppbutton" src="https://www.paypal.com/<?php echo $olimometer_donate_locale; ?>/i/btn/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." /><img alt="" id="ppbutton" style="padding: 5px 0;" src="https://www.paypal.com/<?php echo $olimometer_donate_locale; ?>/i/scr/pixel.gif" width="1" height="1" /></div></form>
+        <?php
+    }
+
 	echo "</div><!-- olimometer_widget div -->";    
     
     echo $after_widget;

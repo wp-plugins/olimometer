@@ -14,7 +14,7 @@ A fully customisable fundraising thermometer with PayPal and StayClassy integrat
 
 Multiple thermometers can be configured and displayed separately on different pages or posts. Each thermometer supports individual customisation, targets, currencies and progress tracking.
 
-Thermometers can be placed in sidebar widgets with custom headers, footers and CSS classes.
+Thermometers can be placed in sidebar widgets with custom headers, footers and CSS classes. A PayPal Donate button can also be configured for each Widget.
 
 Choose from a number of pre-installed vertical and horizontal skins, or create your own and share it.
 
@@ -39,6 +39,10 @@ Either install using the automatic WordPress plugin installation method, or do i
 
 == Frequently Asked Questions ==
 
+= How do I add a PayPal Donate button? =
+
+Simply add the Olimometer as a Widget to your sidebar area, and enter your PayPal account's email address in the relevant field on the widget's configuration panel.
+You can also customise the language and currency of the donation button.
 
 = The thermometer image won't show (or shows up as a red cross) =
 
@@ -103,6 +107,9 @@ For best results follow these tips:
 
 
 == Changelog ==
+
+= 2.42 =
+* PayPal Donate button can be added to a widget. Simply enter your PayPal email address in the relevant field on the Olimometer Widget configuration. You can also customise the language and currency of the donation button.
 
 = 2.41 =
 * Added support for tracking StayClassy.org fundraising totals
@@ -227,6 +234,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.42 =
+* PayPal Donate button can be added to a widget. Simply enter your PayPal email address in the relevant field on the Olimometer Widget configuration. You can also customise the language and currency of the donation button.
 
 = 2.41 =
 * Added support for tracking StayClassy.org fundraising totals

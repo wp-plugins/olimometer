@@ -108,6 +108,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.43 =
+* Removed drop-shadows on some skins. Makes them look neater on transparent backgrounds.
+
 = 2.42 =
 * PayPal Donate button can be added to a widget. Simply enter your PayPal email address in the relevant field on the Olimometer Widget configuration. You can also customise the language and currency of the donation button.
 
@@ -234,6 +237,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.43 =
+* Removed drop-shadows on some skins. Makes them look neater on transparent backgrounds.
 
 = 2.42 =
 * PayPal Donate button can be added to a widget. Simply enter your PayPal email address in the relevant field on the Olimometer Widget configuration. You can also customise the language and currency of the donation button.

@@ -288,7 +288,7 @@ class Olimometer
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.43'></a>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.44'></a>";
         
         return $the_olimometer_text;
         //return null;

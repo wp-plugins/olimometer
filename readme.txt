@@ -108,6 +108,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.44 =
+* A couple of minor fixes and tidy-ups
+
 = 2.43 =
 * Removed drop-shadows on some skins. Makes them look neater on transparent backgrounds.
 
@@ -237,6 +240,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.44 =
+* A couple of minor fixes and tidy-ups
 
 = 2.43 =
 * Removed drop-shadows on some skins. Makes them look neater on transparent backgrounds.

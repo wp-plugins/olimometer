@@ -108,6 +108,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.45 =
+* Added Swiss Francs (CHF) as a currency option
+
 = 2.44 =
 * A couple of minor fixes and tidy-ups
 
@@ -240,6 +243,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.45 =
+* Added Swiss Francs (CHF) as a currency option
 
 = 2.44 =
 * A couple of minor fixes and tidy-ups

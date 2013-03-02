@@ -143,6 +143,9 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         case '10000':
             $currency_symbol = "kr ";
             break;
+		case '10001':
+            $currency_symbol = "CHF ";
+            break;		
         default:
             $currency_symbol = "&#$currency;";
     }
@@ -160,6 +163,9 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         case '10000':
             $suffix_symbol = " kr";
             break;
+		case '10001':
+            $suffix_symbol = " CHF";
+            break;				
         default:
             $suffix_symbol = "&#$suffix;";
     }

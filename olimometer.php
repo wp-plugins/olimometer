@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.44
+Version: 2.45
 */
 
 
@@ -589,7 +589,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
             <option value="8359" <?php if($current_olimometer->olimometer_currency=="8359") { echo "SELECTED"; } ?>>&#8359;</option>                
             <option value="8356" <?php if($current_olimometer->olimometer_currency=="8356") { echo "SELECTED"; } ?>>&#8356;</option> 
             <option value="176" <?php if($current_olimometer->olimometer_currency=="176") { echo "SELECTED"; } ?>>&#176;</option> 
-            <option value="10000" <?php if($current_olimometer->olimometer_currency=="10000") { echo "SELECTED"; } ?>>kr</option> 
+            <option value="10000" <?php if($current_olimometer->olimometer_currency=="10000") { echo "SELECTED"; } ?>>kr</option>
+ 			<option value="10001" <?php if($current_olimometer->olimometer_currency=="10001") { echo "SELECTED"; } ?>>CHF</option> 
 			<option value="" <?php if($current_olimometer->olimometer_currency=="") { echo "SELECTED"; } ?>>No Prefix</option>
 			</select>
 			</td>
@@ -609,7 +610,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
             <option value="8359" <?php if($current_olimometer->olimometer_suffix=="8359") { echo "SELECTED"; } ?>>&#8359;</option>                
             <option value="8356" <?php if($current_olimometer->olimometer_suffix=="8356") { echo "SELECTED"; } ?>>&#8356;</option> 
             <option value="176" <?php if($current_olimometer->olimometer_suffix=="176") { echo "SELECTED"; } ?>>&#176;</option> 
-            <option value="10000" <?php if($current_olimometer->olimometer_suffix=="10000") { echo "SELECTED"; } ?>>kr</option> 
+            <option value="10000" <?php if($current_olimometer->olimometer_suffix=="10000") { echo "SELECTED"; } ?>>kr</option>
+ 			<option value="10001" <?php if($current_olimometer->olimometer_suffix=="10001") { echo "SELECTED"; } ?>>CHF</option> 
 			<option value="" <?php if($current_olimometer->olimometer_suffix=="") { echo "SELECTED"; } ?>>No Suffix</option>
 			</select>
 			</td>

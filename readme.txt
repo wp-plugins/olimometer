@@ -108,6 +108,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.46 =
+* Added support for StayClassy Events in addition to Projects
+
 = 2.45 =
 * Added Swiss Francs (CHF) as a currency option
 
@@ -243,6 +246,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.46 =
+* Added support for StayClassy Events in addition to Projects
 
 = 2.45 =
 * Added Swiss Francs (CHF) as a currency option

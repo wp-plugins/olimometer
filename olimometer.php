@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.45
+Version: 2.46
 */
 
 
@@ -150,6 +150,7 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
     $an_olimometer->olimometer_overlay_x = $_REQUEST['olimometer_overlay_x'];
     $an_olimometer->olimometer_overlay_y = $_REQUEST['olimometer_overlay_y'];
     $an_olimometer->olimometer_stayclassypid = $_REQUEST['olimometer_stayclassypid'];
+    $an_olimometer->olimometer_stayclassyeid = $_REQUEST['olimometer_stayclassyeid'];
     
     // Save it
     $an_olimometer->save();
@@ -218,27 +219,12 @@ function olimometer_manage_page() {
 
 <script language="javascript">
 
-    /*
-    function olimometer_progress_disable() {
-    document.olimometer_form1.olimometer_progress_value.readOnly = true;
-    document.olimometer_form1.olimometer_paypal_username.readOnly = false;
-    document.olimometer_form1.olimometer_paypal_password.readOnly = false;
-    document.olimometer_form1.olimometer_paypal_signature.readOnly = false;
-    document.olimometer_form1.olimometer_paypal_extra_value.readOnly = false;
-    }
-
-    function olimometer_progress_enable() {
-    document.olimometer_form1.olimometer_progress_value.readOnly = false;
-    document.olimometer_form1.olimometer_paypal_username.readOnly = true;
-    document.olimometer_form1.olimometer_paypal_password.readOnly = true;
-    document.olimometer_form1.olimometer_paypal_signature.readOnly = true;
-    document.olimometer_form1.olimometer_paypal_extra_value.readOnly = true;
-    }*/
 
     function olimometer_progress($progress_type) {
         // 0 = Manual
         // 1 = PayPal
-        // 2 = StayClassy
+        // 2 = StayClassy Project
+        // 3 = StayClassy Event
         if ($progress_type == 0) {
             // Enable manual
             olimometer_disable_manual(false);
@@ -246,6 +232,8 @@ function olimometer_manage_page() {
             olimometer_disable_paypal(true);
             // Disable StayClassy
             olimometer_disable_stayclassy(true);
+            // Disable StayClassy Event
+            olimometer_disable_stayclassyevent(true);
         }
         if ($progress_type == 1) {
             // Enable PayPal
@@ -254,6 +242,8 @@ function olimometer_manage_page() {
             olimometer_disable_manual(true);
             // Disable StayClassy
             olimometer_disable_stayclassy(true);
+            // Disable StayClassy Event
+            olimometer_disable_stayclassyevent(true);
         }
         if ($progress_type == 2) {
             // Enable StayClassy
@@ -262,6 +252,18 @@ function olimometer_manage_page() {
             olimometer_disable_paypal(true);
             // Disable Manual
             olimometer_disable_manual(true);
+            // Disable StayClassy Event
+            olimometer_disable_stayclassyevent(true);
+        }
+        if ($progress_type == 3) {
+            // Disable StayClassy
+            olimometer_disable_stayclassy(true);
+            // Disable PayPal
+            olimometer_disable_paypal(true);
+            // Disable Manual
+            olimometer_disable_manual(true);
+            // Enable StayClassy Event
+            olimometer_disable_stayclassyevent(false);
         }
     }
 
@@ -278,6 +280,10 @@ function olimometer_manage_page() {
 
     function olimometer_disable_stayclassy($tof) {
         document.olimometer_form1.olimometer_stayclassypid.readOnly = $tof;
+    }
+
+    function olimometer_disable_stayclassyevent($tof) {
+        document.olimometer_form1.olimometer_stayclassyeid.readOnly = $tof;
     }
 
     function olimometer_overlay_disable() {
@@ -472,7 +478,13 @@ if($current_olimometer->olimometer_use_paypal == 2) {
 	echo " checked";
 }
 
-?> onClick="olimometer_progress(2);"> StayClassy
+?> onClick="olimometer_progress(2);"> StayClassy Project<br />
+			    <input name="olimometer_use_paypal" id="olimometer_use_paypal" type="radio" value="3"<?php
+if($current_olimometer->olimometer_use_paypal == 3) {
+	echo " checked";
+}
+
+?> onClick="olimometer_progress(3);"> StayClassy Event
 
             <p><span class="description">Do you want to update the progress (current amount raised) manually or automatically by linking to a PayPal or StayClassy account?</span></p></td>
 
@@ -552,6 +564,14 @@ if($current_olimometer->olimometer_use_paypal == 2) {
             <p><span class="description">Please enter your unique StayClassy.org project ID for which you would like to track the total.</span></p></td>
 		</tr>
 
+        <tr class="form-field form-required">
+			<th scope="row" valign="top"><label for="name">StayClassy EID</label></th>
+			<td><input name="olimometer_stayclassyeid" id="olimometer_stayclassyeid" type="text" value="<?php 
+				echo $current_olimometer->olimometer_stayclassyeid;
+			
+			?>" size="40" aria-required="true" />
+            <p><span class="description">Please enter your unique StayClassy.org event ID for which you would like to track the total.</span></p></td>
+		</tr>
 
 	</table>
 <p class="submit"><input type="submit" class="button-primary" name="olimometer_submit" value="Save Changes" /></p>	
@@ -846,7 +866,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
             <p>You cannot delete the first Olimometer.</p>
 
 			<p><strong>Want to say thank you?</strong></p>
-		  	<p>You can visit the my site for more information or to make a donation: <a href='http://www.olivershingler.co.uk/oliblog/olimometer'>http://www.olivershingler.co.uk/oliblog/olimometer</a>.</p>
+		  	<p>You can visit my site for more information or to make a donation: <a href='http://www.olivershingler.co.uk/oliblog/olimometer'>http://www.olivershingler.co.uk/oliblog/olimometer</a>.</p>
 
 
 <p>
@@ -891,6 +911,10 @@ olimometer_progress(1);
 if(document.olimometer_form1.olimometer_use_paypal[2].checked)
 {
 olimometer_progress(2);
+}
+if(document.olimometer_form1.olimometer_use_paypal[3].checked)
+{
+olimometer_progress(3);
 }
 
 if(document.olimometer_form1.olimometer_overlay[0].checked)
@@ -1222,7 +1246,7 @@ add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 Database Functions
 ************************/
 global $olimometer_db_version;
-$olimometer_db_version = "2.41";
+$olimometer_db_version = "2.46";
 
 function olimometer_install() {
    global $wpdb;
@@ -1259,6 +1283,7 @@ function olimometer_install() {
   olimometer_overlay_x int,
   olimometer_overlay_y int,
   olimometer_stayclassypid int,
+  olimometer_stayclassyeid int,
   UNIQUE KEY olimometer_id (olimometer_id)
     );";
 

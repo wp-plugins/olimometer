@@ -37,6 +37,7 @@ class Olimometer
     public $olimometer_overlay_x = 0;
     public $olimometer_overlay_y = 0;
     public $olimometer_stayclassypid = 0;
+    public $olimometer_stayclassyeid = 0;
     
     private $olimometer_default_link = "http://www.olivershingler.co.uk/oliblog/olimometer/";
     private $olimometer_table_name = "olimometer_olimometers";
@@ -77,6 +78,7 @@ class Olimometer
         $this->olimometer_overlay_x = $query_results['olimometer_overlay_x'];
         $this->olimometer_overlay_y = $query_results['olimometer_overlay_y'];
         $this->olimometer_stayclassypid = $query_results['olimometer_stayclassypid'];
+        $this->olimometer_stayclassyeid = $query_results['olimometer_stayclassyeid'];
         
         if($query_results['olimometer_link'] == "" || $query_results['olimometer_link'] == null) {
             $this->olimometer_link = $this->olimometer_default_link;
@@ -163,7 +165,8 @@ class Olimometer
                                                                 'olimometer_overlay_image' => $this->olimometer_overlay_image,
                                                                 'olimometer_overlay_x' => $this->olimometer_overlay_x,
                                                                 'olimometer_overlay_y' => $this->olimometer_overlay_y,
-                                                                'olimometer_stayclassypid' => $this->olimometer_stayclassypid
+                                                                'olimometer_stayclassypid' => $this->olimometer_stayclassypid,
+                                                                'olimometer_stayclassyeid' => $this->olimometer_stayclassyeid
                                                                  ) );
             
             // Find out the olimometer_id of the record just created and save it to the object.
@@ -198,7 +201,8 @@ class Olimometer
                                 'olimometer_overlay_image' => $this->olimometer_overlay_image,
                                 'olimometer_overlay_x' => $this->olimometer_overlay_x,
                                 'olimometer_overlay_y' => $this->olimometer_overlay_y,
-                                'olimometer_stayclassypid' => $this->olimometer_stayclassypid
+                                'olimometer_stayclassypid' => $this->olimometer_stayclassypid,
+                                'olimometer_stayclassyeid' => $this->olimometer_stayclassyeid
                         ), 
                         array( 'olimometer_id' => $this->olimometer_id )
                     );
@@ -259,9 +263,28 @@ class Olimometer
             }
         }
 
-        // If StayClassy integration is configured, get the current balance and save it
+        // If StayClassy PROJECT ID integration is configured, get the current balance and save it
         if($this->olimometer_use_paypal == 2) {
             $olimometer_stayclassy_balance = $this->getStayClassy($this->olimometer_stayclassypid);
+            if($olimometer_stayclassy_balance == false) {
+                // If PayPal link is broken, set balance to 0
+                $olimometer_stayclassy_balance = 0;
+            }
+            else {
+                    if($this->olimometer_progress_value == ($olimometer_stayclassy_balance) ) {
+                        // PayPal balance hasn't changed since we last checked so don't do anything
+                    }
+                    else {
+                        // It has changed, so save it
+                        $this->olimometer_progress_value = $olimometer_stayclassy_balance;
+                        $this->save();
+                    }
+            }
+        }
+
+        // If StayClassy EVENT ID integration is configured, get the current balance and save it
+        if($this->olimometer_use_paypal == 3) {
+            $olimometer_stayclassy_balance = $this->getStayClassyEvent($this->olimometer_stayclassyeid);
             if($olimometer_stayclassy_balance == false) {
                 // If PayPal link is broken, set balance to 0
                 $olimometer_stayclassy_balance = 0;
@@ -288,7 +311,7 @@ class Olimometer
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.45'></a>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.46'></a>";
         
         return $the_olimometer_text;
         //return null;
@@ -318,6 +341,30 @@ class Olimometer
         return $return_value;
     }
     
+        // Gets the total_raised value from StayClassy.org for a given EID.
+    function getStayClassyEvent($EID) {
+        $json = file_get_contents("http://www.stayclassy.org/api/event-info?eid=$EID");
+
+        $jsonIterator = new RecursiveIteratorIterator( 
+        new RecursiveArrayIterator(json_decode($json, TRUE)), 
+        RecursiveIteratorIterator::SELF_FIRST); 
+    
+        $return_value = 0;
+
+            foreach ($jsonIterator as $key => $val) { 
+                if(is_array($val)) { 
+                    //$return_text = $return_text . "$key:\n"; 
+                } else {
+                    if($key == "total_raised") {
+                        $return_value = $val;
+                    } 
+                    //$return_text = $return_text . "$key => $val\n"; 
+                } 
+            } 
+
+        return $return_value;
+    }
+
     // The following function is for PayPal balance retrieval
     function PPHttpPost($methodName_, $nvpStr_) {
         $olimometer_pp_environment = 'live';

@@ -1310,7 +1310,7 @@ function update_check() {
     {
         // Yes it has!
         // If currently installed database version is less than current version required for this plugin, then we need to upgrade
-        $required_db_version = 2.41;
+        $required_db_version = 2.46;
         $installed_db_version = get_option("olimometer_db_version");
         if($installed_db_version < $required_db_version) {
             olimometer_install();

@@ -1,6 +1,7 @@
-<?php
-// Olimometer Skin Loading functions
-
+<?php
+    
+// Olimometer Skin Loading functions
+
 class Olimometer_Skins
 {
     function Olimometer_Skins()

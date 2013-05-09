@@ -38,6 +38,10 @@ class Olimometer
     public $olimometer_overlay_y = 0;
     public $olimometer_stayclassypid = 0;
     public $olimometer_stayclassyeid = 0;
+    public $olimometer_display_dp;
+    public $olimometer_display_thousands;
+    public $olimometer_display_decimal;
+    public $olimometer_link_disable = 0;
     
     private $olimometer_default_link = "http://www.olivershingler.co.uk/oliblog/olimometer/";
     private $olimometer_table_name = "olimometer_olimometers";
@@ -79,12 +83,17 @@ class Olimometer
         $this->olimometer_overlay_y = $query_results['olimometer_overlay_y'];
         $this->olimometer_stayclassypid = $query_results['olimometer_stayclassypid'];
         $this->olimometer_stayclassyeid = $query_results['olimometer_stayclassyeid'];
+        $this->olimometer_link_disable = $query_results['olimometer_link_disable'];
         
         if($query_results['olimometer_link'] == "" || $query_results['olimometer_link'] == null) {
             $this->olimometer_link = $this->olimometer_default_link;
         }
         else {
             $this->olimometer_link = $query_results['olimometer_link'];
+        }
+
+        if($this->olimometer_number_format == null) {
+            $this->olimometer_number_format = 0;
         }
 
     }
@@ -166,7 +175,8 @@ class Olimometer
                                                                 'olimometer_overlay_x' => $this->olimometer_overlay_x,
                                                                 'olimometer_overlay_y' => $this->olimometer_overlay_y,
                                                                 'olimometer_stayclassypid' => $this->olimometer_stayclassypid,
-                                                                'olimometer_stayclassyeid' => $this->olimometer_stayclassyeid
+                                                                'olimometer_stayclassyeid' => $this->olimometer_stayclassyeid,
+                                                                'olimometer_link_disable' => $this->olimometer_link_disable
                                                                  ) );
             
             // Find out the olimometer_id of the record just created and save it to the object.
@@ -202,41 +212,11 @@ class Olimometer
                                 'olimometer_overlay_x' => $this->olimometer_overlay_x,
                                 'olimometer_overlay_y' => $this->olimometer_overlay_y,
                                 'olimometer_stayclassypid' => $this->olimometer_stayclassypid,
-                                'olimometer_stayclassyeid' => $this->olimometer_stayclassyeid
+                                'olimometer_stayclassyeid' => $this->olimometer_stayclassyeid,
+                                'olimometer_link_disable' => $this->olimometer_link_disable
                         ), 
                         array( 'olimometer_id' => $this->olimometer_id )
                     );
-/*
-            $wpdb->update($table_name, 
-                        array(  'olimometer_description' => $this->olimometer_description,
-                                'olimometer_progress_value' => $olimometer_progress_value,
-                                'olimometer_total_value' => $this->olimometer_total_value,
-                                'olimometer_currency' => $this->olimometer_currency,
-                                'olimometer_thermometer_bg_colour' => $this->olimometer_thermometer_bg_colour,
-                                'olimometer_text_colour' => $this->olimometer_text_colour,
-                                'olimometer_thermometer_height' => $this->olimometer_thermometer_height,
-                                'olimometer_transparent' => $this->olimometer_transparent,
-                                'olimometer_show_target' => $this->olimometer_show_target,
-                                'olimometer_show_progress' => $this->olimometer_show_progress,
-                                'olimometer_progress_label' => $this->olimometer_progress_label,
-                                'olimometer_font_height' => $this->olimometer_font_height,
-                                'olimometer_suffix' => $this->olimometer_suffix,
-                                'olimometer_skin_slug' => $this->olimometer_skin_slug,
-                                'olimometer_use_paypal' => $this->olimometer_use_paypal,
-                                'olimometer_paypal_username' => $this->olimometer_paypal_username,	
-                                'olimometer_paypal_password' => $this->olimometer_paypal_password,
-                                'olimometer_paypal_signature' => $this->olimometer_paypal_signature,
-                                'olimometer_paypal_extra_value' => $olimometer_paypal_extra_value,
-                                'olimometer_number_format' => $this->olimometer_number_format,
-                                'olimometer_link' => $this->olimometer_link,
-                                'olimometer_overlay' => $this->olimometer_overlay,
-                                'olimometer_overlay_image' => $this->olimometer_overlay_image,
-                                'olimometer_overlay_x' => $this->olimometer_overlay_x,
-                                'olimometer_overlay_y' => $this->olimometer_overlay_y
-                        ), 
-                        array( 'olimometer_id' => $this->olimometer_id )
-                    );
-*/
         }
       
     }
@@ -244,6 +224,32 @@ class Olimometer
     // Returns the olimometer display code
     function show($css_class = '')
     {
+        // Make sure the progress value is updated in case it is pulled in from PayPal etc...
+        $this->update_progress();
+    
+        // And format...
+        $olimometer_font = "LiberationSans-Regular.ttf";
+        $image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );   
+        if($this->olimometer_link_disable == 0) {
+            $the_olimometer_text = "<a href='".$this->olimometer_link."' target=_blank>";
+        } 
+        $the_olimometer_text = $the_olimometer_text."<img src='".$image_location."?olimometer_id=".$this->olimometer_id."' border=0";
+        if(strlen($css_class) > 0) {
+            $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
+        }
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.47'>";
+        if($this->olimometer_link_disable == 0) {
+            $the_olimometer_text = $the_olimometer_text."</a>";
+        } 
+        
+        
+        return $the_olimometer_text;
+    }
+
+
+    // Makes sure that the progress value is updated in case it is frmo a dynamic source such as PayPal.
+    // Should be called before a value is displayed
+    function update_progress() {
         // If PayPal integration is configured, get the current balance and save it
         if($this->olimometer_use_paypal == 1) {
             $olimometer_paypal_balance = $this->get_paypal_balance();
@@ -300,21 +306,6 @@ class Olimometer
                     }
             }
         }
-    
-    
-        $olimometer_font = "LiberationSans-Regular.ttf";
-
-        $image_location = plugins_url('olimometer/thermometer.php', dirname(__FILE__) );
-        
-        
-        $the_olimometer_text = "<a href='".$this->olimometer_link."' target=_blank><img src='".$image_location."?olimometer_id=".$this->olimometer_id."' border=0";
-        if(strlen($css_class) > 0) {
-            $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
-        }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.46'></a>";
-        
-        return $the_olimometer_text;
-        //return null;
     }
     
     // Gets the total_raised value from StayClassy.org for a given PID.
@@ -437,6 +428,127 @@ class Olimometer
         }
     }
 
+
+    // Returns a formatted progress value string
+    function get_display_progress() {
+        $this->set_display_format();
+        $display_string = number_format($this->olimometer_progress_value,$this->olimometer_display_dp,$this->olimometer_display_decimal,$this->olimometer_display_thousands);
+        return $this->wrap_prefix_and_suffix($display_string);
+    }
+
+    // Returns a formatted total to raise string
+    function get_display_total() {
+        $this->set_display_format();
+        $display_string = number_format($this->olimometer_total_value,$this->olimometer_display_dp,$this->olimometer_display_decimal,$this->olimometer_display_thousands);
+        return $this->wrap_prefix_and_suffix($display_string);
+    }
+
+    // Returns a formatted '0' value string
+    function get_display_zero() {
+        $this->set_display_format();
+        $display_string = number_format(0,$this->olimometer_display_dp,$this->olimometer_display_decimal,$this->olimometer_display_thousands);
+        return $this->wrap_prefix_and_suffix($display_string);       
+    }
+
+    // How much do we need to raise to meet the target?
+    function get_display_remaining() {
+        $this->set_display_format();
+        $togo = $this->olimometer_total_value - $this->olimometer_progress_value;
+
+        $display_string = number_format($togo,$this->olimometer_display_dp,$this->olimometer_display_decimal,$this->olimometer_display_thousands);
+        return $this->wrap_prefix_and_suffix($display_string);       
+    }
+
+    function set_display_format() {
+        // Load display array values
+        // No dp, no thousands
+        $olimometer_display_array[0][0] = 0;
+        $olimometer_display_array[0][1] = '';
+        $olimometer_display_array[0][2] = '.';
+        // no dp, thousands marker
+        $olimometer_display_array[1][0] = 0;
+        $olimometer_display_array[1][1] = ',';
+        $olimometer_display_array[1][2] = '.';
+        // 2dp, no thousands
+        $olimometer_display_array[2][0] = 2;
+        $olimometer_display_array[2][1] = '';
+        $olimometer_display_array[2][2] = '.';
+        // 2dp, thousands marker
+        $olimometer_display_array[3][0] = 2;
+        $olimometer_display_array[3][1] = ',';
+        $olimometer_display_array[3][2] = '.';
+        // no dp, period thousands marker
+        $olimometer_display_array[4][0] = 0;
+        $olimometer_display_array[4][1] = '.';
+        $olimometer_display_array[4][2] = ',';
+        // 2dp (comma), period thousands marker
+        $olimometer_display_array[5][0] = 2;
+        $olimometer_display_array[5][1] = '.';
+        $olimometer_display_array[5][2] = ',';
+        // no dp, space thousands marker
+        $olimometer_display_array[6][0] = 0;
+        $olimometer_display_array[6][1] = ' ';
+        $olimometer_display_array[6][2] = '.';
+        // 2dp (comma), space thousands marker
+        $olimometer_display_array[7][0] = 2;
+        $olimometer_display_array[7][1] = ' ';
+        $olimometer_display_array[7][2] = ',';
+        // 2dp (period), space thousands marker
+        $olimometer_display_array[8][0] = 2;
+        $olimometer_display_array[8][1] = '.';
+        $olimometer_display_array[8][2] = ' ';
+
+        $this->olimometer_display_dp = $olimometer_display_array[$this->olimometer_number_format][0];
+        $this->olimometer_display_thousands = $olimometer_display_array[$this->olimometer_number_format][1];
+        $this->olimometer_display_decimal = $olimometer_display_array[$this->olimometer_number_format][2];
+    }   
+
+
+    // Returns a string wrapped with the required prefix and suffix
+    function wrap_prefix_and_suffix($formatted_value) {
+        // Figure out prefix and suffix values
+        switch($this->olimometer_currency) {
+            case 128:
+                $currency_symbol = "&#8364;";
+                //$currency_symbol = "a";
+                break;
+            case '':
+                $currency_symbol = "";
+                break;
+            case 'x':
+                $currency_symbol = "";
+                break;
+            case '10000':
+                $currency_symbol = "kr ";
+                break;
+		    case '10001':
+                $currency_symbol = "CHF ";
+                break;		
+            default:
+                $currency_symbol = "&#$this->olimometer_currency;";
+        }
+    
+        switch($this->olimometer_suffix) {
+            case 128:
+                $suffix_symbol = "&#8364;";
+                break;
+            case '':
+                $suffix_symbol = "";
+                break;
+            case 'x':
+                $suffix_symbol = "";
+                break;
+            case '10000':
+                $suffix_symbol = " kr";
+                break;
+		    case '10001':
+                $suffix_symbol = " CHF";
+                break;				
+            default:
+                $suffix_symbol = "&#$this->olimometer_suffix;";
+        }
+        return $currency_symbol.$formatted_value.$suffix_symbol;
+    }
     
 }
 ?>

@@ -5,7 +5,7 @@ Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.olivershingler.co.uk
-Version: 2.46
+Version: 2.47
 */
 
 
@@ -30,6 +30,9 @@ add_filter('plugin_action_links', 'olimometer_action', -10, 2);
 
 add_shortcode('show_olimometer','call_show_olimometer'); // Legacy
 add_shortcode('olimometer','call_show_olimometer');
+add_shortcode('olimometer_progress','olimometer_progress');
+add_shortcode('olimometer_target','olimometer_target');
+add_shortcode('olimometer_remaining','olimometer_remaining');
 
 register_activation_hook(__FILE__,'olimometer_install');
 add_action('plugins_loaded', 'update_check');
@@ -144,6 +147,7 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
     $an_olimometer->olimometer_paypal_extra_value = $_REQUEST['olimometer_paypal_extra_value'];
     $an_olimometer->olimometer_number_format = $_REQUEST['olimometer_number_format'];
     $an_olimometer->olimometer_link = $_REQUEST['olimometer_link'];
+    $an_olimometer->olimometer_link_disable = $_REQUEST['olimometer_link_disable'];
     //echo "Overlay = xxx".$_REQUEST['olimometer_overlay']."xxx";
     $an_olimometer->olimometer_overlay = $_REQUEST['olimometer_overlay'];
     $an_olimometer->olimometer_overlay_image = $_REQUEST['upload_image'];
@@ -151,6 +155,7 @@ if (isset($_REQUEST['olimometer_submit']) && isset($_REQUEST['olimometer_total_v
     $an_olimometer->olimometer_overlay_y = $_REQUEST['olimometer_overlay_y'];
     $an_olimometer->olimometer_stayclassypid = $_REQUEST['olimometer_stayclassypid'];
     $an_olimometer->olimometer_stayclassyeid = $_REQUEST['olimometer_stayclassyeid'];
+    
     
     // Save it
     $an_olimometer->save();
@@ -438,10 +443,14 @@ function olimometer_manage_page() {
 		</tr>
         </table>
         
-        <p>
-            You can insert this Olimometer in to your posts and pages by using the following shortcode:<br />
-            <i><b>[olimometer id=<?php echo $current_olimometer_id; ?>]</b></i>
-        </p>
+            You can use the following shortcodes in your posts and pages for this Olimometer:<br />
+            <ol>
+                <li>Display the Olimometer: <i><b>[olimometer id=<?php echo $current_olimometer_id; ?>]</b></i></li>
+                <li>Display the Amount Raised: <i><b>[olimometer_progress id=<?php echo $current_olimometer_id; ?>]</b></i></li>
+                <li>Display the Target: <i><b>[olimometer_target id=<?php echo $current_olimometer_id; ?>]</b></i></li>
+                <li>Display the amount remaining to hit Target: <i><b>[olimometer_remaining id=<?php echo $current_olimometer_id; ?>]</b></i></li>
+
+            </ol>
         
         <p class="submit"><input type="submit" class="button-primary" name="olimometer_submit" value="Save Changes" /><input type="submit" class="button-primary" name="olimometer_delete" value="Delete this Olimometer" /></p>
         
@@ -772,6 +781,23 @@ if( ($current_olimometer->olimometer_show_progress == 0)) {
             <p><span class="description">(Optional) The URL users are directed to when clicking on an Olimometer image.</span></p></td>
 		</tr>
 
+        <tr class="form-required">
+			<th scope="row" valign="top"><label for="name">Disable Olimometer Hyperlink</label></th>
+			<td><input name="olimometer_link_disable" id="olimometer_link_disable" type="radio" value="0"<?php
+if($current_olimometer->olimometer_link_disable == 0) {
+	echo " checked";
+}
+
+?>> No<br />
+			    <input name="olimometer_link_disable" id="olimometer_link_disable" type="radio" value="1"<?php
+if($current_olimometer->olimometer_link_disable == 1) {
+	echo " checked";
+}
+
+?>> Yes
+            <p><span class="description">(Optional) Would you like to disable the hyperlink?</span></p></td>
+		</tr>
+
 
         <!-- Overlay Image Begin -->
 
@@ -968,6 +994,14 @@ function my_money_format($format, $num) {
      
     }
 
+
+// Returns the given Olimometer's progress amount.
+/*function olimometer_progress($olimometer_id) {
+    // Load the olimometer
+    $current_olimometer = new Olimometer();
+    $current_olimometer->load($olimometer_id);
+    //return $current_olimometer->show($css_class);
+}*/
 
 /***************
 Olimometer Sidebar Widget
@@ -1246,7 +1280,7 @@ add_action('wp_dashboard_setup', 'olimometer_add_dashboard_widgets' );
 Database Functions
 ************************/
 global $olimometer_db_version;
-$olimometer_db_version = "2.46";
+$olimometer_db_version = "2.47";
 
 function olimometer_install() {
    global $wpdb;
@@ -1284,6 +1318,7 @@ function olimometer_install() {
   olimometer_overlay_y int,
   olimometer_stayclassypid int,
   olimometer_stayclassyeid int,
+  olimometer_link_disable int,
   UNIQUE KEY olimometer_id (olimometer_id)
     );";
 
@@ -1310,7 +1345,7 @@ function update_check() {
     {
         // Yes it has!
         // If currently installed database version is less than current version required for this plugin, then we need to upgrade
-        $required_db_version = 2.46;
+        $required_db_version = 2.47;
         $installed_db_version = get_option("olimometer_db_version");
         if($installed_db_version < $required_db_version) {
             olimometer_install();
@@ -1464,9 +1499,41 @@ function get_olimometer_last() {
     return $olimometer_last;
 }
 
+// Shortcode to display the current amount raised all formatted nice and that
+function olimometer_progress($atts) {
+    extract( shortcode_atts( array(
+        'id' => '1',
+	), $atts ) );
 
+    $an_olimometer = new Olimometer();
+    $an_olimometer->load($id);
+    
+    return $an_olimometer->get_display_progress();
+}
 
-	
+// Shortcode to display the target amount all formatted nice and that
+function olimometer_target($atts) {
+    extract( shortcode_atts( array(
+        'id' => '1',
+	), $atts ) );
+
+    $an_olimometer = new Olimometer();
+    $an_olimometer->load($id);
+    
+    return $an_olimometer->get_display_total();
+}
+
+// Shortcode to display the amount left to raise to meet the target formatted nice and that
+function olimometer_remaining($atts) {
+    extract( shortcode_atts( array(
+        'id' => '1',
+	), $atts ) );
+
+    $an_olimometer = new Olimometer();
+    $an_olimometer->load($id);
+    
+    return $an_olimometer->get_display_remaining();
+}	
 
 
 ?>

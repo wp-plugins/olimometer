@@ -39,6 +39,14 @@ Either install using the automatic WordPress plugin installation method, or do i
 
 == Frequently Asked Questions ==
 
+= Can I display the progress / target / remaining values in a post or page? =
+
+Yup. Use one of these shortcodes, replacing 1 with the actual ID of your Olimometer.
+
+* Display the Amount Raised: [olimometer_progress id=1]
+* Display the Target: [olimometer_target id=1]
+* Display the amount remaining to hit Target: [olimometer_remaining id=1]
+
 = How do I add a PayPal Donate button? =
 
 Simply add the Olimometer as a Widget to your sidebar area, and enter your PayPal account's email address in the relevant field on the widget's configuration panel.
@@ -98,6 +106,8 @@ For best results follow these tips:
 * Share your skins with me - contact me using the Wordpress forums, tweet me @OliverShingler, or leave a comment on the Olimometer page: http://www.olivershingler.co.uk/oliblog/olimometer
 
 
+
+
 == Screenshots ==
 
 1. The Olimometer in a sidebar widget with default skin
@@ -107,6 +117,10 @@ For best results follow these tips:
 
 
 == Changelog ==
+
+= 2.47 =
+* Added three new shortcodes to display a formatted value for progress, target and remaining values. See the Olimometer settings page for a list of shortcodes.
+* You can now disable the Olimometer's hyperlink if required.
 
 = 2.46 =
 * Added support for StayClassy Events in addition to Projects
@@ -246,6 +260,10 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.47 =
+* Added three new shortcodes to display a formatted value for progress, target and remaining values. See the Olimometer settings page for a list of shortcodes.
+* You can now disable the Olimometer's hyperlink if required.
 
 = 2.46 =
 * Added support for StayClassy Events in addition to Projects

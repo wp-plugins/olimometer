@@ -56,14 +56,12 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
     $thermometer_bg_colour = $olimometer_to_display->olimometer_thermometer_bg_colour;
     $total_value = $olimometer_to_display->olimometer_total_value;
     $progress_value = $olimometer_to_display->olimometer_progress_value;
-    $currency = $olimometer_to_display->olimometer_currency;
     $text_colour = $olimometer_to_display->olimometer_text_colour;
     $transparent = $olimometer_to_display->olimometer_transparent;
     $show_target = $olimometer_to_display->olimometer_show_target;
     $show_progress = $olimometer_to_display->olimometer_show_progress;
     $progress_label = $olimometer_to_display->olimometer_progress_label;
     $font_height = $olimometer_to_display->olimometer_font_height;
-    $suffix = $olimometer_to_display->olimometer_suffix;
 
     // Overlay Variables
     $overlay = $olimometer_to_display->olimometer_overlay;
@@ -71,105 +69,11 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
     $overlay_x = $olimometer_to_display->olimometer_overlay_x;
     $overlay_y = $olimometer_to_display->olimometer_overlay_y;
     
-    if($olimometer_to_display->olimometer_number_format == null) {
-        $olimometer_number_format = 0;
-    }
-    else {
-        $olimometer_number_format = $olimometer_to_display->olimometer_number_format;
-    }
-    
-    
-    // Value layout array:
-    
-        // No dp, no thousands
-        $olimometer_display_array[0][0] = 0;
-        $olimometer_display_array[0][1] = '';
-        $olimometer_display_array[0][2] = '.';
-        // no dp, thousands marker
-        $olimometer_display_array[1][0] = 0;
-        $olimometer_display_array[1][1] = ',';
-        $olimometer_display_array[1][2] = '.';
-        // 2dp, no thousands
-        $olimometer_display_array[2][0] = 2;
-        $olimometer_display_array[2][1] = '';
-        $olimometer_display_array[2][2] = '.';
-        // 2dp, thousands marker
-        $olimometer_display_array[3][0] = 2;
-        $olimometer_display_array[3][1] = ',';
-        $olimometer_display_array[3][2] = '.';
-        // no dp, period thousands marker
-        $olimometer_display_array[4][0] = 0;
-        $olimometer_display_array[4][1] = '.';
-        $olimometer_display_array[4][2] = ',';
-        // 2dp (comma), period thousands marker
-        $olimometer_display_array[5][0] = 2;
-        $olimometer_display_array[5][1] = '.';
-        $olimometer_display_array[5][2] = ',';
-        // no dp, space thousands marker
-        $olimometer_display_array[6][0] = 0;
-        $olimometer_display_array[6][1] = ' ';
-        $olimometer_display_array[6][2] = '.';
-        // 2dp (comma), space thousands marker
-        $olimometer_display_array[7][0] = 2;
-        $olimometer_display_array[7][1] = ' ';
-        $olimometer_display_array[7][2] = ',';
-        // 2dp (period), space thousands marker
-        $olimometer_display_array[8][0] = 2;
-        $olimometer_display_array[8][1] = '.';
-        $olimometer_display_array[8][2] = ' ';
-        
-        
-    // Display converted values:
-    $olimometer_display_dp = $olimometer_display_array[$olimometer_number_format][0];
-    $olimometer_display_thousands = $olimometer_display_array[$olimometer_number_format][1];
-    $olimometer_display_decimal = $olimometer_display_array[$olimometer_number_format][2];
-    //$olimometer_display_dp = 2;
-    //$olimometer_display_thousands = ',';
-    $display_total_value = number_format($total_value,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);
-    $display_progress_value = number_format($progress_value,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);
-    $display_zero = number_format(0,$olimometer_display_dp,$olimometer_display_decimal,$olimometer_display_thousands);
-    
-    // Figure out prefix and suffix values
-    switch($currency) {
-        case 128:
-            $currency_symbol = "&#8364;";
-            break;
-        case '':
-            $currency_symbol = "";
-            break;
-        case 'x':
-            $currency_symbol = "";
-            break;
-        case '10000':
-            $currency_symbol = "kr ";
-            break;
-		case '10001':
-            $currency_symbol = "CHF ";
-            break;		
-        default:
-            $currency_symbol = "&#$currency;";
-    }
-    
-    switch($suffix) {
-        case 128:
-            $suffix_symbol = "&#8364;";
-            break;
-        case '':
-            $suffix_symbol = "";
-            break;
-        case 'x':
-            $suffix_symbol = "";
-            break;
-        case '10000':
-            $suffix_symbol = " kr";
-            break;
-		case '10001':
-            $suffix_symbol = " CHF";
-            break;				
-        default:
-            $suffix_symbol = "&#$suffix;";
-    }
 
+    $display_total_value = $olimometer_to_display->get_display_total();
+    $display_progress_value = $olimometer_to_display->get_display_progress();
+    $display_zero = $olimometer_to_display->get_display_zero();
+ 
 
     // Are we making a horizontal or a vertical thermometer?
     if($olimometer_skin_data["orientation"] == "horizontal")
@@ -179,16 +83,6 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         //$therm_bulb = imagecreatefromjpeg($therm_bulb_file);
         $therm_bulb = imagecreatefrompng($therm_bulb_file);
         list($therm_bulb_width, $therm_bulb_height) = getimagesize($therm_bulb_file);
-        //$bulb_ypos = $thermometer_height - $therm_bulb_height;
-        
-        //if the progress value and label are being shown, leave space at the bottom of the thermometer for the label.
-        /*if($show_progress == 1) {
-            $thermometer_height = $therm_bulb_height - ($font_height*2);
-        }
-        else {
-            $thermometer_height = $therm_bulb_height;
-        }*/
-        
         
         //create temporary image
         $temp_new_image = imagecreatetruecolor($image_height,50);
@@ -204,14 +98,10 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         //$therm_bar = imagecreatefromjpeg($therm_bar_file);
         $therm_bar = imagecreatefrompng($therm_bar_file);
         list($therm_bar_width, $therm_bar_height) = getimagesize($therm_bar_file);
-        
-        
+
         //put the top on the thermometer
-        //$therm_top = imagecreatefromjpeg($therm_top_file);
         $therm_top = imagecreatefrompng($therm_top_file);
         list($therm_top_width, $therm_top_height) = getimagesize($therm_top_file);
-        //$top_xpos = $thermometer_height-$therm_top_height;
-        
         
         //work out length of mercury bar
         $total_bar_length = $image_height - $therm_bulb_width - $therm_bar_merc_top;
@@ -228,7 +118,6 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         $top_of_bar = $image_height - ($filled_bar_length + $therm_bulb_width);
         
         //draw mercury line
-        //$mercury_colour_rgb = imagecolorat($therm_bulb, 27, 3); // Old method of getting colour.. use new skin specified value insead
         $mercury_colour_array = rgb2array($therm_bar_merc_colour);
         $mercury_colour_rgb = imagecolorallocate($temp_new_image, $mercury_colour_array[0], $mercury_colour_array[1], $mercury_colour_array[2]);
         
@@ -243,19 +132,14 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         
         // Are we showing the target labels?
         if($show_target == 1) {
-            $the_box = calculateTextBox($currency_symbol.$display_total_value.$suffix_symbol, $font_name, $font_height, 0);
-            //$the_box = imagettfbboxextended($font_height, 0, $font_name, $currency_symbol.$total_value.$suffix_symbol);
+            $the_box = calculateTextBox($olimometer_to_display->get_display_total(), $font_name, $font_height, 0);
             $top_text_width = $the_box["width"]; 
-            
-            // The width of the image file = label width + x_pos of label.
-            //$new_image_width = $top_text_width + $therm_text_xpos + 2;
         }
         
         // Are we showing the progress label?
         if($show_progress == 1) {
             // Calculate the width of it
-            $the_box2 = calculateTextBox($progress_label.' '.$currency_symbol.$display_progress_value.$suffix_symbol, $font_name, $font_height, 0);
-            //$the_box2 = imagettfbboxextended($font_height, 0, $font_name, $progress_label.' '.$currency_symbol.$progress_value.$suffix_symbol);
+            $the_box2 = calculateTextBox($progress_label.' '.$olimometer_to_display->get_display_progress(), $font_name, $font_height, 0);
             $progress_text_width = $the_box2["width"] + 2;
             // Is this wider than our previously calculated value?
                 if($progress_text_width > $image_height) {
@@ -294,12 +178,11 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         //- Top of the thermometer:
         imagecopyresampled($new_image, $therm_top, $image_height-$therm_top_width, $top_of_therm, 0, 0, $therm_top_width, $therm_top_height, $therm_top_width, $therm_top_height);
         // - Draw mercury line
-        //imagefilledrectangle($new_image, $therm_bulb_width, $therm_bar_merc_xpos+$top_of_therm, $top_of_bar,$therm_bar_merc_xpos+$therm_bar_merc_width+$top_of_therm, $mercury_colour_rgb);
         imagefilledrectangle($new_image, $therm_bulb_width, $therm_bar_merc_xpos+$top_of_therm, $filled_bar_length+$therm_bulb_width,$therm_bar_merc_xpos+$therm_bar_merc_width+$top_of_therm, $mercury_colour_rgb);
         // - Add value labels to the right of the thermometer
         if($show_target == 1) {
-            imagettftext($new_image, $font_height, 0, 0, $font_height+2, $text_colour_rgb, $font_name, $currency_symbol.$display_zero.$suffix_symbol);
-            imagettftext($new_image, $font_height, 0, $image_height-$top_text_width, $font_height+2, $text_colour_rgb, $font_name, $currency_symbol.$display_total_value.$suffix_symbol);
+            imagettftext($new_image, $font_height, 0, 0, $font_height+2, $text_colour_rgb, $font_name, $olimometer_to_display->get_display_zero());
+            imagettftext($new_image, $font_height, 0, $image_height-$top_text_width, $font_height+2, $text_colour_rgb, $font_name, $olimometer_to_display->get_display_total());
         }
         // - If the Progress label is needed, show it!
         if($show_progress == 1) {
@@ -312,10 +195,8 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
             {
                 $progress_label_x = ($new_image_width-$progress_text_width)/2;
             }
-            imagettftext($new_image, $font_height, 0, $progress_label_x, $therm_bulb_height+$top_of_therm+$font_height+5, $text_colour_rgb, $font_name, $progress_label.' '.$currency_symbol.$display_progress_value.$suffix_symbol);
-            //imagettftext($new_image, $font_height, 0, 30, $therm_bulb_height+4, $text_colour_rgb, $font_name, "Testing");
+            imagettftext($new_image, $font_height, 0, $progress_label_x, $therm_bulb_height+$top_of_therm+$font_height+5, $text_colour_rgb, $font_name, $progress_label.' '.$olimometer_to_display->get_display_progress());
         }
-        //$image_height-(ceil($font_height/2))
         // - Set transparancy if required using supplied background colour as mask
         if ($transparent == 1) {
             imagecolortransparent($new_image, $background_colour);
@@ -325,10 +206,10 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
     {
         //if the progress value and label are being shown, leave space at the bottom of the thermometer for the label.
         if($show_progress == 1) {
-        $thermometer_height = $image_height - ($font_height*2);
+            $thermometer_height = $image_height - ($font_height*2);
         }
         else {
-        $thermometer_height = $image_height;
+            $thermometer_height = $image_height;
         }
         
 
@@ -342,20 +223,17 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         $background_colour = imagecolorallocate($temp_new_image, $fill_color_array[0], $fill_color_array[1], $fill_color_array[2]);
         
         //read bulb image file and place at the bottom of new file
-        //$therm_bulb = imagecreatefromjpeg($therm_bulb_file);
         $therm_bulb = imagecreatefrompng($therm_bulb_file);
         list($therm_bulb_width, $therm_bulb_height) = getimagesize($therm_bulb_file);
         $bulb_ypos = $thermometer_height - $therm_bulb_height;
         
         
         //read bar thermometer image
-        //$therm_bar = imagecreatefromjpeg($therm_bar_file);
         $therm_bar = imagecreatefrompng($therm_bar_file);
         list($therm_bar_width, $therm_bar_height) = getimagesize($therm_bar_file);
         
         
         //put the top on the thermometer
-        //$therm_top = imagecreatefromjpeg($therm_top_file);
         $therm_top = imagecreatefrompng($therm_top_file);
         list($therm_top_width, $therm_top_height) = getimagesize($therm_top_file);
         
@@ -375,7 +253,6 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         $top_of_bar = $thermometer_height - ($filled_bar_length + $therm_bulb_height);
         
         //draw mercury line
-        //$mercury_colour_rgb = imagecolorat($therm_bulb, 27, 3); // Old method of getting colour.. use new skin specified value insead
         $mercury_colour_array = rgb2array($therm_bar_merc_colour);
         $mercury_colour_rgb = imagecolorallocate($temp_new_image, $mercury_colour_array[0], $mercury_colour_array[1], $mercury_colour_array[2]);
         
@@ -390,8 +267,7 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         
         // Are we showing the target labels?
         if($show_target == 1) {
-            $the_box = calculateTextBox($currency_symbol.$display_total_value.$suffix_symbol, $font_name, $font_height, 0);
-            //$the_box = imagettfbboxextended($font_height, 0, $font_name, $currency_symbol.$total_value.$suffix_symbol);
+            $the_box = calculateTextBox($olimometer_to_display->get_display_total(), $font_name, $font_height, 0);
             $top_text_width = $the_box["width"]; 
             
             // The width of the image file = label width + x_pos of label.
@@ -401,8 +277,7 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         // Are we showing the progress label?
         if($show_progress == 1) {
             // Calculate the width of it
-        $the_box2 = calculateTextBox($progress_label.' '.$currency_symbol.$display_progress_value.$suffix_symbol, $font_name, $font_height, 0);
-        //$the_box2 = imagettfbboxextended($font_height, 0, $font_name, $progress_label.' '.$currency_symbol.$progress_value.$suffix_symbol);
+        $the_box2 = calculateTextBox($progress_label.' '.$olimometer_to_display->get_display_progress(), $font_name, $font_height, 0);
         $progress_text_width = $the_box2["width"] + 2;
         // Is this wider than our previously calculated value?
         if($progress_text_width > $new_image_width) {
@@ -421,10 +296,6 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
 
         // Are we using an overlay image?
         if($overlay == 1) {
-            // Convert the image URL to a real file path
-            //$wp_root_path = str_replace('/wp-content/themes', '', get_theme_root());
-            //$converted_overlay_image = $wp_root_path.wp_make_link_relative( $overlay_image );
-
             // Load the overlay PNG
             $overlay_image_object = imagecreatefrompng($overlay_image);
 
@@ -464,12 +335,12 @@ $olimometer_skin_data = $olimometer_skins->get_skin($olimometer_to_display->olim
         imagefilledrectangle($new_image, $therm_bar_merc_xpos, $bulb_ypos, $therm_bar_merc_xpos+$therm_bar_merc_width, $top_of_bar, $mercury_colour_rgb);
         // - Add value labels to the right of the thermometer
         if($show_target == 1) {
-            imagettftext($new_image, $font_height, 0, $therm_text_xpos, $font_height*1.2, $text_colour_rgb, $font_name, $currency_symbol.$display_total_value.$suffix_symbol);
-            imagettftext($new_image, $font_height, 0, $therm_text_xpos, $bulb_ypos+10, $text_colour_rgb, $font_name, $currency_symbol.$display_zero.$suffix_symbol);
+            imagettftext($new_image, $font_height, 0, $therm_text_xpos, $font_height*1.2, $text_colour_rgb, $font_name, $olimometer_to_display->get_display_total());
+            imagettftext($new_image, $font_height, 0, $therm_text_xpos, $bulb_ypos+10, $text_colour_rgb, $font_name, $olimometer_to_display->get_display_zero());
         }
         // - If the Progress label is needed, show it!
         if($show_progress == 1) {
-        imagettftext($new_image, $font_height, 0, 0, $image_height-(ceil($font_height/2)), $text_colour_rgb, $font_name, $progress_label.' '.$currency_symbol.$display_progress_value.$suffix_symbol);
+        imagettftext($new_image, $font_height, 0, 0, $image_height-(ceil($font_height/2)), $text_colour_rgb, $font_name, $progress_label.' '.$olimometer_to_display->get_display_progress());
         }
 
         // Overlay the overlay if needed!

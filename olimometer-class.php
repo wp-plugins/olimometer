@@ -43,7 +43,7 @@ class Olimometer
     public $olimometer_display_decimal;
     public $olimometer_link_disable = 0;
     
-    private $olimometer_default_link = "http://www.olivershingler.co.uk/oliblog/olimometer/";
+    private $olimometer_default_link = "http://www.speaktothegeek.co.uk/oliblog/olimometer/";
     private $olimometer_table_name = "olimometer_olimometers";
     
     
@@ -237,7 +237,7 @@ class Olimometer
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.47'>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.48'>";
         if($this->olimometer_link_disable == 0) {
             $the_olimometer_text = $the_olimometer_text."</a>";
         } 

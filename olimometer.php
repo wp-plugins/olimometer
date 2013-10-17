@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Olimometer
-Plugin URI: http://www.olivershingler.co.uk/oliblog/olimometer/
+Plugin URI: http://www.speaktothegeek.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
-Author URI: http://www.olivershingler.co.uk
-Version: 2.47
+Author URI: http://www.speaktothegeek.co.uk
+Version: 2.48
 */
 
 
@@ -892,7 +892,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
             <p>You cannot delete the first Olimometer.</p>
 
 			<p><strong>Want to say thank you?</strong></p>
-		  	<p>You can visit my site for more information or to make a donation: <a href='http://www.olivershingler.co.uk/oliblog/olimometer'>http://www.olivershingler.co.uk/oliblog/olimometer</a>.</p>
+		  	<p>You can visit my site for more information or to make a donation: <a href='http://www.speaktothegeek.co.uk/oliblog/olimometer'>http://www.speaktothegeek.co.uk/oliblog/olimometer</a>.</p>
 
 
 <p>
@@ -1238,17 +1238,17 @@ function olimometer_dashboard_widget_function() {
 		</tr>
 	</table>	
 <p>
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-9213372745182820";
-/* Olimometer Admin Widget */
-google_ad_slot = "8636922583";
-google_ad_width = 234;
-google_ad_height = 60;
-//-->
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Olimometer - Admin Widget Wide -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:468px;height:60px"
+     data-ad-client="ca-pub-9213372745182820"
+     data-ad-slot="9755164941"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
+
 </p>
 	<p><input type="submit" class="button-primary" name="olimometer_dw_submit" value="Update" />
 

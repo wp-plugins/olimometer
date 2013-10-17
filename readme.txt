@@ -1,9 +1,9 @@
 === Olimometer ===
 Contributors: oshingler
-Donate link: http://www.olivershingler.co.uk/oliblog/olimometer
+Donate link: http://www.speaktothegeek.co.uk/oliblog/olimometer
 Tags: charities, charity, counter, donate, donate goals, donate meter, donation, donations, fund, fundraise, fundraising, fundraising goal, fundraising thermometer, goal, olimometer, paypal, progress, sidebar, sponsor, sponsorship, thermometer, widget, stayclassy
 Requires at least: 3.1
-Tested up to: 3.3.2
+Tested up to: 3.6.1
 Stable tag: trunk
 
 A fully customisable fundraising thermometer with PayPal integration, custom skins and support for multiple vertical and horizontal thermometers.
@@ -22,7 +22,7 @@ This plugin requires that the GD libraries are available within PHP.
 
 If you wish the thermometer to have a transparent background then I suggest you still choose a background colour close to the actual background on which the thermometer will appear. This will ensure that the image blends in perfectly.
 
-If you have *any* problems installing or using this plugin, or if it doesn't quite meet your needs then please let me know. Post your query on the forum http://wordpress.org/support/plugin/olimometer or visit http://www.olivershingler.co.uk/oliblog/olimometer and leave a comment, or via Twitter @OliverShingler
+If you have *any* problems installing or using this plugin, or if it doesn't quite meet your needs then please let me know. Post your query on the forum http://wordpress.org/support/plugin/olimometer or visit http://www.speaktothegeek.co.uk/oliblog/olimometer and leave a comment, or via Twitter @OliverShingler
  
 
 == Installation ==
@@ -65,7 +65,7 @@ For example, to use a class called align_right, use the following code:
 
 = I've found a bug / have a suggestion =
 
-You can contact me via Twitter @OliverShingler, chat on the forum http://wordpress.org/support/plugin/olimometer or you can leave a comment on the plugin's official page http://www.olivershingler.co.uk/oliblog/olimometer. I can't make any promises but I will do my best.
+You can contact me via Twitter @OliverShingler, chat on the forum http://wordpress.org/support/plugin/olimometer or you can leave a comment on the plugin's official page http://www.speaktothegeek.co.uk/oliblog/olimometer. I can't make any promises but I will do my best.
 
 = How do I change the thermometer image? =
 See: How do I create my own skin?
@@ -103,7 +103,7 @@ For best results follow these tips:
 * Use a droplet tool or other suitable colour identifier to identify a suitable bar_colour value using the mercury colour in your bulb_file image.
 * Make sure the top_file image includes a copy of the bar_file underneath it, but cleaned of any marks or bars - see the built in skins for an example. This is to avoid a gap being left between the top image and the bar image at certain image heights.
 * All built-in skins have a slug-name starting with "oli-" so avoid using this prefix to prevent name conflicts.
-* Share your skins with me - contact me using the Wordpress forums, tweet me @OliverShingler, or leave a comment on the Olimometer page: http://www.olivershingler.co.uk/oliblog/olimometer
+* Share your skins with me - contact me using the Wordpress forums, tweet me @OliverShingler, or leave a comment on the Olimometer page: http://www.speaktothegeek.co.uk/oliblog/olimometer
 
 
 
@@ -117,6 +117,9 @@ For best results follow these tips:
 
 
 == Changelog ==
+
+= 2.48 =
+* Very minor cosmetic tweaks.
 
 = 2.47 =
 * Added three new shortcodes to display a formatted value for progress, target and remaining values. See the Olimometer settings page for a list of shortcodes.
@@ -260,6 +263,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.48 =
+* Very minor cosmetic tweaks.
 
 = 2.47 =
 * Added three new shortcodes to display a formatted value for progress, target and remaining values. See the Olimometer settings page for a list of shortcodes.

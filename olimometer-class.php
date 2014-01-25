@@ -237,7 +237,7 @@ class Olimometer
         if(strlen($css_class) > 0) {
             $the_olimometer_text = $the_olimometer_text." class='".$css_class."'";
         }
-        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.49'>";
+        $the_olimometer_text = $the_olimometer_text." alt='Olimometer 2.50'>";
         if($this->olimometer_link_disable == 0) {
             $the_olimometer_text = $the_olimometer_text."</a>";
         } 
@@ -372,7 +372,7 @@ class Olimometer
         // setting the curl parameters.
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $API_Endpoint);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
     
         // turning off the server and peer verification(TrustManager Concept).
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);

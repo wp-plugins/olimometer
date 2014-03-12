@@ -118,6 +118,9 @@ For best results follow these tips:
 
 == Changelog ==
 
+= 2.51 =
+* Fixed missing argument error
+
 = 2.50 =
 * Turned off Curl verbose logging - should stop server logs being filled up unnecessarily.
 
@@ -269,6 +272,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.51 =
+* Fixed missing argument error
 
 = 2.50 =
 * Turned off Curl verbose logging - should stop server logs being filled up unnecessarily.

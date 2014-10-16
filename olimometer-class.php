@@ -43,7 +43,7 @@ class Olimometer
     public $olimometer_display_decimal;
     public $olimometer_link_disable = 0;
     
-    private $olimometer_default_link = "http://www.speaktothegeek.co.uk/oliblog/olimometer/";
+    private $olimometer_default_link = "";
     private $olimometer_table_name = "olimometer_olimometers";
     
     

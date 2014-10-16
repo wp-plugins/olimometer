@@ -3,7 +3,7 @@ Contributors: oshingler
 Donate link: http://www.speaktothegeek.co.uk/oliblog/olimometer
 Tags: charities, charity, counter, donate, donate goals, donate meter, donation, donations, fund, fundraise, fundraising, fundraising goal, fundraising thermometer, goal, olimometer, paypal, progress, sidebar, sponsor, sponsorship, thermometer, widget, stayclassy
 Requires at least: 3.1
-Tested up to: 3.9
+Tested up to: 4.0
 Stable tag: trunk
 
 A fully customisable fundraising thermometer with PayPal integration, custom skins and support for multiple vertical and horizontal thermometers.
@@ -117,6 +117,9 @@ For best results follow these tips:
 
 
 == Changelog ==
+
+= 2.52 =
+* Updated to comply with Wordpress policies
 
 = 2.52 =
 * Wordpress 3.9 compatibility
@@ -275,6 +278,9 @@ Thermometer now includes an optional transparent background
 The initial release
 
 == Upgrade Notice ==
+
+= 2.52 =
+* Updated to comply with Wordpress policies
 
 = 2.52 =
 * Wordpress 3.9 compatibility

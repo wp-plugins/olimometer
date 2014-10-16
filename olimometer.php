@@ -5,7 +5,7 @@ Plugin URI: http://www.speaktothegeek.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.speaktothegeek.co.uk
-Version: 2.52
+Version: 2.53
 */
 
 
@@ -586,7 +586,7 @@ if($current_olimometer->olimometer_use_paypal == 3) {
 <p class="submit"><input type="submit" class="button-primary" name="olimometer_submit" value="Save Changes" /></p>	
 
 <a name="appearance"></a>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- Olimometer - Responsive --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-9213372745182820"     data-ad-slot="5064915744"     data-ad-format="auto"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
 <hr />
 <?php
 
@@ -841,7 +841,7 @@ if($current_olimometer->olimometer_overlay == 1) {
     ?>
 
 <a name="diagnostics"></a>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- Olimometer - Responsive --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-9213372745182820"     data-ad-slot="5064915744"     data-ad-format="auto"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
 <hr />
     
     <?php
@@ -1219,7 +1219,7 @@ function olimometer_dashboard_widget_function() {
 	</table>	
 <p>
 
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- Olimometer - Responsive --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-9213372745182820"     data-ad-slot="5064915744"     data-ad-format="auto"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
 
 </p>
 	<p><input type="submit" class="button-primary" name="olimometer_dw_submit" value="Update" />

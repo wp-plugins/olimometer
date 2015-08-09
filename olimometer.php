@@ -5,7 +5,7 @@ Plugin URI: http://www.speaktothegeek.co.uk/oliblog/olimometer/
 Description: A dynamic fundraising thermometer with PayPal integration, customisable height, currency, background colour, transparency and skins.
 Author: Oliver Shingler
 Author URI: http://www.speaktothegeek.co.uk
-Version: 2.53
+Version: 2.54
 */
 
 

@@ -4,10 +4,11 @@
 
 class Olimometer
 {
-    function Olimometer()
+	function __construct() {}
+    /*function Olimometer()
     {
         // Constructor
-    }
+    }*/
     
     // Properties
     public $olimometer_id = -1;
